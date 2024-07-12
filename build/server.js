@@ -17,10 +17,12 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const mongoose_1 = require("./libs/mongoose");
 const errorHandler_1 = require("./middleware/errorHandler");
+const authRoutes_1 = require("./routes/auth/authRoutes");
 const server = (0, express_1.default)();
 // middlewares
 server.use(express_1.default.json());
 // routes
+server.use("/api/v1/auth", authRoutes_1.authRouter);
 // error handling middlware
 server.use(errorHandler_1.errorHandeler);
 const port = process.env.PORT ? process.env.PORT : 8000;

@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { connectToDatabase } from "./libs/mongoose";
 import { errorHandeler } from "./middleware/errorHandler";
+import { authRouter } from "./routes/auth/authRoutes";
 
 
 const server = express();
@@ -11,6 +12,7 @@ const server = express();
 server.use(express.json());
 
 // routes
+server.use("/api/v1/auth",authRouter)
 
 
 // error handling middlware
