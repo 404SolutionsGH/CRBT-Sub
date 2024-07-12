@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetAccountController = exports.accountConfirmationController = exports.loginController = exports.signUpController = void 0;
+exports.sendConfirmationCodeController = exports.resetAccountController = exports.accountConfirmationController = exports.loginController = exports.signUpController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const accountSchema_1 = require("../../schema/accountSchema");
 const bcrypt_1 = require("../../libs/bcrypt");
@@ -48,3 +48,4 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
 exports.loginController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
 exports.accountConfirmationController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
 exports.resetAccountController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
+exports.sendConfirmationCodeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));

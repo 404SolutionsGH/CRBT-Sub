@@ -44,3 +44,6 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 export const accountConfirmationController = asyncHandler(async (req: Request, res: Response) => {});
 
 export const resetAccountController = asyncHandler(async (req: Request, res: Response) => {});
+
+export const sendConfirmationCodeController = asyncHandler(async (req: Request, res: Response) => {});
+
