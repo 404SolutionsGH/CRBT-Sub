@@ -4,22 +4,28 @@ import { AccountSchema } from "../schema/accountSchema";
 
 export const checkingForAccount = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   console.log("Client data received.Checking if it exist in database....");
-  const { email, phone } = req.body;
+  const { email, phone,username } = req.body;
 
-  if (email && phone) {
+  if (email && phone && username) {
     console.log("Checking if recieved data exists in database(Accont creation)...");
     let account = await AccountSchema.find({ email });
 
-    if (account.length === 0) {
+    if (account.length !== 0) {
       console.log("Account with this email exist");
       throw new Error("An account with this email already exist")
     }
 
     account = await AccountSchema.find({ phone });
 
-    if (account.length === 0) {
+    if (account.length !== 0) {
      console.log("Account with this phone number exist");
      throw new Error("An account with this phone number already exist");
+    }
+
+    account = await AccountSchema.find({ username });
+    if (account.length !== 0) {
+      console.log("Account with this username number exist");
+      throw new Error("An account with this username already exist");
     }
 
     next();

@@ -17,18 +17,23 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const accountSchema_1 = require("../schema/accountSchema");
 exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Client data received.Checking if it exist in database....");
-    const { email, phone } = req.body;
-    if (email && phone) {
+    const { email, phone, username } = req.body;
+    if (email && phone && username) {
         console.log("Checking if recieved data exists in database(Accont creation)...");
         let account = yield accountSchema_1.AccountSchema.find({ email });
-        if (account.length === 0) {
+        if (account.length !== 0) {
             console.log("Account with this email exist");
             throw new Error("An account with this email already exist");
         }
         account = yield accountSchema_1.AccountSchema.find({ phone });
-        if (account.length === 0) {
+        if (account.length !== 0) {
             console.log("Account with this phone number exist");
             throw new Error("An account with this phone number already exist");
+        }
+        account = yield accountSchema_1.AccountSchema.find({ username });
+        if (account.length !== 0) {
+            console.log("Account with this username number exist");
+            throw new Error("An account with this username already exist");
         }
         next();
     }

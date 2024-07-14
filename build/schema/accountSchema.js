@@ -7,6 +7,10 @@ exports.AccountSchema = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 // the userSchema
 const accountSchema = new mongoose_1.default.Schema({
+    username: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
@@ -21,7 +25,7 @@ const accountSchema = new mongoose_1.default.Schema({
     },
     accountType: {
         type: String,
-        enum: ["norm", "admin"],
+        enum: ["norm", "admin", "superAdmin"],
     },
     authorizationMethod: {
         type: String,
