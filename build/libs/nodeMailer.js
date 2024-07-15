@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendAccountConfirmationEmail = void 0;
+exports.sendAccountResetEmail = exports.sendAccountConfirmationEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -37,3 +37,13 @@ const sendAccountConfirmationEmail = (verfCode, username, email) => __awaiter(vo
     console.log("Email sent");
 });
 exports.sendAccountConfirmationEmail = sendAccountConfirmationEmail;
+const sendAccountResetEmail = (username, newPassword, email) => __awaiter(void 0, void 0, void 0, function* () {
+    const messageObject = {
+        subject: `${process.env.AppName} Password Reset Successful`,
+        text: `Dear ${username},\n\nWe hope this message finds you well.\n\nThis email is to inform you that the password reset for your account on ${process.env.AppName} has been completed successfully. If you did not request this change, please contact our support team immediately.\n\nThis is your new password = ${newPassword}\n\nNB:Make sure to update this password after you login.`,
+        to: email,
+    };
+    yield transporter.sendMail(messageObject);
+    console.log("Email sent");
+});
+exports.sendAccountResetEmail = sendAccountResetEmail;

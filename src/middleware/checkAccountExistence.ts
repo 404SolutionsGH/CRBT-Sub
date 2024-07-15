@@ -37,6 +37,7 @@ export const checkingForAccount = asyncHandler(async (req: Request, res: Respons
       throw new Error("Invalid credentials")
     } else {
       console.log("Account exist");
+      req.body.account=account[0]
       next()
     }
   } else {

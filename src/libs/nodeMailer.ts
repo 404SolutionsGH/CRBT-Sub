@@ -24,3 +24,14 @@ export const sendAccountConfirmationEmail = async (verfCode: number, username: s
   await transporter.sendMail(messageObject);
   console.log("Email sent");
 };
+
+export const sendAccountResetEmail = async (username:string,newPassword:string,email:string) => {
+ const messageObject = {
+   subject: `${process.env.AppName} Password Reset Successful`,
+   text: `Dear ${username},\n\nWe hope this message finds you well.\n\nThis email is to inform you that the password reset for your account on ${process.env.AppName} has been completed successfully. If you did not request this change, please contact our support team immediately.\n\nThis is your new password = ${newPassword}\n\nNB:Make sure to update this password after you login.`,
+   to: email,
+ };
+
+   await transporter.sendMail(messageObject);
+   console.log("Email sent");
+};

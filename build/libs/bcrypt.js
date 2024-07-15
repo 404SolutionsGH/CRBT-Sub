@@ -12,9 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.encryptPassword = void 0;
+exports.verifyPassword = exports.encryptPassword = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const encryptPassword = (rawPassword) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt_1.default.hash(rawPassword, 10);
 });
 exports.encryptPassword = encryptPassword;
+const verifyPassword = (rawPassword, encryptedPassword) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield bcrypt_1.default.compare(rawPassword, encryptedPassword);
+});
+exports.verifyPassword = verifyPassword;

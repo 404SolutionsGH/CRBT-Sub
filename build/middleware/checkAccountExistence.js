@@ -46,6 +46,7 @@ exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, nex
         }
         else {
             console.log("Account exist");
+            req.body.account = account[0];
             next();
         }
     }
