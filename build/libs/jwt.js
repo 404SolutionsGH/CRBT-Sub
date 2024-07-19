@@ -9,7 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const jwtForLogIn = (id) => {
     if (process.env.JwtSecretKey !== undefined) {
-        return jsonwebtoken_1.default.sign({ userId: id }, process.env.JwtSecretKey, { expiresIn: "1d" });
+        return jsonwebtoken_1.default.sign({ userId: id }, process.env.JwtSecretKey, { expiresIn: "20d" });
     }
     else {
         return null;

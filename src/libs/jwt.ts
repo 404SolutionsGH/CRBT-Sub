@@ -4,7 +4,7 @@ dotenv.config();
 
 export const jwtForLogIn = (id: string): string | null => {
   if (process.env.JwtSecretKey !== undefined) {
-    return jwt.sign({ userId: id }, process.env.JwtSecretKey, { expiresIn: "1d" });
+    return jwt.sign({ userId: id }, process.env.JwtSecretKey, { expiresIn: "20d" });
   } else {
     return null;
   }
