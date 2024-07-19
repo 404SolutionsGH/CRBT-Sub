@@ -17,8 +17,8 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const accountSchema_1 = require("../schema/accountSchema");
 exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Client data received.Checking if it exist in database....");
-    const { email, phone, username } = req.body;
-    if (email && phone && username) {
+    const { email, phone, accountType } = req.body;
+    if (email && phone) {
         console.log("Checking if recieved data exists in database(Accont creation)...");
         let account = yield accountSchema_1.AccountSchema.find({ email });
         if (account.length !== 0) {
@@ -30,12 +30,13 @@ exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, nex
             console.log("Account with this phone number exist");
             throw new Error("An account with this phone number already exist");
         }
-        account = yield accountSchema_1.AccountSchema.find({ username });
+    }
+    else if (phone && accountType === "norm") {
+        const account = yield accountSchema_1.AccountSchema.find({ phone });
         if (account.length !== 0) {
-            console.log("Account with this username number exist");
-            throw new Error("An account with this username already exist");
+            console.log("Account with this phone number exist");
+            throw new Error("An account with this phone number already exist");
         }
-        next();
     }
     else if (email || phone) {
         console.log("Checking if recieved data exists in database...");
@@ -47,11 +48,11 @@ exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, nex
         else {
             console.log("Account exist");
             req.body.account = account[0];
-            next();
         }
     }
     else {
         res.status(400);
         throw new Error("Bad request invalid request body");
     }
+    next();
 }));

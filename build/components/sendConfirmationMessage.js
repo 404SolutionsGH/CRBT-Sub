@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendConfirmationMessage = void 0;
 const axios_1 = require("../libs/axios");
 const nodeMailer_1 = require("../libs/nodeMailer");
-const sendConfirmationMessage = (sendingMethod, verfCode, emailAdress, phone, username) => __awaiter(void 0, void 0, void 0, function* () {
-    if (sendingMethod === "email" && emailAdress && username) {
+const sendConfirmationMessage = (sendingMethod, verfCode, emailAdress, phone, firstName) => __awaiter(void 0, void 0, void 0, function* () {
+    if (sendingMethod === "email" && emailAdress && firstName) {
         console.log("Sending code through email..");
         // function for sending message with the code through email
-        yield (0, nodeMailer_1.sendAccountConfirmationEmail)(verfCode, username, emailAdress);
+        yield (0, nodeMailer_1.sendAccountConfirmationEmail)(verfCode, firstName, emailAdress);
     }
     else if (sendingMethod === "phone" && phone) {
         console.log("Sending code through phone....");

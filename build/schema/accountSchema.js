@@ -7,13 +7,16 @@ exports.AccountSchema = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 // the userSchema
 const accountSchema = new mongoose_1.default.Schema({
-    username: {
+    firstName: {
         type: String,
-        required: true,
+        default: "N/A",
+    },
+    lastName: {
+        type: String,
+        default: "N/A",
     },
     email: {
         type: String,
-        required: true,
     },
     phone: {
         type: String,
@@ -21,7 +24,7 @@ const accountSchema = new mongoose_1.default.Schema({
     },
     password: {
         type: String,
-        required: true,
+        default: "N/A"
     },
     accountType: {
         type: String,
@@ -39,6 +42,10 @@ const accountSchema = new mongoose_1.default.Schema({
     verfCode: {
         type: Number,
         default: 0,
+    },
+    langPref: {
+        type: String,
+        required: true
     },
     accountBalance: String, // for only normal users
     subscribedServices: Array, // for only normal users

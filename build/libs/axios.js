@@ -18,7 +18,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const sendAccountConfirmationSms = (verfCode, phone) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Sending Sms.....");
-    const response = yield axios_1.default.get(`https://sms.arkesel.com/sms/api?action=send-sms&api_key=${process.env.SmsApiKey}&to=${phone}&from=${process.env.AppName}&sms=Welcome to ${process.env.AppName}\n\nYour verification code is: ${verfCode}\n\nPlease enter this code on the verification page to activate your account. If you did not create an account, please ignore this message or contact support.\n\nThank you!`);
+    const response = yield axios_1.default.get(`https://sms.smsnotifygh.com/smsapi?key=${process.env.SmsApiKey}&to=${phone}&msg=Welcome to ${process.env.AppName}\n\n Your verification code is: ${verfCode}\n\n Please enter this code on the verification page to activate your account.&sender_id=CRBT`);
     console.log(`Sms Send Status:${response.data.code}, message:${response.data.message}`);
 });
 exports.sendAccountConfirmationSms = sendAccountConfirmationSms;

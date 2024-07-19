@@ -20,22 +20,37 @@ const nodeMailer_1 = require("../../libs/nodeMailer");
 const verfCodeGenerator_1 = require("../../components/verfCodeGenerator");
 const sendConfirmationMessage_1 = require("../../components/sendConfirmationMessage");
 const jwt_1 = require("../../libs/jwt");
+// helper methods
+const createAccount = (email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Generating 4 digit verification code");
+    const verfCode = (0, verfCodeGenerator_1.verfCodeGenerator)();
+    console.log("Saving data in data in database...");
+    let account;
+    if (encryptedPassword && firstName && lastName) {
+        account = yield accountSchema_1.AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName, lastName, langPref: langPref ? langPref : "eng" });
+    }
+    else {
+        account = yield accountSchema_1.AccountSchema.create({ phone, accountType, verfCode, langPref: langPref ? langPref : "eng" });
+    }
+    console.log("Sending verification code....");
+    yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, phone, firstName);
+    res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
+});
 exports.signUpController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
-    const { email, password, accountType, phone, username } = req.body;
+    const { email, password, accountType, phone, firstName, lastName, langPref } = req.body;
     console.log("Checking if remaining neccessary data are present...");
-    if (password && accountType && username) {
+    if (password && (accountType === "admin" || accountType === "superAdmin")) {
         console.log("All data present");
+        console.log("Account belongs to admin or superAdmin....");
         console.log("Encypting password...");
         const encryptedPassword = yield (0, bcrypt_1.encryptPassword)(password);
         console.log("Encyption done");
-        console.log("Generating 4 digit verification code");
-        const verfCode = (0, verfCodeGenerator_1.verfCodeGenerator)();
-        console.log("Saving data in data in database...");
-        const account = yield accountSchema_1.AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, username });
-        console.log("Sending verification code....");
-        yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, phone, username);
-        res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
+        yield createAccount(email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref);
+    }
+    else if (accountType === "norm") {
+        console.log("Account normal user...");
+        yield createAccount(email, undefined, phone, accountType, firstName, lastName, res, langPref);
     }
     else {
         console.log("Not all data is present");
@@ -94,16 +109,16 @@ exports.accountConfirmationController = (0, express_async_handler_1.default)((re
 exports.resetAccountController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("A user is reseting account....");
     const { account } = req.body;
-    const newPassword = `${account.username}${(0, verfCodeGenerator_1.verfCodeGenerator)()}4563`;
+    const newPassword = `${account.firstName}${(0, verfCodeGenerator_1.verfCodeGenerator)()}4563`;
     yield accountSchema_1.AccountSchema.findOneAndUpdate({ email: account.email }, { $set: { password: yield (0, bcrypt_1.encryptPassword)(newPassword) } });
     console.log("Account reset complete");
     console.log("Sending Account reset email...");
-    yield (0, nodeMailer_1.sendAccountResetEmail)(account.username, newPassword, account.email);
+    yield (0, nodeMailer_1.sendAccountResetEmail)(account.firstName, newPassword, account.email);
     res.json({ message: "Account reset successfull, Check email for new password" });
 }));
 exports.sendConfirmationCodeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User requesting new confirmation message..");
-    const { email, username } = req.body;
+    const { email, phone } = req.body;
     const verfCode = (0, verfCodeGenerator_1.verfCodeGenerator)();
     let authorizationMethod = "";
     console.log("New verfication code created");
@@ -112,16 +127,16 @@ exports.sendConfirmationCodeController = (0, express_async_handler_1.default)((r
         const account = yield accountSchema_1.AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
         console.log("Account updated");
         if (account) {
-            yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, account.phone, account.username);
+            yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, account.phone, account.firstName);
             authorizationMethod = account.authorizationMethod;
         }
     }
-    else if (username) {
+    else if (phone) {
         console.log("Updating verfcode in user's account");
         const account = yield accountSchema_1.AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
         console.log("Account updated");
         if (account) {
-            yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, account.email, account.phone, username);
+            yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, account.email, account.phone, account.firstName);
             authorizationMethod = account.authorizationMethod;
         }
     }

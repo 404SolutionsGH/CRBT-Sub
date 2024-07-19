@@ -3,14 +3,16 @@ import mongoose from "mongoose";
 
 // the userSchema
 const accountSchema = new mongoose.Schema({
-
-  username:{
+  firstName: {
     type: String,
-    required: true,
+    default: "N/A",
+  },
+  lastName: {
+    type: String,
+    default: "N/A",
   },
   email: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
@@ -18,11 +20,11 @@ const accountSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    default:"N/A"
   },
   accountType: {
     type: String,
-    enum: ["norm", "admin","superAdmin"],
+    enum: ["norm", "admin", "superAdmin"],
   },
 
   authorizationMethod: {
@@ -37,6 +39,11 @@ const accountSchema = new mongoose.Schema({
   verfCode: {
     type: Number,
     default: 0,
+  },
+
+  langPref:{
+    type:String,
+    required:true
   },
   accountBalance: String, // for only normal users
   subscribedServices: Array, // for only normal users
