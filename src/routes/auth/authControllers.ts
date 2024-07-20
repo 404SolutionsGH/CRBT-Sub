@@ -32,7 +32,7 @@ const createAccount = async (
 
   console.log("Sending verification code....");
   await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
-  res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
+  res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` ,token:(account.accountType === "norm")?jwtForLogIn(String(account._id)):null});
 };
 
 export const signUpController = asyncHandler(async (req: Request, res: Response) => {
@@ -49,6 +49,14 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
     console.log("Encyption done");
 
     await createAccount(email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref);
+    // console.log("Generating 4 digit verification code");
+    // const verfCode = verfCodeGenerator();
+
+    // console.log("Saving data in data in database...");
+    // const account = await AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName });
+    // console.log("Sending verification code....");
+    // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
+    // res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
   } else if (accountType === "norm") {
     console.log("Account normal user...");
     await createAccount(email, undefined, phone, accountType, firstName, lastName, res, langPref);

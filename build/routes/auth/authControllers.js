@@ -34,7 +34,7 @@ const createAccount = (email, encryptedPassword, phone, accountType, firstName, 
     }
     console.log("Sending verification code....");
     yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, phone, firstName);
-    res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
+    res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account`, token: (account.accountType === "norm") ? (0, jwt_1.jwtForLogIn)(String(account._id)) : null });
 });
 exports.signUpController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
@@ -47,6 +47,13 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
         const encryptedPassword = yield (0, bcrypt_1.encryptPassword)(password);
         console.log("Encyption done");
         yield createAccount(email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref);
+        // console.log("Generating 4 digit verification code");
+        // const verfCode = verfCodeGenerator();
+        // console.log("Saving data in data in database...");
+        // const account = await AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName });
+        // console.log("Sending verification code....");
+        // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
+        // res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
     }
     else if (accountType === "norm") {
         console.log("Account normal user...");
