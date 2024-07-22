@@ -1,4 +1,3 @@
-import { subscribe, unsubscribe } from "diagnostics_channel";
 import mongoose from "mongoose";
 
 // the userSchema
