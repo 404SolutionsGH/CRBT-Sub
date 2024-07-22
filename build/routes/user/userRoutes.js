@@ -4,5 +4,7 @@ exports.userRouter = void 0;
 const express_1 = require("express");
 const userControllers_1 = require("./userControllers");
 const verifyJwt_1 = require("../../middleware/verifyJwt");
+const getAccountInfo_1 = require("../../middleware/getAccountInfo");
 exports.userRouter = (0, express_1.Router)();
-exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userControllers_1.accountUpdateControler);
+exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userControllers_1.accountUpdateController);
+exports.userRouter.get("/account-info", verifyJwt_1.verifyJwt, getAccountInfo_1.getAccount, userControllers_1.accountInfoController);

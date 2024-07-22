@@ -39,7 +39,7 @@ const updateAccount = async (
   }
 };
 
-export const accountUpdateControler = asyncHandler(async (req: Request, res: Response) => {
+export const accountUpdateController = asyncHandler(async (req: Request, res: Response) => {
   console.log("User updating account info....");
   const { firstName, lastName, email, password, oldPassword, id } = req.body;
   let infoFromDatabase: any = "";
@@ -54,3 +54,8 @@ export const accountUpdateControler = asyncHandler(async (req: Request, res: Res
   console.log("Account Updated")
   res.status(200).json({ message: "Update Successful" });
 });
+
+export const accountInfoController=asyncHandler(async (req: Request, res: Response) =>{
+    const {account}=req.body
+    res.status(200).json({message:"Info received successfully",accountInfo:account})
+})

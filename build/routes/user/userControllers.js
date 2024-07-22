@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.accountUpdateControler = void 0;
+exports.accountInfoController = exports.accountUpdateController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const bcrypt_1 = require("../../libs/bcrypt");
 const accountSchema_1 = require("../../schema/accountSchema");
@@ -47,7 +47,7 @@ const updateAccount = (res, id, firstName, lastName, email, oldPassword, passwor
         throw new Error("Bad Request,check request body");
     }
 });
-exports.accountUpdateControler = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User updating account info....");
     const { firstName, lastName, email, password, oldPassword, id } = req.body;
     let infoFromDatabase = "";
@@ -61,4 +61,8 @@ exports.accountUpdateControler = (0, express_async_handler_1.default)((req, res)
     yield updateAccount(res, id, firstName, lastName, email, oldPassword, password, infoFromDatabase !== "" ? infoFromDatabase[0].password : undefined);
     console.log("Account Updated");
     res.status(200).json({ message: "Update Successful" });
+}));
+exports.accountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { account } = req.body;
+    res.status(200).json({ message: "Info received successfully", accountInfo: account });
 }));
