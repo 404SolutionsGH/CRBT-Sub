@@ -15,12 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyTokenIdFromFirebase = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const admin = require("firebase-admin");
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY) : "";
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+firebase_admin_1.default.initializeApp({
+    credential: firebase_admin_1.default.credential.cert(serviceAccount),
 });
 const verifyTokenIdFromFirebase = (idToken) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield admin.auth().verifyIdToken(idToken);
+    return yield firebase_admin_1.default.auth().verifyIdToken(idToken);
 });
 exports.verifyTokenIdFromFirebase = verifyTokenIdFromFirebase;
