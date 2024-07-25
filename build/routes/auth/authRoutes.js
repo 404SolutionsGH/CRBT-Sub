@@ -7,6 +7,7 @@ const checkAccountExistence_1 = require("../../middleware/checkAccountExistence"
 exports.authRouter = (0, express_1.Router)();
 exports.authRouter.post("/signup", checkAccountExistence_1.checkingForAccount, authControllers_1.signUpController);
 exports.authRouter.post("/send-confirmationCode", checkAccountExistence_1.checkingForAccount, authControllers_1.sendConfirmationCodeController);
-exports.authRouter.post("/login", checkAccountExistence_1.checkingForAccount, authControllers_1.loginController);
+exports.authRouter.post("/admins/login", checkAccountExistence_1.checkingForAccount, authControllers_1.loginControllerForAdmins);
+exports.authRouter.post("/user/login", checkAccountExistence_1.checkingForAccount, authControllers_1.loginControllerForUsers);
 exports.authRouter.post("/confirm-account", checkAccountExistence_1.checkingForAccount, authControllers_1.accountConfirmationController);
 exports.authRouter.post("/reset-account", checkAccountExistence_1.checkingForAccount, authControllers_1.resetAccountController);

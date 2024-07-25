@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendConfirmationCodeController = exports.resetAccountController = exports.accountConfirmationController = exports.loginController = exports.signUpController = void 0;
+exports.sendConfirmationCodeController = exports.resetAccountController = exports.accountConfirmationController = exports.loginControllerForUsers = exports.loginControllerForAdmins = exports.signUpController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const accountSchema_1 = require("../../schema/accountSchema");
 const bcrypt_1 = require("../../libs/bcrypt");
@@ -20,21 +20,25 @@ const nodeMailer_1 = require("../../libs/nodeMailer");
 const verfCodeGenerator_1 = require("../../components/verfCodeGenerator");
 const sendConfirmationMessage_1 = require("../../components/sendConfirmationMessage");
 const jwt_1 = require("../../libs/jwt");
+const firebase_1 = require("../../libs/firebase");
 // helper methods
 const createAccount = (email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Generating 4 digit verification code");
-    const verfCode = (0, verfCodeGenerator_1.verfCodeGenerator)();
     console.log("Saving data in data in database...");
     let account;
     if (encryptedPassword && firstName && lastName) {
+        console.log("Generating 4 digit verification code");
+        const verfCode = (0, verfCodeGenerator_1.verfCodeGenerator)();
         account = yield accountSchema_1.AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName, lastName, langPref: langPref ? langPref : "eng" });
+        console.log("Sending verification code....");
+        yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, phone, firstName);
     }
     else {
-        account = yield accountSchema_1.AccountSchema.create({ phone, accountType, verfCode, langPref: langPref ? langPref : "eng" });
+        account = yield accountSchema_1.AccountSchema.create({ phone, accountType, langPref: langPref ? langPref : "eng", isVerified: true });
     }
-    console.log("Sending verification code....");
-    yield (0, sendConfirmationMessage_1.sendConfirmationMessage)(account.authorizationMethod, verfCode, email, phone, firstName);
-    res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account`, token: (account.accountType === "norm") ? (0, jwt_1.jwtForLogIn)(String(account._id)) : null });
+    res.status(200).json({
+        message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account`,
+        token: account.accountType === "norm" ? (0, jwt_1.jwtForLogIn)(String(account._id)) : null,
+    });
 });
 exports.signUpController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
@@ -65,8 +69,8 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
         throw new Error("Bad request, some fields in the body was not set");
     }
 }));
-exports.loginController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("User logging in ...");
+exports.loginControllerForAdmins = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("An Admin logging in ...");
     const { password, account } = req.body;
     // checking if account has been verfied
     if (!account.isVerified) {
@@ -89,6 +93,21 @@ exports.loginController = (0, express_async_handler_1.default)((req, res) => __a
     else {
         res.status(400);
         throw new Error("No data passed for password in request body");
+    }
+}));
+exports.loginControllerForUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("User logging in ...");
+    const { idToken, account } = req.body;
+    // checking if account has been verfied
+    if (!idToken) {
+        res.status(400);
+        throw new Error("No idToken passed in request body");
+    }
+    console.log("Verifying idToken form firebase..");
+    if (yield (0, firebase_1.verifyTokenIdFromFirebase)(idToken)) {
+        console.log("Id token Verified");
+        console.log("Respond Sent with Token, Login Sucessfull");
+        res.json({ message: "Login Sucessfull", token: (0, jwt_1.jwtForLogIn)(String(account._id)) });
     }
 }));
 exports.accountConfirmationController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
