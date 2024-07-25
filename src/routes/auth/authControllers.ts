@@ -6,6 +6,7 @@ import { sendAccountResetEmail } from "../../libs/nodeMailer";
 import { verfCodeGenerator } from "../../components/verfCodeGenerator";
 import { sendConfirmationMessage } from "../../components/sendConfirmationMessage";
 import { jwtForLogIn } from "../../libs/jwt";
+import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 
 // helper methods
 
@@ -19,20 +20,21 @@ const createAccount = async (
   res: Response,
   langPref: string | undefined
 ) => {
-  console.log("Generating 4 digit verification code");
-  const verfCode = verfCodeGenerator();
-
   console.log("Saving data in data in database...");
   let account: any;
   if (encryptedPassword && firstName && lastName) {
+    console.log("Generating 4 digit verification code");
+    const verfCode = verfCodeGenerator();
     account = await AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName, lastName, langPref: langPref ? langPref : "eng" });
+    console.log("Sending verification code....");
+    await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
   } else {
-    account = await AccountSchema.create({ phone, accountType, verfCode, langPref: langPref ? langPref : "eng" });
+    account = await AccountSchema.create({ phone, accountType,langPref: langPref ? langPref : "eng", isVerified: true });
   }
-
-  console.log("Sending verification code....");
-  await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
-  res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` ,token:(account.accountType === "norm")?jwtForLogIn(String(account._id)):null});
+  res.status(200).json({
+    message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account`,
+    token: account.accountType === "norm" ? jwtForLogIn(String(account._id)) : null,
+  });
 };
 
 export const signUpController = asyncHandler(async (req: Request, res: Response) => {
@@ -67,8 +69,8 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
   }
 });
 
-export const loginController = asyncHandler(async (req: Request, res: Response) => {
-  console.log("User logging in ...");
+export const loginControllerForAdmins = asyncHandler(async (req: Request, res: Response) => {
+  console.log("An Admin logging in ...");
   const { password, account } = req.body;
   // checking if account has been verfied
 
@@ -91,6 +93,24 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
   } else {
     res.status(400);
     throw new Error("No data passed for password in request body");
+  }
+});
+
+export const loginControllerForUsers = asyncHandler(async (req: Request, res: Response) => {
+  console.log("User logging in ...");
+  const { idToken, account } = req.body;
+  // checking if account has been verfied
+
+  if (!idToken) {
+    res.status(400);
+    throw new Error("No idToken passed in request body");
+  }
+  console.log("Verifying idToken form firebase..");
+
+  if (await verifyTokenIdFromFirebase(idToken)) {
+    console.log("Id token Verified");
+    console.log("Respond Sent with Token, Login Sucessfull");
+    res.json({ message: "Login Sucessfull", token: jwtForLogIn(String(account._id)) });
   }
 });
 

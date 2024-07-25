@@ -29,7 +29,7 @@ const accountSchema = new mongoose.Schema({
   authorizationMethod: {
     type: String,
     enum: ["phone", "email"],
-    default: "phone",
+    default: "email",
   },
   isVerified: {
     type: Boolean,
