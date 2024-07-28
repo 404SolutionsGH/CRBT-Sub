@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.songsRouter = void 0;
+const express_1 = require("express");
+const verifyJwt_1 = require("../../middleware/verifyJwt");
+const songsControllers_1 = require("./songsControllers");
+const multer_1 = require("../../libs/multer");
+const setImg_Mp3Files_1 = require("../../middleware/setImg&Mp3Files");
+exports.songsRouter = (0, express_1.Router)();
+exports.songsRouter.post("/upload", verifyJwt_1.verifyJwt, (0, multer_1.getFilesFromReq)(), setImg_Mp3Files_1.setImgAndMp3Files, songsControllers_1.uploadController);

@@ -6,7 +6,7 @@ export const authRouter = Router();
 
 authRouter.post("/signup", checkingForAccount, signUpController);
 authRouter.post("/send-confirmationCode", checkingForAccount, sendConfirmationCodeController);
-authRouter.post("/admins/login",checkingForAccount ,loginControllerForAdmins);
+authRouter.post("/admin/login",checkingForAccount ,loginControllerForAdmins);
 authRouter.post("/user/login",checkingForAccount,loginControllerForUsers)
 authRouter.post("/confirm-account", checkingForAccount, accountConfirmationController);
 authRouter.post("/reset-account", checkingForAccount,resetAccountController);
