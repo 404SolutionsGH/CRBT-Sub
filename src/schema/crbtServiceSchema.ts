@@ -7,7 +7,6 @@ const crbtServiceSchema = new mongoose.Schema({
     ref: "Account",
   },
   serviceName: String,
-  servicePrice: String, // price being paid to run this service
   planType:{
     type:String,
     enum:["basic","gold","silver"],
@@ -15,7 +14,6 @@ const crbtServiceSchema = new mongoose.Schema({
   },
   songs: Array, // array of the songs id 
   albums: Array, // array of strings of album names
-  lang: String,
   category:String,
    date: {
     type: String,
