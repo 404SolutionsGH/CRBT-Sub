@@ -25,22 +25,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-// the userSchema
+// the songSchema
 const songSchema = new mongoose_1.default.Schema({
     subServiceId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "CrbtService",
     },
+    albumName: String,
     songTitle: String,
     artisteName: String,
     profile: {
         type: String,
-        default: "link To a deafault image",
     },
+    song: String,
     lang: String,
     date: {
         type: String,
-        required: true,
+        default: new Date().toISOString(), // format =YYYY-MM-DDThh:mm:ss.741Z nb: T is what separate the date from the time. 
     },
+    numberOfListeners: Number,
+    numberOfSubscribers: Number,
+    ussdCode: String
 });
 exports.SongSchema = mongoose_1.default.model("Song", songSchema);

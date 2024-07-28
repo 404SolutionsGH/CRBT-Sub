@@ -32,13 +32,20 @@ const crbtServiceSchema = new mongoose_1.default.Schema({
         ref: "Account",
     },
     serviceName: String,
-    servicePrice: String,
-    songs: Array,
-    albums: Array,
+    servicePrice: String, // price being paid to run this service
+    planType: {
+        type: String,
+        enum: ["basic", "gold", "silver"],
+        default: "basic"
+    },
+    songs: Array, // array of the songs id 
+    albums: Array, // array of strings of album names
     lang: String,
+    category: String,
     date: {
         type: String,
-        required: true,
+        default: new Date().toISOString(), // format: YYYY-MM-DDThh:mm:ss.741Z    NB: T is what separate the date from the time. 
     },
+    numberOfSubscribers: Number,
 });
 exports.CrbtServiceSchema = mongoose_1.default.model("CrbtService", crbtServiceSchema);
