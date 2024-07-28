@@ -6,6 +6,7 @@ import { errorHandeler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth/authRoutes";
 import { userRouter } from "./routes/user/userRoutes";
 import { songsRouter } from "./routes/songs/songsRoutes";
+import { serviceRouter } from "./routes/services/serviceRoutes";
 
 
 const server = express();
@@ -17,7 +18,7 @@ server.use(express.json());
 server.use("/api/v1/auth",authRouter)
 server.use("/api/v1/user",userRouter);
 server.use("/api/v1/songs",songsRouter)
-
+server.use("/api/v1/service", serviceRouter);
 // error handling middlware
 server.use(errorHandeler);
 

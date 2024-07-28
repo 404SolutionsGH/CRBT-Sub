@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.serviceRouter = void 0;
+const express_1 = require("express");
+const verifyJwt_1 = require("../../middleware/verifyJwt");
+const serviceController_1 = require("./serviceController");
+const checkForSuperAdmin_1 = require("../../middleware/checkForSuperAdmin");
+const checkAccountExistence_1 = require("../../middleware/checkAccountExistence");
+exports.serviceRouter = (0, express_1.Router)();
+exports.serviceRouter.post("/new-service", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, checkAccountExistence_1.checkingForAccount, serviceController_1.newServiceController);
