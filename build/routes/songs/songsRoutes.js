@@ -7,4 +7,4 @@ const songsControllers_1 = require("./songsControllers");
 const multer_1 = require("../../libs/multer");
 const setImg_Mp3Files_1 = require("../../middleware/setImg&Mp3Files");
 exports.songsRouter = (0, express_1.Router)();
-exports.songsRouter.post("/upload", verifyJwt_1.verifyJwt, (0, multer_1.getFilesFromReq)(), setImg_Mp3Files_1.setImgAndMp3Files, songsControllers_1.uploadController);
+exports.songsRouter.post("/upload", (0, multer_1.getFilesFromReq)(), verifyJwt_1.verifyJwt, setImg_Mp3Files_1.setImgAndMp3Files, songsControllers_1.uploadController);

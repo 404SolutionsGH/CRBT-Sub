@@ -43,7 +43,7 @@ exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, nex
         const account = email ? yield accountSchema_1.AccountSchema.find({ email }) : yield accountSchema_1.AccountSchema.find({ phone });
         if (account.length === 0) {
             console.log("Account with this email or phone number does not exist");
-            throw new Error("Invalid credentials");
+            throw new Error((email) ? "No account with this email exist" : "No account with this  phone exist");
         }
         else {
             console.log("Account exist");

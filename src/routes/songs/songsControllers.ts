@@ -9,6 +9,7 @@ import { Schema } from "mongoose";
 import { SongSchema } from "../../schema/songSchema";
 import { writeFile } from "fs/promises";
 import { resolve } from "path";
+import { CrbtServiceSchema } from "../../schema/crbtServiceSchema";
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
@@ -32,6 +33,15 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
             : process.env.goldServiceSongsLimit
         )
     ) {
+
+       console.log("Checking if songs with this title already exist...");
+        if((await SongSchema.find({ subServiceId: accountInfo.service._id ,songTitle,artisteName})).length!==0){
+           console.log("A song with this title has already been uploaded");
+           throw new Error("Song has already been uploaded")
+        }
+         console.log("Song does not exist in database");
+
+
       console.log("Songs limit not reached,upload can proceed");
       console.log("Saving info about song...");
       const songDataSaved = await SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A" });
@@ -39,15 +49,22 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
 
       // Saving song's profile image and mp3 file using the ObjectId of it saved info
       console.log("Saving song profile image and mp3 files");
+
       if (profile) {
         // checking if the profile was set(this is because is not compulsory to upload an image when uploading a sond)
-        await writeFile(`../../../songsData/songsProfileImages/${songDataSaved._id}.${profile.exetension}`, profile.data);
+        await writeFile(resolve(__dirname, `./songsData/songsProfileImages/${songDataSaved._id}${profile.exetension}`), profile.data);
       }
-      await writeFile(`../../../songsData/songs/${songDataSaved._id}.${song.exetension}`, song.data);
+      await writeFile(resolve(__dirname, `./songsData/songs/${songDataSaved._id}${song.exetension}`), song.data);
       console.log("Files sucessfully saved..");
 
       console.log("Updating profile and song section of song info with saved info ObjectId...");
-      await SongSchema.updateOne({ _id: songDataSaved._id }, { $set: { profile: profile ? `/${String(songDataSaved._id)}` : "/defaultProf.png", song: `/${String(songDataSaved._id)}` } });
+      await SongSchema.updateOne(
+        { _id: songDataSaved._id },
+        { $set: { profile: profile ? `/${String(songDataSaved._id)}${profile.exetension}` : "/defaultProf.png", song: `/${String(songDataSaved._id)}${song.exetension}` } }
+      );
+      console.log("Updating this account's crbt service document by adding the saved song's id....");
+      await CrbtServiceSchema.findOneAndUpdate({ _id: accountInfo.service._id }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
+      console.log("Update done");
 
       res.status(200).json({ message: "Song saved successfully" });
     } else {

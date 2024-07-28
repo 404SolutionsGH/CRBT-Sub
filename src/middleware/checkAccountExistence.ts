@@ -33,7 +33,7 @@ export const checkingForAccount = asyncHandler(async (req: Request, res: Respons
     const account = email ? await AccountSchema.find({ email }) : await AccountSchema.find({ phone });
     if (account.length === 0) {
       console.log("Account with this email or phone number does not exist");
-      throw new Error("Invalid credentials");
+      throw new Error((email)?"No account with this email exist":"No account with this  phone exist");
     } else {
       console.log("Account exist");
       req.body.account = account[0];

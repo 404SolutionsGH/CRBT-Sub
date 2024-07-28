@@ -8,4 +8,4 @@ import { setImgAndMp3Files } from "../../middleware/setImg&Mp3Files";
 
 
 export const songsRouter = Router();
-songsRouter.post("/upload", verifyJwt,getFilesFromReq(),setImgAndMp3Files,uploadController);
+songsRouter.post("/upload", getFilesFromReq(), verifyJwt, setImgAndMp3Files, uploadController);

@@ -9,7 +9,6 @@ export const isSuperAdminAccount = asyncHandler(async (req: Request, res: Respon
 
   if (account?.accountType === "superAdmin") {
     console.log("Account is a SuperAdmin Account");
-    req.body.account = account;
     next();
   } else {
     console.log("account is not Super Admin Account");

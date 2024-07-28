@@ -21,7 +21,6 @@ exports.isSuperAdminAccount = (0, express_async_handler_1.default)((req, res, ne
     const account = yield accountSchema_1.AccountSchema.findById(id);
     if ((account === null || account === void 0 ? void 0 : account.accountType) === "superAdmin") {
         console.log("Account is a SuperAdmin Account");
-        req.body.account = account;
         next();
     }
     else {
