@@ -25,11 +25,11 @@ const path_1 = require("path");
 const crbtServiceSchema_1 = require("../../schema/crbtServiceSchema");
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-    const { id, albumName, songTitle, artisteName, profile, song, lang } = req.body;
+    const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType } = req.body;
     console.log("Uploading a song...");
     console.log("Checking if account is of the appropriate type...");
     const accountInfo = yield accountSchema_1.AccountSchema.findOne({ _id: (0, mongoose_1.tObjectId)(id) }).populate("service");
-    if (accountInfo && (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) !== "norm" && songTitle && artisteName) {
+    if (accountInfo && (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) !== "norm" && songTitle && artisteName && ussdCode && subscriptionType) {
         console.log("Checking account songs limit...");
         if (!(accountInfo.service instanceof mongoose_2.Schema.Types.ObjectId) &&
             accountInfo.service.songs.length <=
@@ -46,7 +46,7 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
             console.log("Song does not exist in database");
             console.log("Songs limit not reached,upload can proceed");
             console.log("Saving info about song...");
-            const songDataSaved = yield songSchema_1.SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A" });
+            const songDataSaved = yield songSchema_1.SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A", ussdCode, subscriptionType });
             console.log("Song Info saved sucessfully");
             // Saving song's profile image and mp3 file using the ObjectId of it saved info
             console.log("Saving song profile image and mp3 files");
@@ -69,7 +69,7 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
         }
     }
     else {
-        if (!songTitle || !artisteName) {
+        if (!songTitle || !artisteName || !ussdCode || !subscriptionType) {
             res.status(400);
             throw new Error("Song upload failed ,Invalid request body");
         }

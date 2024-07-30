@@ -13,13 +13,13 @@ import { CrbtServiceSchema } from "../../schema/crbtServiceSchema";
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-  const { id, albumName, songTitle, artisteName, profile, song, lang } = req.body;
+  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType } = req.body;
 
   console.log("Uploading a song...");
   console.log("Checking if account is of the appropriate type...");
   const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(id) }).populate("service");
 
-  if (accountInfo && accountInfo?.accountType !== "norm" && songTitle && artisteName) {
+  if (accountInfo && accountInfo?.accountType !== "norm" && songTitle && artisteName && ussdCode && subscriptionType) {
     console.log("Checking account songs limit...");
 
     if (
@@ -44,7 +44,7 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
 
       console.log("Songs limit not reached,upload can proceed");
       console.log("Saving info about song...");
-      const songDataSaved = await SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A" });
+      const songDataSaved = await SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A" ,ussdCode,subscriptionType});
       console.log("Song Info saved sucessfully");
 
       // Saving song's profile image and mp3 file using the ObjectId of it saved info
@@ -72,7 +72,7 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
       throw new Error("Songs upload limit reached");
     }
   } else {
-    if (!songTitle || !artisteName) {
+    if (!songTitle || !artisteName || !ussdCode || !subscriptionType) {
       res.status(400);
       throw new Error("Song upload failed ,Invalid request body");
     }
