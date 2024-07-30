@@ -20,7 +20,11 @@ const songSchema = new mongoose.Schema({
   },
   numberOfListeners: Number,
   numberOfSubscribers: Number,
-  ussdCode:String
+  ussdCode:String,
+  subscriptionType:{
+    type:String,
+    enum:["weekily","monthly","daily"]
+  }
 });
 
 export const SongSchema = mongoose.model("Song", songSchema);
