@@ -111,31 +111,55 @@ export const profileController = asyncHandler(async (req: Request, res: Response
   console.log("Checking if file path exist....");
 
   if (await checkPathExists(pathToFile)) {
-    res.status(200)
+    res.status(200);
     res.download(pathToFile);
   } else {
-     res.status(200);
+    res.status(200);
     res.download(resolve(__dirname, "./songsData/songsProfileImages/brokenProf.png"));
   }
 });
 
-export const listenController=asyncHandler(async (req: Request, res: Response) =>{
+export const listenController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("A song is been retrieved....");
+  const { fileName } = req.params;
+  console.log("Creating file path....");
+  const pathToFile = resolve(__dirname, `./songsData/songs/${fileName}`);
+  console.log("File path created");
+  console.log("Checking if file path exist....");
 
-   console.log("A song is been retrieved....");
-   const { fileName } = req.params;
-   console.log("Creating file path....");
-   const pathToFile = resolve(__dirname, `./songsData/songs/${fileName}`);
-   console.log("File path created");
-   console.log("Checking if file path exist....");
+  if (await checkPathExists(pathToFile)) {
+    console.log("Updating numberOfListeners of songInfo...");
+    await SongSchema.findOneAndUpdate({ _id: tObjectId(fileName.split(".")[0]) }, { $inc: { numberOfListeners: 1 } });
+    console.log("Update done");
+    res.status(200);
+    res.download(pathToFile);
+  } else {
+    res.status(404);
+    throw new Error("No song file with this id exist");
+  }
+});
 
-   if (await checkPathExists(pathToFile)) {
-    console.log("Updating numberOfListeners of songInfo...")
-    await SongSchema.findOneAndUpdate({ _id: tObjectId(fileName.split(".")[0]) }, { $inc: { numberOfListeners :1} });
-      console.log("Update done")
-     res.status(200);
-     res.download(pathToFile);
-   } else {
-     res.status(404);
-     throw new Error("No song file with this id exist")
-   }
-})
+export const searchController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("A search is been done...");
+  const { songTitle, artisteName, lang } = req.query;
+
+  if (songTitle || lang || artisteName) {
+    const fieldsToExclude = "-_id -__v -date -numberOfListeners -lang";
+    const results =
+      songTitle && lang
+        ? await SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" }, lang }).select(fieldsToExclude)
+        : artisteName && lang
+        ? await SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" }, lang }).select(fieldsToExclude)
+        : songTitle
+        ? await SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
+        : artisteName
+        ? await SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
+        : await SongSchema.find({ lang }).select(fieldsToExclude);
+
+    console.log("Search complete")
+    res.status(200).json({ results, numOfSongs: results.length });
+  } else {
+    res.status(400);
+    throw new Error("Invalid request body:No songTitle passed");
+  }
+});

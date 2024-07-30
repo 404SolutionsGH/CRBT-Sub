@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listenController = exports.profileController = exports.uploadController = void 0;
+exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -158,5 +158,27 @@ exports.listenController = (0, express_async_handler_1.default)((req, res) => __
     else {
         res.status(404);
         throw new Error("No song file with this id exist");
+    }
+}));
+exports.searchController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("A search is been done...");
+    const { songTitle, artisteName, lang } = req.query;
+    if (songTitle || lang || artisteName) {
+        const fieldsToExclude = "-_id -__v -date -numberOfListeners -lang";
+        const results = songTitle && lang
+            ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" }, lang }).select(fieldsToExclude)
+            : artisteName && lang
+                ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" }, lang }).select(fieldsToExclude)
+                : songTitle
+                    ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
+                    : artisteName
+                        ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
+                        : yield songSchema_1.SongSchema.find({ lang }).select(fieldsToExclude);
+        console.log("Search complete");
+        res.status(200).json({ results, numOfSongs: results.length });
+    }
+    else {
+        res.status(400);
+        throw new Error("Invalid request body:No songTitle passed");
     }
 }));
