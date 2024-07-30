@@ -2,6 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 // the songSchema
 const songSchema = new mongoose.Schema({
+
+  _id:Schema.Types.ObjectId,
   subServiceId: {
     type: Schema.Types.ObjectId,
     ref: "CrbtService",

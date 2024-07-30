@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadController = void 0;
+exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -23,6 +23,7 @@ const songSchema_1 = require("../../schema/songSchema");
 const promises_1 = require("fs/promises");
 const path_1 = require("path");
 const crbtServiceSchema_1 = require("../../schema/crbtServiceSchema");
+const mongoose_3 = require("mongoose");
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
     const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType } = req.body;
@@ -46,7 +47,20 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
             console.log("Song does not exist in database");
             console.log("Songs limit not reached,upload can proceed");
             console.log("Saving info about song...");
-            const songDataSaved = yield songSchema_1.SongSchema.create({ songTitle, artisteName, lang: lang ? lang : "eng", subServiceId: accountInfo.service._id, albumName: albumName ? albumName : "N/A", ussdCode, subscriptionType });
+            console.log("Generating songId...");
+            const songId = new mongoose_3.Types.ObjectId();
+            const songDataSaved = yield songSchema_1.SongSchema.create({
+                _id: songId,
+                songTitle,
+                artisteName,
+                lang: lang ? lang : "eng",
+                subServiceId: accountInfo.service._id,
+                albumName: albumName ? albumName : "N/A",
+                ussdCode,
+                subscriptionType,
+                profile: profile ? `/${String(songId)}${profile.exetension}` : "/defaultProf.png",
+                song: `/${String(songId)}${song.exetension}`,
+            });
             console.log("Song Info saved sucessfully");
             // Saving song's profile image and mp3 file using the ObjectId of it saved info
             console.log("Saving song profile image and mp3 files");
@@ -56,8 +70,6 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
             }
             yield (0, promises_1.writeFile)((0, path_1.resolve)(__dirname, `./songsData/songs/${songDataSaved._id}${song.exetension}`), song.data);
             console.log("Files sucessfully saved..");
-            console.log("Updating profile and song section of song info with saved info ObjectId...");
-            yield songSchema_1.SongSchema.updateOne({ _id: songDataSaved._id }, { $set: { profile: profile ? `/${String(songDataSaved._id)}${profile.exetension}` : "/defaultProf.png", song: `/${String(songDataSaved._id)}${song.exetension}` } });
             console.log("Updating this account's crbt service document by adding the saved song's id....");
             yield crbtServiceSchema_1.CrbtServiceSchema.findOneAndUpdate({ _id: accountInfo.service._id }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
             console.log("Update done");
@@ -76,4 +88,7 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
         res.status(401);
         throw new Error(!(accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.service) ? "Do not have an CRBT service to upload songs to" : "This account type is not authorized to upload a song");
     }
+}));
+exports.profileController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { songId } = req.params;
 }));

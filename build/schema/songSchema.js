@@ -27,6 +27,7 @@ exports.SongSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 // the songSchema
 const songSchema = new mongoose_1.default.Schema({
+    _id: mongoose_1.Schema.Types.ObjectId,
     subServiceId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "CrbtService",
