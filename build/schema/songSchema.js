@@ -42,14 +42,17 @@ const songSchema = new mongoose_1.default.Schema({
     lang: String,
     date: {
         type: String,
-        default: new Date().toISOString(), // format =YYYY-MM-DDThh:mm:ss.741Z nb: T is what separate the date from the time. 
+        default: new Date().toISOString(), // format =YYYY-MM-DDThh:mm:ss.741Z nb: T is what separate the date from the time.
     },
-    numberOfListeners: Number,
+    numberOfListeners: {
+        type: Number,
+        default: 0,
+    },
     numberOfSubscribers: Number,
     ussdCode: String,
     subscriptionType: {
         type: String,
-        enum: ["weekily", "monthly", "daily"]
-    }
+        enum: ["weekily", "monthly", "daily"],
+    },
 });
 exports.SongSchema = mongoose_1.default.model("Song", songSchema);

@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.songFileController = exports.profileController = exports.uploadController = void 0;
+exports.listenController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -141,7 +141,7 @@ exports.profileController = (0, express_async_handler_1.default)((req, res) => _
         res.download((0, path_1.resolve)(__dirname, "./songsData/songsProfileImages/brokenProf.png"));
     }
 }));
-exports.songFileController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.listenController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("A song is been retrieved....");
     const { fileName } = req.params;
     console.log("Creating file path....");
@@ -149,6 +149,9 @@ exports.songFileController = (0, express_async_handler_1.default)((req, res) => 
     console.log("File path created");
     console.log("Checking if file path exist....");
     if (yield checkPathExists(pathToFile)) {
+        console.log("Updating numberOfListeners of songInfo...");
+        yield songSchema_1.SongSchema.findOneAndUpdate({ _id: (0, mongoose_1.tObjectId)(fileName.split(".")[0]) }, { $inc: { numberOfListeners: 1 } });
+        console.log("Update done");
         res.status(200);
         res.download(pathToFile);
     }

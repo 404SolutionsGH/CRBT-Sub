@@ -9,4 +9,5 @@ const setImg_Mp3Files_1 = require("../../middleware/setImg&Mp3Files");
 exports.songsRouter = (0, express_1.Router)();
 exports.songsRouter.post("/upload", (0, multer_1.getFilesFromReq)(), verifyJwt_1.verifyJwt, setImg_Mp3Files_1.setImgAndMp3Files, songsControllers_1.uploadController);
 exports.songsRouter.get("/profile/:fileName", verifyJwt_1.verifyJwt, songsControllers_1.profileController);
-exports.songsRouter.get("/song-file/:fileName", verifyJwt_1.verifyJwt, songsControllers_1.songFileController);
+exports.songsRouter.get("/listen/:fileName", verifyJwt_1.verifyJwt, songsControllers_1.listenController);
+exports.songsRouter.get("/search", verifyJwt_1.verifyJwt);

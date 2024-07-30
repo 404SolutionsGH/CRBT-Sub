@@ -119,7 +119,7 @@ export const profileController = asyncHandler(async (req: Request, res: Response
   }
 });
 
-export const songFileController=asyncHandler(async (req: Request, res: Response) =>{
+export const listenController=asyncHandler(async (req: Request, res: Response) =>{
 
    console.log("A song is been retrieved....");
    const { fileName } = req.params;
@@ -129,6 +129,9 @@ export const songFileController=asyncHandler(async (req: Request, res: Response)
    console.log("Checking if file path exist....");
 
    if (await checkPathExists(pathToFile)) {
+    console.log("Updating numberOfListeners of songInfo...")
+    await SongSchema.findOneAndUpdate({ _id: tObjectId(fileName.split(".")[0]) }, { $inc: { numberOfListeners :1} });
+      console.log("Update done")
      res.status(200);
      res.download(pathToFile);
    } else {
