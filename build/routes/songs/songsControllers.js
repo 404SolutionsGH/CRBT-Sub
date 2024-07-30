@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.profileController = exports.uploadController = void 0;
+exports.songFileController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -24,6 +47,19 @@ const promises_1 = require("fs/promises");
 const path_1 = require("path");
 const crbtServiceSchema_1 = require("../../schema/crbtServiceSchema");
 const mongoose_3 = require("mongoose");
+const promises_2 = __importStar(require("fs/promises"));
+// helper methods
+const checkPathExists = (path) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield (0, promises_2.access)(path, promises_2.default.constants.F_OK);
+        console.log("Path exists.");
+        return true;
+    }
+    catch (err) {
+        console.log("Path does not exist.");
+        return false;
+    }
+});
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
     const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType } = req.body;
@@ -90,5 +126,34 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
     }
 }));
 exports.profileController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { songId } = req.params;
+    console.log("An img is been retrieved....");
+    const { fileName } = req.params;
+    console.log("Creating file path....");
+    const pathToFile = (0, path_1.resolve)(__dirname, `./songsData/songsProfileImages/${fileName}`);
+    console.log("File path created");
+    console.log("Checking if file path exist....");
+    if (yield checkPathExists(pathToFile)) {
+        res.status(200);
+        res.download(pathToFile);
+    }
+    else {
+        res.status(200);
+        res.download((0, path_1.resolve)(__dirname, "./songsData/songsProfileImages/brokenProf.png"));
+    }
+}));
+exports.songFileController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("A song is been retrieved....");
+    const { fileName } = req.params;
+    console.log("Creating file path....");
+    const pathToFile = (0, path_1.resolve)(__dirname, `./songsData/songs/${fileName}`);
+    console.log("File path created");
+    console.log("Checking if file path exist....");
+    if (yield checkPathExists(pathToFile)) {
+        res.status(200);
+        res.download(pathToFile);
+    }
+    else {
+        res.status(404);
+        throw new Error("No song file with this id exist");
+    }
 }));

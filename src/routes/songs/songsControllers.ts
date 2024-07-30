@@ -8,9 +8,23 @@ import { Account } from "../../components/customDataTypes";
 import { Schema } from "mongoose";
 import { SongSchema } from "../../schema/songSchema";
 import { writeFile } from "fs/promises";
-import { resolve } from "path";
+import { isAbsolute, resolve } from "path";
 import { CrbtServiceSchema } from "../../schema/crbtServiceSchema";
 import { Types } from "mongoose";
+import fs, { access } from "fs/promises";
+
+// helper methods
+
+const checkPathExists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path, fs.constants.F_OK);
+    console.log("Path exists.");
+    return true;
+  } catch (err) {
+    console.log("Path does not exist.");
+    return false;
+  }
+};
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
@@ -89,5 +103,36 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
 });
 
 export const profileController = asyncHandler(async (req: Request, res: Response) => {
-  const { songId } = req.params;
+  console.log("An img is been retrieved....");
+  const { fileName } = req.params;
+  console.log("Creating file path....");
+  const pathToFile = resolve(__dirname, `./songsData/songsProfileImages/${fileName}`);
+  console.log("File path created");
+  console.log("Checking if file path exist....");
+
+  if (await checkPathExists(pathToFile)) {
+    res.status(200)
+    res.download(pathToFile);
+  } else {
+     res.status(200);
+    res.download(resolve(__dirname, "./songsData/songsProfileImages/brokenProf.png"));
+  }
 });
+
+export const songFileController=asyncHandler(async (req: Request, res: Response) =>{
+
+   console.log("A song is been retrieved....");
+   const { fileName } = req.params;
+   console.log("Creating file path....");
+   const pathToFile = resolve(__dirname, `./songsData/songs/${fileName}`);
+   console.log("File path created");
+   console.log("Checking if file path exist....");
+
+   if (await checkPathExists(pathToFile)) {
+     res.status(200);
+     res.download(pathToFile);
+   } else {
+     res.status(404);
+     throw new Error("No song file with this id exist")
+   }
+})
