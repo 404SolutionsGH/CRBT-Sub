@@ -11,3 +11,5 @@ exports.songsRouter.post("/upload", (0, multer_1.getFilesFromReq)(), verifyJwt_1
 exports.songsRouter.get("/profile/:fileName", verifyJwt_1.verifyJwt, songsControllers_1.profileController);
 exports.songsRouter.get("/listen/:fileName", verifyJwt_1.verifyJwt, songsControllers_1.listenController);
 exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.searchController);
+exports.songsRouter.get("/subscription-details", verifyJwt_1.verifyJwt, songsControllers_1.songSubDetailController);
+exports.songsRouter.get("/recommendation", verifyJwt_1.verifyJwt, songsControllers_1.recommendationController);

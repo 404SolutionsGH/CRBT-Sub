@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
+exports.recommendationController = exports.songSubDetailController = exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -48,6 +48,7 @@ const path_1 = require("path");
 const crbtServiceSchema_1 = require("../../schema/crbtServiceSchema");
 const mongoose_3 = require("mongoose");
 const promises_2 = __importStar(require("fs/promises"));
+const albumSchema_1 = require("../../schema/albumSchema");
 // helper methods
 const checkPathExists = (path) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -62,11 +63,11 @@ const checkPathExists = (path) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-    const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType } = req.body;
+    const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType, price, category } = req.body;
     console.log("Uploading a song...");
     console.log("Checking if account is of the appropriate type...");
     const accountInfo = yield accountSchema_1.AccountSchema.findOne({ _id: (0, mongoose_1.tObjectId)(id) }).populate("service");
-    if (accountInfo && (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) !== "norm" && songTitle && artisteName && ussdCode && subscriptionType) {
+    if (accountInfo && (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) !== "norm" && songTitle && artisteName && ussdCode && subscriptionType && price && category) {
         console.log("Checking account songs limit...");
         if (!(accountInfo.service instanceof mongoose_2.Schema.Types.ObjectId) &&
             accountInfo.service.songs.length <=
@@ -75,13 +76,13 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
                     : accountInfo.service.planType === "silver"
                         ? process.env.silverServiceSongsLimit
                         : process.env.goldServiceSongsLimit)) {
+            console.log("Songs limit not reached,upload can proceed");
             console.log("Checking if songs with this title already exist...");
             if ((yield songSchema_1.SongSchema.find({ subServiceId: accountInfo.service._id, songTitle, artisteName })).length !== 0) {
                 console.log("A song with this title has already been uploaded");
                 throw new Error("Song has already been uploaded");
             }
             console.log("Song does not exist in database");
-            console.log("Songs limit not reached,upload can proceed");
             console.log("Saving info about song...");
             console.log("Generating songId...");
             const songId = new mongoose_3.Types.ObjectId();
@@ -89,6 +90,8 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
                 _id: songId,
                 songTitle,
                 artisteName,
+                price,
+                category,
                 lang: lang ? lang : "eng",
                 subServiceId: accountInfo.service._id,
                 albumName: albumName ? albumName : "N/A",
@@ -98,6 +101,17 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
                 song: `/${String(songId)}${song.exetension}`,
             });
             console.log("Song Info saved sucessfully");
+            console.log("Checking if there is an albumName and if it already exist..");
+            if (albumName && !(yield albumSchema_1.AlbumSchema.findOne({ name: albumName }))) {
+                console.log("Album does not exist, creating album ..");
+                yield albumSchema_1.AlbumSchema.create({ name: albumName, artisteName, numOfSongs: 1, profile: profile ? `/${String(songId)}${profile.exetension}` : "/defaultProf.png" });
+            }
+            else {
+                console.log(!albumName ? "No data in albumName in request body" : "An album with this name exist");
+                if (albumName) {
+                    yield albumSchema_1.AlbumSchema.updateOne({ name: albumName }, { $inc: { numOfSongs: 1 } });
+                }
+            }
             // Saving song's profile image and mp3 file using the ObjectId of it saved info
             console.log("Saving song profile image and mp3 files");
             if (profile) {
@@ -162,23 +176,80 @@ exports.listenController = (0, express_async_handler_1.default)((req, res) => __
 }));
 exports.searchController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("A search is been done...");
-    const { songTitle, artisteName, lang } = req.query;
-    if (songTitle || lang || artisteName) {
-        const fieldsToExclude = "-_id -__v -date -numberOfListeners -lang";
+    const { songTitle, artisteName, lang, albumName } = req.query;
+    if (songTitle || lang || artisteName || albumName) {
+        const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId -albumName -ussdCode -subscriptionType";
         const results = songTitle && lang
             ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" }, lang }).select(fieldsToExclude)
             : artisteName && lang
                 ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" }, lang }).select(fieldsToExclude)
-                : songTitle
-                    ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
-                    : artisteName
-                        ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
-                        : yield songSchema_1.SongSchema.find({ lang }).select(fieldsToExclude);
+                : albumName && lang
+                    ? yield songSchema_1.SongSchema.find({ albumName: { $regex: albumName, $options: "i" }, lang }).select(fieldsToExclude)
+                    : songTitle
+                        ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
+                        : artisteName
+                            ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
+                            : albumName
+                                ? yield songSchema_1.SongSchema.find({ albumName: { $regex: albumName, $options: "i" } }).select(fieldsToExclude)
+                                : yield songSchema_1.SongSchema.find({ lang }).select(fieldsToExclude);
         console.log("Search complete");
         res.status(200).json({ results, numOfSongs: results.length });
     }
     else {
         res.status(400);
         throw new Error("Invalid request body:No songTitle passed");
+    }
+}));
+exports.songSubDetailController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { songId } = req.query;
+    console.log("Getting subscrition details about a song...");
+    if (songId && typeof songId === "string") {
+        const songDetails = yield songSchema_1.SongSchema.findOne({ _id: (0, mongoose_1.tObjectId)(songId) }).populate("subServiceId");
+        if (songDetails && !(songDetails.subServiceId instanceof mongoose_2.Schema.Types.ObjectId)) {
+            // setting up the json obj to be sent
+            console.log("Details Retrieved");
+            const detailToSend = {
+                subName: songDetails.subServiceId.serviceName,
+                category: songDetails.category,
+                price: songDetails.price,
+                currency: "ETB",
+                billing: songDetails.subscriptionType,
+                ussdCode: songDetails.ussdCode,
+                _id: songDetails._id,
+            };
+            res.status(200).json(detailToSend);
+        }
+        else {
+            res.status(404);
+            throw new Error("No song with this id exist");
+        }
+    }
+    else {
+        res.status(400);
+        throw new Error("Invalid request body, no data passed for songId");
+    }
+}));
+exports.recommendationController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //Songs are recommended to users base on a users language preference and the songs with the higest subscribers
+    console.log("Getting recommendation...");
+    const { id } = req.body;
+    const { flag } = req.query;
+    const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId -albumName -ussdCode -subscriptionType";
+    // gettting  the language preference of client
+    console.log("Getting user lang Pref...");
+    const accountInfo = yield accountSchema_1.AccountSchema.findById(id).select("langPref");
+    console.log("Language Pref retrieved");
+    if (accountInfo) {
+        const { langPref } = accountInfo;
+        if (flag) {
+            console.log("Recommendation been retrieved for albums...");
+            const albumRecom = yield albumSchema_1.AlbumSchema.find({}).sort({ numberOfSubscribers: -1 }).select("-_id -__v ");
+            res.status(200).json({ results: albumRecom, numOfResults: albumRecom.length });
+        }
+        else {
+            console.log("Recommendation been retrieved is for songs...");
+            const songRecom = yield songSchema_1.SongSchema.find({ lang: langPref }).sort({ numberOfSubscribers: -1 }).select(fieldsToExclude);
+            res.status(200).json({ results: songRecom, numOfResults: songRecom.length });
+        }
     }
 }));
