@@ -68,7 +68,10 @@ const accountSchema = new mongoose_1.default.Schema({
         required: true,
     },
     accountBalance: String, // for only normal users
-    subscribedServices: Array, // for only normal users
+    subscribedService: {
+        type: Object,
+        default: null
+    }, // for only normal users
     unsubscribeService: Array, // for only normal users
     transactionHistory: Array, // for only normal users
     paymentInfo: Array, // this for only admin accounts
