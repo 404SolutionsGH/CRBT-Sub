@@ -48,11 +48,16 @@ const songSchema = new mongoose_1.default.Schema({
         type: Number,
         default: 0,
     },
-    numberOfSubscribers: Number,
+    numberOfSubscribers: {
+        type: Number,
+        default: 0,
+    },
     ussdCode: String,
     subscriptionType: {
         type: String,
         enum: ["weekily", "monthly", "daily"],
     },
+    price: String,
+    category: String
 });
 exports.SongSchema = mongoose_1.default.model("Song", songSchema);

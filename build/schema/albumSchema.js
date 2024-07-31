@@ -10,7 +10,14 @@ const albumSchema = new mongoose_1.default.Schema({
     name: String,
     artisteName: String,
     numOfSongs: Number,
-    numOfListners: Number,
-    numSubscribers: Number,
+    numOfListners: {
+        type: Number,
+        default: 0,
+    },
+    numSubscribers: {
+        type: Number,
+        default: 0,
+    },
+    profile: String
 });
 exports.AlbumSchema = mongoose_1.default.model("Album", albumSchema);

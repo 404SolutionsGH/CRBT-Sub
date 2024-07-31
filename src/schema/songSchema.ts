@@ -1,7 +1,8 @@
 import mongoose, { Schema } from "mongoose";
+import { Song } from "../components/customDataTypes";
 
 // the songSchema
-const songSchema = new mongoose.Schema({
+const songSchema = new mongoose.Schema<Song>({
   _id: Schema.Types.ObjectId,
   subServiceId: {
     type: Schema.Types.ObjectId,
@@ -23,12 +24,17 @@ const songSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  numberOfSubscribers: Number,
+  numberOfSubscribers: {
+    type: Number,
+    default: 0,
+  },
   ussdCode: String,
   subscriptionType: {
     type: String,
     enum: ["weekily", "monthly", "daily"],
   },
+  price: String,
+  category:String
 });
 
 export const SongSchema = mongoose.model("Song", songSchema);
