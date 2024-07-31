@@ -4,10 +4,9 @@ import multer from "multer";
 
 // SubService(Sub=subscribe)
 export interface SubService {
-  subServiceId: Schema.Types.ObjectId;
   songId?: Schema.Types.ObjectId;
   date?: string;
-  billing: string;
+  billingTime: string;   // monthly, yearly ,weekily
   nextSubPayment?: string;
 }
 
@@ -15,8 +14,8 @@ export interface SubService {
 export interface UnsubService {
   subServiceId: Schema.Types.ObjectId;
   songId?: Schema.Types.ObjectId;
-  startDate?: string;
-  billing: string;
+  date?: string;
+  billingTime: string;
   endDate: string;
 }
 
@@ -46,7 +45,7 @@ export interface Account {
   verfCode: number;
   langPref: string;
   accountBalance: String; // for only normal users
-  subscribedServices: Array<SubService>; // for only normal users
+  subscribedService: SubService|null; // for only normal users
   unsubscribeService: Array<UnsubService>; // for only normal users
   transactionHistory: Array<string>; // for only normal users
   paymentInfo: Array<string>; // this for only admin accounts(is an array of strings for now but will change)

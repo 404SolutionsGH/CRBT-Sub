@@ -8,3 +8,5 @@ const checkForSuperAdmin_1 = require("../../middleware/checkForSuperAdmin");
 const checkAccountExistence_1 = require("../../middleware/checkAccountExistence");
 exports.serviceRouter = (0, express_1.Router)();
 exports.serviceRouter.post("/new-service", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, checkAccountExistence_1.checkingForAccount, serviceController_1.newServiceController);
+exports.serviceRouter.post("/subscribe", verifyJwt_1.verifyJwt, serviceController_1.subscribeServiceController);
+exports.serviceRouter.post("/unsubscribe", verifyJwt_1.verifyJwt, serviceController_1.unsubscribeServiceController);
