@@ -2,7 +2,6 @@
 import mongooseString, { Schema } from "mongoose";
 import multer from "multer";
 
-
 // SubService(Sub=subscribe)
 export interface SubService {
   subServiceId: Schema.Types.ObjectId;
@@ -35,9 +34,6 @@ export interface CrbtService {
   numberOfSubscribers: number;
 }
 
-
-
-
 export interface Account {
   firstName: string;
   lastName: string;
@@ -57,5 +53,20 @@ export interface Account {
   service: CrbtService | Schema.Types.ObjectId;
 }
 
-
-
+export interface Song {
+  _id: Schema.Types.ObjectId;
+  subServiceId: Schema.Types.ObjectId | CrbtService;
+  albumName: string;
+  songTitle: string;
+  artisteName: string;
+  profile: string;
+  song: string;
+  lang: string;
+  date: string; // The default value will be set in the Mongoose schema, so this can remain a string.
+  numberOfListeners: number;
+  numberOfSubscribers: number;
+  ussdCode: string;
+  subscriptionType: "weekly" | "monthly" | "daily";
+  price: string;
+  category: String;
+}
