@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toneDeletionController = exports.toneController = exports.recommendationController = exports.songSubDetailController = exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
+exports.allSongsController = exports.toneDeletionController = exports.toneController = exports.recommendationController = exports.songSubDetailController = exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -282,4 +282,21 @@ exports.toneDeletionController = (0, express_async_handler_1.default)((req, res)
             throw new Error("Delete action Failed,no tone with this id exist");
         }
     }
+}));
+exports.allSongsController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Getting All Songs..");
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
+    const skip = (page - 1) * limit;
+    const results = yield songSchema_1.SongSchema.find({}).skip(skip).limit(limit);
+    const total = yield songSchema_1.SongSchema.countDocuments({});
+    res.status(200).json({
+        results,
+        pagination: {
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            totalItems: total,
+        },
+    });
 }));

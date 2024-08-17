@@ -14,4 +14,5 @@ exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.sea
 exports.songsRouter.get("/subscription-details", verifyJwt_1.verifyJwt, songsControllers_1.songSubDetailController);
 exports.songsRouter.get("/recommendation", verifyJwt_1.verifyJwt, songsControllers_1.recommendationController);
 exports.songsRouter.get("/tone/:id", verifyJwt_1.verifyJwt, songsControllers_1.toneController);
-exports.songsRouter.delete("/tone/:id", verifyJwt_1.verifyJwt);
+exports.songsRouter.delete("/tone/:id", verifyJwt_1.verifyJwt, songsControllers_1.toneDeletionController);
+exports.songsRouter.get("/all", verifyJwt_1.verifyJwt, songsControllers_1.allSongsController);

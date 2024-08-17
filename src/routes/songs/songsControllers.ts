@@ -278,3 +278,24 @@ console.log("Checking if user ia authorized to delete tone")
 
  }
 })
+
+export const allSongsController=  asyncHandler(async (req: Request, res: Response) => {
+  console.log("Getting All Songs..")
+  const page = parseInt(req.query.page as string) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page
+  const skip = (page - 1) * limit;
+
+   const results = await SongSchema.find({}).skip(skip).limit(limit);
+
+   const total = await SongSchema.countDocuments({});
+
+   res.status(200).json({
+     results,
+     pagination: {
+       page,
+       limit,
+       totalPages: Math.ceil(total / limit),
+       totalItems: total,
+     },
+   });
+})
