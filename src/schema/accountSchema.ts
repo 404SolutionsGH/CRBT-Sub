@@ -11,16 +11,9 @@ const accountSchema = new mongoose.Schema<Account>({
     type: String,
     default: "N/A",
   },
-  email: {
-    type: String,
-  },
   phone: {
     type: String,
     required: true,
-  },
-  password: {
-    type: String,
-    default: "N/A",
   },
   accountType: {
     type: String,
@@ -30,17 +23,12 @@ const accountSchema = new mongoose.Schema<Account>({
   authorizationMethod: {
     type: String,
     enum: ["phone", "email"],
-    default: "email",
+    default: "phone",
   },
   isVerified: {
     type: Boolean,
     default: false,
   },
-  verfCode: {
-    type: Number,
-    default: 0,
-  },
-
   langPref: {
     type: String,
     required: true,

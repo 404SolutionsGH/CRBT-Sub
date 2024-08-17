@@ -18,14 +18,14 @@ const accountSchema_1 = require("../schema/accountSchema");
 exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Client data received.Checking if it exist in database....");
     const { email, phone, accountType } = req.body;
-    if (email && phone) {
-        console.log("Checking if recieved data exists in database(Accont creation)...");
-        let account = yield accountSchema_1.AccountSchema.find({ email });
-        if (account.length !== 0) {
-            console.log("Account with this email exist");
-            throw new Error("An account with this email already exist");
-        }
-        account = yield accountSchema_1.AccountSchema.find({ phone });
+    if ((phone && accountType === "admin") || accountType === "superAdmin") {
+        // console.log("Checking if recieved data exists in database(Accont creation)...");
+        // let account = await AccountSchema.find({ email });
+        // if (account.length !== 0) {
+        //   console.log("Account with this email exist");
+        //   throw new Error("An account with this email already exist");
+        // }
+        const account = yield accountSchema_1.AccountSchema.find({ phone });
         if (account.length !== 0) {
             console.log("Account with this phone number exist");
             throw new Error("An account with this phone number already exist");
@@ -38,12 +38,12 @@ exports.checkingForAccount = (0, express_async_handler_1.default)((req, res, nex
             throw new Error("An account with this phone number already exist");
         }
     }
-    else if (email || phone) {
+    else if (phone) {
         console.log("Checking if recieved data exists in database...");
-        const account = email ? yield accountSchema_1.AccountSchema.find({ email }) : yield accountSchema_1.AccountSchema.find({ phone });
+        const account = yield accountSchema_1.AccountSchema.find({ phone });
         if (account.length === 0) {
             console.log("Account with this email or phone number does not exist");
-            throw new Error((email) ? "No account with this email exist" : "No account with this  phone exist");
+            throw new Error("No account with this  phone exist");
         }
         else {
             console.log("Account exist");

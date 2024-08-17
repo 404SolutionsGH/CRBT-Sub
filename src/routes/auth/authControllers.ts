@@ -11,8 +11,6 @@ import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 // helper methods
 
 const createAccount = async (
-  email: string | undefined,
-  encryptedPassword: string | undefined,
   phone: string,
   accountType: string,
   firstName: string | undefined,
@@ -22,35 +20,33 @@ const createAccount = async (
 ) => {
   console.log("Saving data in data in database...");
   let account: any;
-  if (encryptedPassword && firstName && lastName) {
-    console.log("Generating 4 digit verification code");
-    const verfCode = verfCodeGenerator();
-    account = await AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName, lastName, langPref: langPref ? langPref : "eng" });
-    console.log("Sending verification code....");
-    await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
+  if (firstName && lastName) {
+    account = await AccountSchema.create({ phone, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
+    // console.log("Sending verification code....");
+    // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
   } else {
     account = await AccountSchema.create({ phone, accountType,langPref: langPref ? langPref : "eng", isVerified: true });
   }
   res.status(200).json({
-    message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account`,
+    message: `Account created sucessfully,Check your`,
     token: account.accountType === "norm" ? jwtForLogIn(String(account._id)) : null,
   });
 };
 
 export const signUpController = asyncHandler(async (req: Request, res: Response) => {
   console.log("Account creation began ...");
-  const { email, password, accountType, phone, firstName, lastName, langPref } = req.body;
+  const { password, accountType, phone, firstName, lastName, langPref } = req.body;
   console.log("Checking if remaining neccessary data are present...");
   if (password && (accountType === "admin" || accountType === "superAdmin")) {
     console.log("All data present");
     console.log("Account belongs to admin or superAdmin....");
-    console.log("Encypting password...");
+    // console.log("Encypting password...");
 
-    const encryptedPassword = await encryptPassword(password);
+    // const encryptedPassword = await encryptPassword(password);
 
-    console.log("Encyption done");
+    // console.log("Encyption done");
 
-    await createAccount(email, encryptedPassword, phone, accountType, firstName, lastName, res, langPref);
+    await createAccount(phone, accountType, firstName, lastName, res, langPref);
     // console.log("Generating 4 digit verification code");
     // const verfCode = verfCodeGenerator();
 
@@ -61,7 +57,7 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
     // res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
   } else if (accountType === "norm") {
     console.log("Account normal user...");
-    await createAccount(email, undefined, phone, accountType, firstName, lastName, res, langPref);
+    await createAccount(phone, accountType, firstName, lastName, res, langPref);
   } else {
     console.log("Not all data is present");
     res.status(400);
@@ -96,7 +92,7 @@ export const loginControllerForAdmins = asyncHandler(async (req: Request, res: R
   }
 });
 
-export const loginControllerForUsers = asyncHandler(async (req: Request, res: Response) => {
+export const loginController = asyncHandler(async (req: Request, res: Response) => {
   console.log("User logging in ...");
   const { idToken, account } = req.body;
   // checking if account has been verfied
@@ -114,62 +110,68 @@ export const loginControllerForUsers = asyncHandler(async (req: Request, res: Re
   }
 });
 
-export const accountConfirmationController = asyncHandler(async (req: Request, res: Response) => {
-  console.log("An account is been verified....");
-  const { email, verfCode } = req.body;
 
-  if (verfCode) {
-    // comparing verfCode in request to the one in the account
-    console.log("Comparing verfCode...");
-    const account = await AccountSchema.findOneAndUpdate({ email, verfCode: Number(verfCode) }, { $set: { verfCode: 0, isVerified: true } });
-    if (account) {
-      console.log("Account verfication successfull");
-      res.json({ message: "Account successfully verified" });
-    } else {
-      console.log("Account verification failed");
-      res.status(401);
-      throw new Error("Account verfication failed,please check verification code again and try again");
-    }
-  } else {
-    res.status(400);
-    throw new Error("No data pass for field verfCode in the request body");
-  }
-});
 
-export const resetAccountController = asyncHandler(async (req: Request, res: Response) => {
-  console.log("A user is reseting account....");
-  const { account } = req.body;
-  const newPassword = `${account.firstName}${verfCodeGenerator()}4563`;
-  await AccountSchema.findOneAndUpdate({ email: account.email }, { $set: { password: await encryptPassword(newPassword) } });
-  console.log("Account reset complete");
-  console.log("Sending Account reset email...");
-  await sendAccountResetEmail(account.firstName, newPassword, account.email);
-  res.json({ message: "Account reset successfull, Check email for new password" });
-});
+// export const sendConfirmationCodeController = asyncHandler(async (req: Request, res: Response) => {
+//   console.log("User requesting new confirmation message..");
+//   const { email, phone } = req.body;
+//   const verfCode = verfCodeGenerator();
+//   let authorizationMethod = "";
+//   console.log("New verfication code created");
 
-export const sendConfirmationCodeController = asyncHandler(async (req: Request, res: Response) => {
-  console.log("User requesting new confirmation message..");
-  const { email, phone } = req.body;
-  const verfCode = verfCodeGenerator();
-  let authorizationMethod = "";
-  console.log("New verfication code created");
+//   if (email) {
+//     console.log("Updating verfcode in user's account...");
+//     const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
+//     console.log("Account updated");
+//     if (account) {
+//       await sendConfirmationMessage(account.authorizationMethod, verfCode, email, account.phone, account.firstName);
+//       authorizationMethod = account.authorizationMethod;
+//     }
+//   } else if (phone) {
+//     console.log("Updating verfcode in user's account");
+//     const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
+//     console.log("Account updated");
+//     if (account) {
+//       await sendConfirmationMessage(account.authorizationMethod, verfCode, account.email, account.phone, account.firstName);
+//       authorizationMethod = account.authorizationMethod;
+//     }
+//   }
+//   res.json({ message: `Confirmation code sent successfully,Check ${authorizationMethod === "phone" ? "Sms" : authorizationMethod}  for confirmation code to verify account` });
+// });
 
-  if (email) {
-    console.log("Updating verfcode in user's account...");
-    const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
-    console.log("Account updated");
-    if (account) {
-      await sendConfirmationMessage(account.authorizationMethod, verfCode, email, account.phone, account.firstName);
-      authorizationMethod = account.authorizationMethod;
-    }
-  } else if (phone) {
-    console.log("Updating verfcode in user's account");
-    const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
-    console.log("Account updated");
-    if (account) {
-      await sendConfirmationMessage(account.authorizationMethod, verfCode, account.email, account.phone, account.firstName);
-      authorizationMethod = account.authorizationMethod;
-    }
-  }
-  res.json({ message: `Confirmation code sent successfully,Check ${authorizationMethod === "phone" ? "Sms" : authorizationMethod}  for confirmation code to verify account` });
-});
+
+
+// export const resetAccountController = asyncHandler(async (req: Request, res: Response) => {
+//   console.log("A user is reseting account....");
+//   const { account } = req.body;
+//   const newPassword = `${account.firstName}${verfCodeGenerator()}4563`;
+//   await AccountSchema.findOneAndUpdate({ email: account.email }, { $set: { password: await encryptPassword(newPassword) } });
+//   console.log("Account reset complete");
+//   console.log("Sending Account reset email...");
+//   await sendAccountResetEmail(account.firstName, newPassword, account.email);
+//   res.json({ message: "Account reset successfull, Check email for new password" });
+// });
+
+
+
+// export const accountConfirmationController = asyncHandler(async (req: Request, res: Response) => {
+//   console.log("An account is been verified....");
+//   const { email, verfCode } = req.body;
+
+//   if (verfCode) {
+//     // comparing verfCode in request to the one in the account
+//     console.log("Comparing verfCode...");
+//     const account = await AccountSchema.findOneAndUpdate({ email, verfCode: Number(verfCode) }, { $set: { verfCode: 0, isVerified: true } });
+//     if (account) {
+//       console.log("Account verfication successfull");
+//       res.json({ message: "Account successfully verified" });
+//     } else {
+//       console.log("Account verification failed");
+//       res.status(401);
+//       throw new Error("Account verfication failed,please check verification code again and try again");
+//     }
+//   } else {
+//     res.status(400);
+//     throw new Error("No data pass for field verfCode in the request body");
+//   }
+// });
