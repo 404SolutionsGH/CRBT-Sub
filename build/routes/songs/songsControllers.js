@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recommendationController = exports.songSubDetailController = exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
+exports.toneDeletionController = exports.toneController = exports.recommendationController = exports.songSubDetailController = exports.searchController = exports.listenController = exports.profileController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -176,8 +176,8 @@ exports.listenController = (0, express_async_handler_1.default)((req, res) => __
 }));
 exports.searchController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("A search is been done...");
-    const { songTitle, artisteName, lang, albumName } = req.query;
-    if (songTitle || lang || artisteName || albumName) {
+    const { songTitle, artisteName, lang, albumName, category } = req.query;
+    if (songTitle || lang || artisteName || albumName || category) {
         const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId -albumName -ussdCode -subscriptionType";
         const results = songTitle && lang
             ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" }, lang }).select(fieldsToExclude)
@@ -185,13 +185,17 @@ exports.searchController = (0, express_async_handler_1.default)((req, res) => __
                 ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" }, lang }).select(fieldsToExclude)
                 : albumName && lang
                     ? yield songSchema_1.SongSchema.find({ albumName: { $regex: albumName, $options: "i" }, lang }).select(fieldsToExclude)
-                    : songTitle
-                        ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
-                        : artisteName
-                            ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
-                            : albumName
-                                ? yield songSchema_1.SongSchema.find({ albumName: { $regex: albumName, $options: "i" } }).select(fieldsToExclude)
-                                : yield songSchema_1.SongSchema.find({ lang }).select(fieldsToExclude);
+                    : category && lang
+                        ? yield songSchema_1.SongSchema.find({ category: { $regex: category, $options: "i" }, lang }).select(fieldsToExclude)
+                        : songTitle
+                            ? yield songSchema_1.SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
+                            : artisteName
+                                ? yield songSchema_1.SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
+                                : albumName
+                                    ? yield songSchema_1.SongSchema.find({ albumName: { $regex: albumName, $options: "i" } }).select(fieldsToExclude)
+                                    : category
+                                        ? yield songSchema_1.SongSchema.find({ category: { $regex: category, $options: "i" } }).select(fieldsToExclude)
+                                        : yield songSchema_1.SongSchema.find({ lang }).select(fieldsToExclude);
         console.log("Search complete");
         res.status(200).json({ results, numOfSongs: results.length });
     }
@@ -250,6 +254,32 @@ exports.recommendationController = (0, express_async_handler_1.default)((req, re
             console.log("Recommendation been retrieved is for songs...");
             const songRecom = yield songSchema_1.SongSchema.find({ lang: langPref }).sort({ numberOfSubscribers: -1 }).select(fieldsToExclude);
             res.status(200).json({ results: songRecom, numOfResults: songRecom.length });
+        }
+    }
+}));
+exports.toneController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId  -ussdCode -subscriptionType";
+    const toneInfo = yield songSchema_1.SongSchema.findById(id).select(fieldsToExclude);
+    // toneInfo returns null if no song with the id in params exist
+    if (!toneInfo) {
+        res.status(404);
+        throw new Error("No tune with such id exists");
+    }
+    res.status(200).json({ tone: toneInfo });
+}));
+exports.toneDeletionController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("A tone is been deleted");
+    const { id } = req.params;
+    console.log("Checking if user ia authorized to delete tone");
+    const accountInfo = yield accountSchema_1.AccountSchema.findOne({ _id: (0, mongoose_1.tObjectId)(req.body.id) });
+    if (accountInfo && (accountInfo.accountType === "admin" || accountInfo.accountType === "superAdmin")) {
+        const deletedTone = yield songSchema_1.SongSchema.findOneAndDelete({ _id: (0, mongoose_1.tObjectId)(id) });
+        if (deletedTone) {
+            res.status(200).json({ message: `Tone with title ${deletedTone.songTitle} has been sucessfully deleted` });
+        }
+        else {
+            throw new Error("Delete action Failed,no tone with this id exist");
         }
     }
 }));

@@ -156,9 +156,9 @@ export const listenController = asyncHandler(async (req: Request, res: Response)
 
 export const searchController = asyncHandler(async (req: Request, res: Response) => {
   console.log("A search is been done...");
-  const { songTitle, artisteName, lang,albumName } = req.query;
+  const { songTitle, artisteName, lang, albumName, category } = req.query;
 
-  if (songTitle || lang || artisteName||albumName) {
+  if (songTitle || lang || artisteName || albumName || category) {
     const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId -albumName -ussdCode -subscriptionType";
     const results =
       songTitle && lang
@@ -167,12 +167,16 @@ export const searchController = asyncHandler(async (req: Request, res: Response)
         ? await SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" }, lang }).select(fieldsToExclude)
         : albumName && lang
         ? await SongSchema.find({ albumName: { $regex: albumName, $options: "i" }, lang }).select(fieldsToExclude)
+        : category && lang
+        ? await SongSchema.find({ category: { $regex: category, $options: "i" }, lang }).select(fieldsToExclude)
         : songTitle
         ? await SongSchema.find({ songTitle: { $regex: songTitle, $options: "i" } }).select(fieldsToExclude)
         : artisteName
         ? await SongSchema.find({ artisteName: { $regex: artisteName, $options: "i" } }).select(fieldsToExclude)
         : albumName
         ? await SongSchema.find({ albumName: { $regex: albumName, $options: "i" } }).select(fieldsToExclude)
+        : category
+        ? await SongSchema.find({ category: { $regex: category, $options: "i" } }).select(fieldsToExclude)
         : await SongSchema.find({ lang }).select(fieldsToExclude);
 
     console.log("Search complete");
@@ -240,3 +244,37 @@ export const recommendationController = asyncHandler(async (req: Request, res: R
     }
   }
 });
+
+export const toneController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const fieldsToExclude = "-__v -date -numberOfListeners -lang -numberOfSubscribers -subServiceId  -ussdCode -subscriptionType";
+  const toneInfo = await SongSchema.findById(id).select(fieldsToExclude);
+
+  // toneInfo returns null if no song with the id in params exist
+  if (!toneInfo) {
+    res.status(404);
+    throw new Error("No tune with such id exists");
+  }
+
+  res.status(200).json({ tone: toneInfo });
+});
+
+export const toneDeletionController= asyncHandler(async (req: Request, res: Response) =>{
+ console.log("A tone is been deleted"); 
+const {id}=req.params
+
+
+console.log("Checking if user ia authorized to delete tone")
+ const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(req.body.id) })
+ if (accountInfo && (accountInfo.accountType === "admin" || accountInfo.accountType === "superAdmin")) {
+
+ const deletedTone = await SongSchema.findOneAndDelete({ _id: tObjectId(id) });
+ if(deletedTone){
+  res.status(200).json({message:`Tone with title ${deletedTone.songTitle} has been sucessfully deleted`})
+ }
+ else{
+  throw new Error("Delete action Failed,no tone with this id exist")
+ }
+
+ }
+})
