@@ -14,7 +14,7 @@ const server = express();
 
 // middlewares
 server.use(express.json());
-server.use(cors())
+server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"],credentials:true}));
 
 // routes
 server.use("/api/v1/auth",authRouter)

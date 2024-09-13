@@ -25,7 +25,7 @@ const serviceRoutes_1 = require("./routes/services/serviceRoutes");
 const server = (0, express_1.default)();
 // middlewares
 server.use(express_1.default.json());
-server.use((0, cors_1.default)());
+server.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 // routes
 server.use("/api/v1/auth", authRoutes_1.authRouter);
 server.use("/api/v1/user", userRoutes_1.userRouter);
