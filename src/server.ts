@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import cors from "cors"
 import { connectToDatabase } from "./libs/mongoose";
 import { errorHandeler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth/authRoutes";
@@ -13,6 +14,7 @@ const server = express();
 
 // middlewares
 server.use(express.json());
+server.use(cors())
 
 // routes
 server.use("/api/v1/auth",authRouter)
