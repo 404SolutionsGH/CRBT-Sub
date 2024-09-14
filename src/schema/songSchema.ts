@@ -4,9 +4,8 @@ import { Song } from "../components/customDataTypes";
 // the songSchema
 const songSchema = new mongoose.Schema<Song>({
   _id: Schema.Types.ObjectId,
-  subServiceId: {
+  ownerId: {
     type: Schema.Types.ObjectId,
-    ref: "CrbtService",
   },
   albumName: String,
   songTitle: String,

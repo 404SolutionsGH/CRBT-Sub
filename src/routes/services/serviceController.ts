@@ -56,7 +56,7 @@ export const subscribeServiceController = asyncHandler(async (req: Request, res:
     }
     console.log("Update done");
     console.log("Updating serviceInfo...");
-    await CrbtServiceSchema.updateOne({ _id: songInfo?.subServiceId }, { $inc: { numberOfSubscribers: 1 } });
+    await CrbtServiceSchema.updateOne({ ownerId: songInfo.ownerId }, { $inc: { numberOfSubscribers: 1 } });
     console.log("Update done");
 
     if (songInfo.albumName !== "N/A") {
@@ -107,7 +107,7 @@ export const unsubscribeServiceController = asyncHandler(async (req: Request, re
     console.log("Update done");
     console.log("Updating serviceInfo...");
     await CrbtServiceSchema.updateOne(
-      { _id: songInfo?.subServiceId },
+      { ownerId: songInfo?.ownerId },
       { $inc: { numberOfSubscribers: -1 } } // 6. Changed to decrease by one
     );
     console.log("Update done");

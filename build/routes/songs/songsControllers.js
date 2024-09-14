@@ -41,12 +41,11 @@ dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const accountSchema_1 = require("../../schema/accountSchema");
 const mongoose_1 = require("../../libs/mongoose");
-const mongoose_2 = require("mongoose");
 const songSchema_1 = require("../../schema/songSchema");
 const promises_1 = require("fs/promises");
 const path_1 = require("path");
 const crbtServiceSchema_1 = require("../../schema/crbtServiceSchema");
-const mongoose_3 = require("mongoose");
+const mongoose_2 = require("mongoose");
 const promises_2 = __importStar(require("fs/promises"));
 const albumSchema_1 = require("../../schema/albumSchema");
 // helper methods
@@ -68,24 +67,18 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
     console.log("Checking if account is of the appropriate type...");
     const accountInfo = yield accountSchema_1.AccountSchema.findOne({ _id: (0, mongoose_1.tObjectId)(id) }).populate("service");
     if (accountInfo && (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) !== "norm" && songTitle && artisteName && ussdCode && subscriptionType && price && category) {
-        console.log("Checking account songs limit...");
-        if (!(accountInfo.service instanceof mongoose_2.Schema.Types.ObjectId) &&
-            accountInfo.service.songs.length <=
-                Number(accountInfo.service.planType === "basic"
-                    ? process.env.basicServiceSongsLimit
-                    : accountInfo.service.planType === "silver"
-                        ? process.env.silverServiceSongsLimit
-                        : process.env.goldServiceSongsLimit)) {
+        // console.log("Checking account songs limit...");
+        if ((accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.service) || (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.accountType) === "superAdmin") {
             console.log("Songs limit not reached,upload can proceed");
             console.log("Checking if songs with this title already exist...");
-            if ((yield songSchema_1.SongSchema.find({ subServiceId: accountInfo.service._id, songTitle, artisteName })).length !== 0) {
+            if ((yield songSchema_1.SongSchema.find({ ownerId: (0, mongoose_1.tObjectId)(id), songTitle, artisteName })).length !== 0) {
                 console.log("A song with this title has already been uploaded");
                 throw new Error("Song has already been uploaded");
             }
             console.log("Song does not exist in database");
             console.log("Saving info about song...");
             console.log("Generating songId...");
-            const songId = new mongoose_3.Types.ObjectId();
+            const songId = new mongoose_2.Types.ObjectId();
             const songDataSaved = yield songSchema_1.SongSchema.create({
                 _id: songId,
                 songTitle,
@@ -93,7 +86,7 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
                 price,
                 category,
                 lang: lang ? lang : "eng",
-                subServiceId: accountInfo.service._id,
+                ownerId: (0, mongoose_1.tObjectId)(id),
                 albumName: albumName ? albumName : "N/A",
                 ussdCode,
                 subscriptionType,
@@ -120,14 +113,17 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
             }
             yield (0, promises_1.writeFile)((0, path_1.resolve)(__dirname, `./songsData/songs/${songDataSaved._id}${song.exetension}`), song.data);
             console.log("Files sucessfully saved..");
-            console.log("Updating this account's crbt service document by adding the saved song's id....");
-            yield crbtServiceSchema_1.CrbtServiceSchema.findOneAndUpdate({ _id: accountInfo.service._id }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
-            console.log("Update done");
+            if (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.service) {
+                console.log("Updating this account's crbt service document by adding the saved song's id....");
+                yield crbtServiceSchema_1.CrbtServiceSchema.findOneAndUpdate({ ownerId: (0, mongoose_1.tObjectId)(id) }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
+                console.log("Update done");
+            }
             res.status(200).json({ message: "Song saved successfully" });
         }
         else {
-            console.log("Songs upload limit reached");
-            throw new Error("Songs upload limit reached");
+            console.log("Do not have an CRBT service to upload songs to");
+            res.status(400);
+            throw new Error("Do not have an CRBT service to upload songs to");
         }
     }
     else {
@@ -209,11 +205,16 @@ exports.songSubDetailController = (0, express_async_handler_1.default)((req, res
     console.log("Getting subscrition details about a song...");
     if (songId && typeof songId === "string") {
         const songDetails = yield songSchema_1.SongSchema.findOne({ _id: (0, mongoose_1.tObjectId)(songId) }).populate("subServiceId");
-        if (songDetails && !(songDetails.subServiceId instanceof mongoose_2.Schema.Types.ObjectId)) {
+        if (!songDetails) {
+            res.status(404);
+            throw new Error("No song with such id exists");
+        }
+        const serviceDetails = yield crbtServiceSchema_1.CrbtServiceSchema.findOne({ ownerId: songDetails.ownerId });
+        if (songDetails && serviceDetails) {
             // setting up the json obj to be sent
             console.log("Details Retrieved");
             const detailToSend = {
-                subName: songDetails.subServiceId.serviceName,
+                subName: serviceDetails.serviceName,
                 category: songDetails.category,
                 price: songDetails.price,
                 currency: "ETB",

@@ -36,22 +36,12 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
   const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(id) }).populate("service");
 
   if (accountInfo && accountInfo?.accountType !== "norm" && songTitle && artisteName && ussdCode && subscriptionType && price && category) {
-    console.log("Checking account songs limit...");
+    // console.log("Checking account songs limit...");
 
-    if (
-      !(accountInfo.service instanceof Schema.Types.ObjectId) &&
-      accountInfo.service.songs.length <=
-        Number(
-          accountInfo.service.planType === "basic"
-            ? process.env.basicServiceSongsLimit
-            : accountInfo.service.planType === "silver"
-            ? process.env.silverServiceSongsLimit
-            : process.env.goldServiceSongsLimit
-        )
-    ) {
+    if (accountInfo?.service || accountInfo?.accountType === "superAdmin") {
       console.log("Songs limit not reached,upload can proceed");
       console.log("Checking if songs with this title already exist...");
-      if ((await SongSchema.find({ subServiceId: accountInfo.service._id, songTitle, artisteName })).length !== 0) {
+      if ((await SongSchema.find({ ownerId: tObjectId(id), songTitle, artisteName })).length !== 0) {
         console.log("A song with this title has already been uploaded");
         throw new Error("Song has already been uploaded");
       }
@@ -67,7 +57,7 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
         price,
         category,
         lang: lang ? lang : "eng",
-        subServiceId: accountInfo.service._id,
+        ownerId: tObjectId(id),
         albumName: albumName ? albumName : "N/A",
         ussdCode,
         subscriptionType,
@@ -97,15 +87,16 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
       }
       await writeFile(resolve(__dirname, `./songsData/songs/${songDataSaved._id}${song.exetension}`), song.data);
       console.log("Files sucessfully saved..");
-
-      console.log("Updating this account's crbt service document by adding the saved song's id....");
-      await CrbtServiceSchema.findOneAndUpdate({ _id: accountInfo.service._id }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
-      console.log("Update done");
-
+      if (accountInfo?.service) {
+        console.log("Updating this account's crbt service document by adding the saved song's id....");
+        await CrbtServiceSchema.findOneAndUpdate({ ownerId: tObjectId(id) }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
+        console.log("Update done");
+      }
       res.status(200).json({ message: "Song saved successfully" });
     } else {
-      console.log("Songs upload limit reached");
-      throw new Error("Songs upload limit reached");
+      console.log("Do not have an CRBT service to upload songs to");
+      res.status(400);
+      throw new Error("Do not have an CRBT service to upload songs to");
     }
   } else {
     if (!songTitle || !artisteName || !ussdCode || !subscriptionType) {
@@ -194,11 +185,16 @@ export const songSubDetailController = asyncHandler(async (req: Request, res: Re
   if (songId && typeof songId === "string") {
     const songDetails = await SongSchema.findOne({ _id: tObjectId(songId) }).populate("subServiceId");
 
-    if (songDetails && !(songDetails.subServiceId instanceof Schema.Types.ObjectId)) {
+    if(!songDetails){
+      res.status(404)
+      throw new Error("No song with such id exists")
+    }
+    const serviceDetails = await CrbtServiceSchema.findOne({ownerId:songDetails!.ownerId})
+    if (songDetails && serviceDetails) {
       // setting up the json obj to be sent
       console.log("Details Retrieved");
       const detailToSend = {
-        subName: songDetails.subServiceId.serviceName,
+        subName: serviceDetails.serviceName,
         category: songDetails.category,
         price: songDetails.price,
         currency: "ETB",
@@ -259,43 +255,39 @@ export const toneController = asyncHandler(async (req: Request, res: Response) =
   res.status(200).json({ tone: toneInfo });
 });
 
-export const toneDeletionController= asyncHandler(async (req: Request, res: Response) =>{
- console.log("A tone is been deleted"); 
-const {id}=req.params
+export const toneDeletionController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("A tone is been deleted");
+  const { id } = req.params;
 
+  console.log("Checking if user ia authorized to delete tone");
+  const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(req.body.id) });
+  if (accountInfo && (accountInfo.accountType === "admin" || accountInfo.accountType === "superAdmin")) {
+    const deletedTone = await SongSchema.findOneAndDelete({ _id: tObjectId(id) });
+    if (deletedTone) {
+      res.status(200).json({ message: `Tone with title ${deletedTone.songTitle} has been sucessfully deleted` });
+    } else {
+      throw new Error("Delete action Failed,no tone with this id exist");
+    }
+  }
+});
 
-console.log("Checking if user ia authorized to delete tone")
- const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(req.body.id) })
- if (accountInfo && (accountInfo.accountType === "admin" || accountInfo.accountType === "superAdmin")) {
-
- const deletedTone = await SongSchema.findOneAndDelete({ _id: tObjectId(id) });
- if(deletedTone){
-  res.status(200).json({message:`Tone with title ${deletedTone.songTitle} has been sucessfully deleted`})
- }
- else{
-  throw new Error("Delete action Failed,no tone with this id exist")
- }
-
- }
-})
-
-export const allSongsController=  asyncHandler(async (req: Request, res: Response) => {
-  console.log("Getting All Songs..")
+export const allSongsController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("Getting All Songs..");
   const page = parseInt(req.query.page as string) || 1; // Default to page 1
   const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page
   const skip = (page - 1) * limit;
 
-   const results = await SongSchema.find({}).skip(skip).limit(limit);
+  const results = await SongSchema.find({}).skip(skip).limit(limit);
 
-   const total = await SongSchema.countDocuments({});
+  const total = await SongSchema.countDocuments({});
 
-   res.status(200).json({
-     results,
-     pagination: {
-       page,
-       limit,
-       totalPages: Math.ceil(total / limit),
-       totalItems: total,
-     },
-   });
-})
+  res.status(200).json({
+    results,
+    pagination: {
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    },
+  });
+});

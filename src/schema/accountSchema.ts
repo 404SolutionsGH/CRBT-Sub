@@ -11,6 +11,7 @@ const accountSchema = new mongoose.Schema<Account>({
     type: String,
     default: "N/A",
   },
+  password:String,
   phone: {
     type: String,
     required: true,

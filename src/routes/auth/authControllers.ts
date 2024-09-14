@@ -10,25 +10,19 @@ import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 
 // helper methods
 
-const createAccount = async (
-  phone: string,
-  accountType: string,
-  firstName: string | undefined,
-  lastName: string | undefined,
-  res: Response,
-  langPref: string | undefined
-) => {
+const createAccount = async (phone: string, accountType: string, password: string | null, firstName: string | undefined, lastName: string | undefined, res: Response, langPref: string | undefined) => {
   console.log("Saving data in data in database...");
   let account: any;
   if (firstName && lastName) {
-    account = await AccountSchema.create({ phone, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
+    const hashedPassword = await encryptPassword(password!);
+    account = await AccountSchema.create({ phone, isVerified:true, password: hashedPassword, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
     // console.log("Sending verification code....");
     // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
   } else {
-    account = await AccountSchema.create({ phone, accountType,langPref: langPref ? langPref : "eng", isVerified: true });
+    account = await AccountSchema.create({ phone, accountType, langPref: langPref ? langPref : "eng", isVerified: true });
   }
   res.status(200).json({
-    message: `Account created sucessfully,Check your`,
+    message: `Account created sucessfully`,
     token: account.accountType === "norm" ? jwtForLogIn(String(account._id)) : null,
   });
 };
@@ -46,7 +40,7 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
 
     // console.log("Encyption done");
 
-    await createAccount(phone, accountType, firstName, lastName, res, langPref);
+    await createAccount(phone, accountType, password, firstName, lastName, res, langPref);
     // console.log("Generating 4 digit verification code");
     // const verfCode = verfCodeGenerator();
 
@@ -57,7 +51,7 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
     // res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
   } else if (accountType === "norm") {
     console.log("Account normal user...");
-    await createAccount(phone, accountType, firstName, lastName, res, langPref);
+    await createAccount(phone, accountType, null, firstName, lastName, res, langPref);
   } else {
     console.log("Not all data is present");
     res.status(400);
@@ -68,6 +62,7 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
 export const loginControllerForAdmins = asyncHandler(async (req: Request, res: Response) => {
   console.log("An Admin logging in ...");
   const { password, account } = req.body;
+  
   // checking if account has been verfied
 
   if (!account.isVerified) {
@@ -110,8 +105,6 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
   }
 });
 
-
-
 // export const sendConfirmationCodeController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("User requesting new confirmation message..");
 //   const { email, phone } = req.body;
@@ -139,8 +132,6 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 //   res.json({ message: `Confirmation code sent successfully,Check ${authorizationMethod === "phone" ? "Sms" : authorizationMethod}  for confirmation code to verify account` });
 // });
 
-
-
 // export const resetAccountController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("A user is reseting account....");
 //   const { account } = req.body;
@@ -151,8 +142,6 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 //   await sendAccountResetEmail(account.firstName, newPassword, account.email);
 //   res.json({ message: "Account reset successfull, Check email for new password" });
 // });
-
-
 
 // export const accountConfirmationController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("An account is been verified....");

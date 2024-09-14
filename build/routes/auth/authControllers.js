@@ -19,11 +19,12 @@ const bcrypt_1 = require("../../libs/bcrypt");
 const jwt_1 = require("../../libs/jwt");
 const firebase_1 = require("../../libs/firebase");
 // helper methods
-const createAccount = (phone, accountType, firstName, lastName, res, langPref) => __awaiter(void 0, void 0, void 0, function* () {
+const createAccount = (phone, accountType, password, firstName, lastName, res, langPref) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Saving data in data in database...");
     let account;
     if (firstName && lastName) {
-        account = yield accountSchema_1.AccountSchema.create({ phone, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
+        const hashedPassword = yield (0, bcrypt_1.encryptPassword)(password);
+        account = yield accountSchema_1.AccountSchema.create({ phone, isVerified: true, password: hashedPassword, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
         // console.log("Sending verification code....");
         // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
     }
@@ -31,7 +32,7 @@ const createAccount = (phone, accountType, firstName, lastName, res, langPref) =
         account = yield accountSchema_1.AccountSchema.create({ phone, accountType, langPref: langPref ? langPref : "eng", isVerified: true });
     }
     res.status(200).json({
-        message: `Account created sucessfully,Check your`,
+        message: `Account created sucessfully`,
         token: account.accountType === "norm" ? (0, jwt_1.jwtForLogIn)(String(account._id)) : null,
     });
 });
@@ -45,7 +46,7 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
         // console.log("Encypting password...");
         // const encryptedPassword = await encryptPassword(password);
         // console.log("Encyption done");
-        yield createAccount(phone, accountType, firstName, lastName, res, langPref);
+        yield createAccount(phone, accountType, password, firstName, lastName, res, langPref);
         // console.log("Generating 4 digit verification code");
         // const verfCode = verfCodeGenerator();
         // console.log("Saving data in data in database...");
@@ -56,7 +57,7 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
     }
     else if (accountType === "norm") {
         console.log("Account normal user...");
-        yield createAccount(phone, accountType, firstName, lastName, res, langPref);
+        yield createAccount(phone, accountType, null, firstName, lastName, res, langPref);
     }
     else {
         console.log("Not all data is present");

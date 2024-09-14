@@ -54,7 +54,7 @@ export interface Account {
 
 export interface Song {
   _id: Schema.Types.ObjectId;
-  subServiceId: Schema.Types.ObjectId | CrbtService;
+  ownerId: Schema.Types.ObjectId;
   albumName: string;
   songTitle: string;
   artisteName: string;

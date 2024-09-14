@@ -59,7 +59,7 @@ exports.subscribeServiceController = (0, express_async_handler_1.default)((req, 
         }
         console.log("Update done");
         console.log("Updating serviceInfo...");
-        yield crbtServiceSchema_1.CrbtServiceSchema.updateOne({ _id: songInfo === null || songInfo === void 0 ? void 0 : songInfo.subServiceId }, { $inc: { numberOfSubscribers: 1 } });
+        yield crbtServiceSchema_1.CrbtServiceSchema.updateOne({ ownerId: songInfo.ownerId }, { $inc: { numberOfSubscribers: 1 } });
         console.log("Update done");
         if (songInfo.albumName !== "N/A") {
             console.log("Updating albumInfo...");
@@ -98,7 +98,7 @@ exports.unsubscribeServiceController = (0, express_async_handler_1.default)((req
         }
         console.log("Update done");
         console.log("Updating serviceInfo...");
-        yield crbtServiceSchema_1.CrbtServiceSchema.updateOne({ _id: songInfo === null || songInfo === void 0 ? void 0 : songInfo.subServiceId }, { $inc: { numberOfSubscribers: -1 } } // 6. Changed to decrease by one
+        yield crbtServiceSchema_1.CrbtServiceSchema.updateOne({ ownerId: songInfo === null || songInfo === void 0 ? void 0 : songInfo.ownerId }, { $inc: { numberOfSubscribers: -1 } } // 6. Changed to decrease by one
         );
         console.log("Update done");
         if (songInfo.albumName !== "N/A") {
