@@ -1,34 +1,33 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import cors from "cors"
-import { connectToDatabase } from "./libs/mongoose";
-import { errorHandeler } from "./middleware/errorHandler";
-import { authRouter } from "./routes/auth/authRoutes";
-import { userRouter } from "./routes/user/userRoutes";
-import { songsRouter } from "./routes/songs/songsRoutes";
-import { serviceRouter } from "./routes/services/serviceRoutes";
+import cors from "cors";
 
+import { errorHandler } from "./interface/middlewares/errorHandler";
+import { authRouter } from "./interface/routes/authRoutes";
+import { userRouter } from "./interface/routes/userRoutes";
+import { songsRouter } from "./interface/routes/songsRoutes";
+import { serviceRouter } from "./interface/routes/serviceRoutes";
+import { connectToDatabase } from "./infrastructure/database/connectDb";
 
 const server = express();
 
 // middlewares
 server.use(express.json());
-server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"],credentials:true}));
+server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
 // routes
-server.use("/api/v1/auth",authRouter)
-server.use("/api/v1/user",userRouter);
-server.use("/api/v1/songs",songsRouter)
+server.use("/api/v1/auth", authRouter);
+server.use("/api/v1/user", userRouter);
+server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
 // error handling middlware
-server.use(errorHandeler);
+server.use(errorHandler);
 
 const port = process.env.PORT ? process.env.PORT : 8000;
 const startServer = async () => {
   try {
-    await connectToDatabase(process.env.MongoDbConnectionUrl);
-
+    await connectToDatabase()
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

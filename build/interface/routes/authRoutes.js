@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authRouter = void 0;
+const express_1 = require("express");
+// import { loginControllerForAdmins, loginController, signUpController } from "../controllers/authControllers";
+exports.authRouter = (0, express_1.Router)();
+// authRouter.post("/signup", checkingForAccount, signUpController);
+// // authRouter.post("/send-confirmationCode", checkingForAccount, sendConfirmationCodeController);
+// authRouter.post("/admin/login", checkingForAccount, loginControllerForAdmins);
+// authRouter.post("/login", checkingForAccount, loginController);
+// authRouter.post("/confirm-account", checkingForAccount, accountConfirmationController);
+// authRouter.post("/reset-account", checkingForAccount,resetAccountController);
