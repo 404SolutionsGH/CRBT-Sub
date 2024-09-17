@@ -1,165 +1,55 @@
-// import { NextFunction, Request, Response } from "express";
-// import asyncHandler from "express-async-handler";
-// import { AccountSchema } from "../../schema/accountSchema";
-// import { encryptPassword, verifyPassword } from "../../libs/bcrypt";
-// import { sendAccountResetEmail } from "../../libs/nodeMailer";
-// import { verfCodeGenerator } from "../../components/verfCodeGenerator";
-// import { sendConfirmationMessage } from "../../components/sendConfirmationMessage";
-// import { jwtForLogIn } from "../../libs/jwt";
+import { NextFunction, Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import { AppError } from "../../domain/entities/AppError";
+import { createUserAccount } from "../../useCases/auth/createUser";
+import { User } from "../../domain/entities/User";
+import { createAdminAccount } from "../../useCases/auth/createAdmin";
+import { Admin } from "../../domain/entities/Admin";
+import { userLogin } from "../../useCases/auth/userLogin";
+import { adminLogin } from "../../useCases/auth/adminLogin";
+
 // import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 
 // // helper methods
+const nullAndStringTypeChecker = (data1: any, data2: any, d1Name: string, d2Name: string) => {
+  if (!data1 || !data2) throw new AppError(!data1 ? `No data passed for ${d1Name}` : `No data was passed for ${d2Name}`, 400);
+  else if (typeof data1 !== "string" || typeof data2 != "string") throw new AppError(typeof data1 !== "string" ? `Value for ${d1Name} must be a string` : `Value for ${d2Name} must be a string`, 400);
+};
 
-// const createAccount = async (phone: string, accountType: string, password: string | null, firstName: string | undefined, lastName: string | undefined, res: Response, langPref: string | undefined) => {
-//   console.log("Saving data in data in database...");
-//   let account: any;
-//   if (firstName && lastName) {
-//     const hashedPassword = await encryptPassword(password!);
-//     account = await AccountSchema.create({ phone, isVerified:true, password: hashedPassword, accountType, firstName, lastName, langPref: langPref ? langPref : "eng" });
-//     // console.log("Sending verification code....");
-//     // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
-//   } else {
-//     account = await AccountSchema.create({ phone, accountType, langPref: langPref ? langPref : "eng", isVerified: true });
-//   }
-//   res.status(200).json({
-//     message: `Account created sucessfully`,
-//     token: account.accountType === "norm" ? jwtForLogIn(String(account._id)) : null,
-//   });
-// };
+export const signUpController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("Account creation began ...");
+  const { phone, langPref, email, accountType, password, firstName, lastName } = req.body;
 
-// export const signUpController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("Account creation began ...");
-//   const { password, accountType, phone, firstName, lastName, langPref } = req.body;
-//   console.log("Checking if remaining neccessary data are present...");
-//   if (password && (accountType === "admin" || accountType === "superAdmin")) {
-//     console.log("All data present");
-//     console.log("Account belongs to admin or superAdmin....");
-//     // console.log("Encypting password...");
+  if (!accountType || RegExp(/^\d+$/).test(accountType)) {
+    throw new AppError(`${!accountType ? "No data passed for accountType in request body" : "Value passed for account type must be a string"}`, 400);
+  }
 
-//     // const encryptedPassword = await encryptPassword(password);
+  if (accountType === "user") {
+    if (!phone) throw new AppError("No data passed for phone in request body", 400);
+    res.status(201).json({ message: "User account created sucessfully", token: await createUserAccount(User.build({ phone, langPref })) });
+  } else if (accountType === "admin") {
+    if (!email) throw new AppError("No data passed for email", 400);
+    await createAdminAccount(Admin.build({ email, password, adminType: "merchant", firstName, lastName }));
+    res.status(201).json({ message: "Admin account created successfully" });
+  } else throw new AppError("Value passed for accountType in request body must be admin or user", 400);
+});
 
-//     // console.log("Encyption done");
+export const loginController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("User logging in ...");
+  const { idFromFirebase, phone, email, password, accountType } = req.body;
+  let jwtToken: string;
+  if (accountType === "user") {
+    nullAndStringTypeChecker(idFromFirebase, phone, "idFromFirebase", "phone");
+    //use case for user login
+    jwtToken = await userLogin(idFromFirebase, phone);
+  } else if (accountType == "admin") {
+    nullAndStringTypeChecker(email, password, "email", "password");
+    // use case for admin log in
+    jwtToken = await adminLogin(email, password);
+  } else {
+    throw new AppError(!accountType ? "No data passed for accontType in body" : `Value for accountType must be either admin or user not ${accountType}`, 400);
+  }
+  console.log("Login sucessfull")
+  res.status(200).json({ message: "Login successfull", token: jwtToken });
+});
 
-//     await createAccount(phone, accountType, password, firstName, lastName, res, langPref);
-//     // console.log("Generating 4 digit verification code");
-//     // const verfCode = verfCodeGenerator();
-
-//     // console.log("Saving data in data in database...");
-//     // const account = await AccountSchema.create({ email, password: encryptedPassword, phone, accountType, verfCode, firstName });
-//     // console.log("Sending verification code....");
-//     // await sendConfirmationMessage(account.authorizationMethod, verfCode, email, phone, firstName);
-//     // res.status(200).json({ message: `Account created sucessfully,Check your ${account.authorizationMethod === "phone" ? "Sms" : "email"} for confirmation code to verify account` });
-//   } else if (accountType === "norm") {
-//     console.log("Account normal user...");
-//     await createAccount(phone, accountType, null, firstName, lastName, res, langPref);
-//   } else {
-//     console.log("Not all data is present");
-//     res.status(400);
-//     throw new Error("Bad request, some fields in the body was not set");
-//   }
-// });
-
-// export const loginControllerForAdmins = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("An Admin logging in ...");
-//   const { password, account } = req.body;
-  
-//   // checking if account has been verfied
-//   if (!account.isVerified) {
-//     res.status(401);
-//     throw new Error("Account is not verified,please verify account to login");
-//   }
-
-//   if (password) {
-//     console.log("Verifying password..");
-//     if (await verifyPassword(password, account.password)) {
-//       console.log("Password Verified");
-//       console.log("Respond Sent with Token, Login Sucessfull");
-//       res.json({ message: "Login Sucessfull", token: jwtForLogIn(String(account._id)) });
-//     } else {
-//       console.log("Password Incorrect");
-//       res.status(400);
-//       throw new Error("Invalid Login Credentails");
-//     }
-//   } else {
-//     res.status(400);
-//     throw new Error("No data passed for password in request body");
-//   }
-// });
-
-// export const loginController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("User logging in ...");
-//   const { idToken, account } = req.body;
-//   // checking if account has been verfied
-
-//   if (!idToken) {
-//     res.status(400);
-//     throw new Error("No idToken passed in request body");
-//   }
-//   console.log("Verifying idToken form firebase..");
-
-//   if (await verifyTokenIdFromFirebase(idToken)) {
-//     console.log("Id token Verified");
-//     console.log("Respond Sent with Token, Login Sucessfull");
-//     res.json({ message: "Login Sucessfull", token: jwtForLogIn(String(account._id)) });
-//   }
-// });
-
-// // export const sendConfirmationCodeController = asyncHandler(async (req: Request, res: Response) => {
-// //   console.log("User requesting new confirmation message..");
-// //   const { email, phone } = req.body;
-// //   const verfCode = verfCodeGenerator();
-// //   let authorizationMethod = "";
-// //   console.log("New verfication code created");
-
-// //   if (email) {
-// //     console.log("Updating verfcode in user's account...");
-// //     const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
-// //     console.log("Account updated");
-// //     if (account) {
-// //       await sendConfirmationMessage(account.authorizationMethod, verfCode, email, account.phone, account.firstName);
-// //       authorizationMethod = account.authorizationMethod;
-// //     }
-// //   } else if (phone) {
-// //     console.log("Updating verfcode in user's account");
-// //     const account = await AccountSchema.findOneAndUpdate({ email }, { $set: { verfCode } });
-// //     console.log("Account updated");
-// //     if (account) {
-// //       await sendConfirmationMessage(account.authorizationMethod, verfCode, account.email, account.phone, account.firstName);
-// //       authorizationMethod = account.authorizationMethod;
-// //     }
-// //   }
-// //   res.json({ message: `Confirmation code sent successfully,Check ${authorizationMethod === "phone" ? "Sms" : authorizationMethod}  for confirmation code to verify account` });
-// // });
-
-// // export const resetAccountController = asyncHandler(async (req: Request, res: Response) => {
-// //   console.log("A user is reseting account....");
-// //   const { account } = req.body;
-// //   const newPassword = `${account.firstName}${verfCodeGenerator()}4563`;
-// //   await AccountSchema.findOneAndUpdate({ email: account.email }, { $set: { password: await encryptPassword(newPassword) } });
-// //   console.log("Account reset complete");
-// //   console.log("Sending Account reset email...");
-// //   await sendAccountResetEmail(account.firstName, newPassword, account.email);
-// //   res.json({ message: "Account reset successfull, Check email for new password" });
-// // });
-
-// // export const accountConfirmationController = asyncHandler(async (req: Request, res: Response) => {
-// //   console.log("An account is been verified....");
-// //   const { email, verfCode } = req.body;
-
-// //   if (verfCode) {
-// //     // comparing verfCode in request to the one in the account
-// //     console.log("Comparing verfCode...");
-// //     const account = await AccountSchema.findOneAndUpdate({ email, verfCode: Number(verfCode) }, { $set: { verfCode: 0, isVerified: true } });
-// //     if (account) {
-// //       console.log("Account verfication successfull");
-// //       res.json({ message: "Account successfully verified" });
-// //     } else {
-// //       console.log("Account verification failed");
-// //       res.status(401);
-// //       throw new Error("Account verfication failed,please check verification code again and try again");
-// //     }
-// //   } else {
-// //     res.status(400);
-// //     throw new Error("No data pass for field verfCode in the request body");
-// //   }
-// // });

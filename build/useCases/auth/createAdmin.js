@@ -9,22 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorHandler = void 0;
+exports.createAdminAccount = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
-const sequelize_1 = require("sequelize");
-const errorHandler = (err, req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (err instanceof AppError_1.AppError) {
-        res.status(err.statusCode).json({ error: err.message });
+const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
+const bcrypt_1 = require("../../libs/bcrypt");
+const createAdminAccount = (adminData) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = adminData;
+    const adminRepo = new adminRepoImplementation_1.AdminRepoImp();
+    if (password) {
+        console.log("Encrypting password..");
+        adminData.password = yield (0, bcrypt_1.encryptPassword)(password);
+        console.log("Encryption Done");
     }
-    else if (err instanceof sequelize_1.ValidationError) {
-        res.status(400).json({ error: err.message.split(":")[1] });
-    }
-    else if (err instanceof SyntaxError) {
-        res.status(400).json({ error: err.message });
-    }
-    else {
-        console.log(err);
-        res.status(500).json({ error: "Server Error" });
-    }
+    if (!(yield adminRepo.createAdmin(adminData)))
+        throw new AppError_1.AppError(`Admin account with email ${email} already exist`, 409);
 });
-exports.errorHandler = errorHandler;
+exports.createAdminAccount = createAdminAccount;

@@ -9,8 +9,13 @@ import { userRouter } from "./interface/routes/userRoutes";
 import { songsRouter } from "./interface/routes/songsRoutes";
 import { serviceRouter } from "./interface/routes/serviceRoutes";
 import { connectToDatabase } from "./infrastructure/database/connectDb";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpecs } from "./swaggerConfig";
 
 const server = express();
+
+// setting up swagger-ui
+server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // middlewares
 server.use(express.json());

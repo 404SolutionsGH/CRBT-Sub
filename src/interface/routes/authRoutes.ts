@@ -1,10 +1,11 @@
 import { Router } from "express";
-// import { loginControllerForAdmins, loginController, signUpController } from "../controllers/authControllers";
-
+import { loginController, signUpController } from "../controllers/authControllers";
 
 export const authRouter = Router();
 
-// authRouter.post("/signup", checkingForAccount, signUpController);
+// endpoint for creating account for users and mercahnts
+authRouter.post("/signup", signUpController);
+authRouter.post("/login",  loginController);
 // // authRouter.post("/send-confirmationCode", checkingForAccount, sendConfirmationCodeController);
 // authRouter.post("/admin/login", checkingForAccount, loginControllerForAdmins);
 // authRouter.post("/login", checkingForAccount, loginController);

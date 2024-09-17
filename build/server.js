@@ -22,7 +22,11 @@ const userRoutes_1 = require("./interface/routes/userRoutes");
 const songsRoutes_1 = require("./interface/routes/songsRoutes");
 const serviceRoutes_1 = require("./interface/routes/serviceRoutes");
 const connectDb_1 = require("./infrastructure/database/connectDb");
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swaggerConfig_1 = require("./swaggerConfig");
 const server = (0, express_1.default)();
+// setting up swagger-ui
+server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
 // middlewares
 server.use(express_1.default.json());
 server.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));

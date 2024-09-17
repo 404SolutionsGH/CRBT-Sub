@@ -9,22 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorHandler = void 0;
+exports.createUserAccount = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
-const sequelize_1 = require("sequelize");
-const errorHandler = (err, req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (err instanceof AppError_1.AppError) {
-        res.status(err.statusCode).json({ error: err.message });
-    }
-    else if (err instanceof sequelize_1.ValidationError) {
-        res.status(400).json({ error: err.message.split(":")[1] });
-    }
-    else if (err instanceof SyntaxError) {
-        res.status(400).json({ error: err.message });
-    }
-    else {
-        console.log(err);
-        res.status(500).json({ error: "Server Error" });
-    }
+const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
+const jwt_1 = require("../../libs/jwt");
+const createUserAccount = (userData) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRepo = new userRepoImplemtation_1.UserRepoImp();
+    const account = yield userRepo.createUser(userData);
+    if (account)
+        return (0, jwt_1.jwtForLogIn)(String(account.id));
+    throw new AppError_1.AppError(`Account with this phone number ${userData.phone} already exist`, 409);
 });
-exports.errorHandler = errorHandler;
+exports.createUserAccount = createUserAccount;

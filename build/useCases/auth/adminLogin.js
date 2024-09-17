@@ -9,22 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorHandler = void 0;
+exports.adminLogin = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
-const sequelize_1 = require("sequelize");
-const errorHandler = (err, req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (err instanceof AppError_1.AppError) {
-        res.status(err.statusCode).json({ error: err.message });
+const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
+const bcrypt_1 = require("../../libs/bcrypt");
+const jwt_1 = require("../../libs/jwt");
+const adminLogin = (email, pasword) => __awaiter(void 0, void 0, void 0, function* () {
+    const adminRepo = new adminRepoImplementation_1.AdminRepoImp();
+    const account = yield adminRepo.findAdminByEmail(email);
+    if (account) {
+        if (!(yield (0, bcrypt_1.verifyPassword)(pasword, account.password)))
+            throw new AppError_1.AppError("Invalid email and password", 401);
+        return (0, jwt_1.jwtForLogIn)(String(account.id));
     }
-    else if (err instanceof sequelize_1.ValidationError) {
-        res.status(400).json({ error: err.message.split(":")[1] });
-    }
-    else if (err instanceof SyntaxError) {
-        res.status(400).json({ error: err.message });
-    }
-    else {
-        console.log(err);
-        res.status(500).json({ error: "Server Error" });
-    }
+    throw new AppError_1.AppError(`No admin account with ${email} exist`, 404);
 });
-exports.errorHandler = errorHandler;
+exports.adminLogin = adminLogin;
