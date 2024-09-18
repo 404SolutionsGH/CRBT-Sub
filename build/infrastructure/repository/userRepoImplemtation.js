@@ -21,8 +21,8 @@ class UserRepoImp {
                     phone,
                     langPref,
                     firstName,
-                    lastName
-                }
+                    lastName,
+                },
             });
             if (isCreated) {
                 return itemCreated;
@@ -38,6 +38,24 @@ class UserRepoImp {
     findUserByPhone(phone) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield User_1.User.findOne({ where: { phone } });
+        });
+    }
+    updateFirstName(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { firstName, id } = data;
+            const updatedData = yield User_1.User.update({ firstName }, { where: { id } });
+            if (updatedData[0] == 1)
+                return true;
+            return false;
+        });
+    }
+    updateLastName(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { lastName, id } = data;
+            const updatedData = yield User_1.User.update({ lastName }, { where: { id } });
+            if (updatedData[0] == 1)
+                return true;
+            return false;
         });
     }
 }

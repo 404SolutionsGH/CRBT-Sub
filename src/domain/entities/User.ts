@@ -3,7 +3,7 @@ import { Model } from "sequelize";
 
 
 export class User extends Model {
-  declare id: Number;
+  declare id: number;
   declare firstName: string;
   declare lastName: string;
   declare phone: string;

@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = require("express");
+// import { accountInfoController, accountUpdateController } from "../controllers/userControllers";
+const verifyJwt_1 = require("../middlewares/verifyJwt");
+const userControllers_1 = require("../controllers/userControllers");
 exports.userRouter = (0, express_1.Router)();
-// userRouter.put("/update-account-info", verifyJwt, accountUpdateController);
-// userRouter.get("/account-info", verifyJwt, getAccount, accountInfoController);
+exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userControllers_1.accountUpdateController);
+exports.userRouter.get("/account-info", verifyJwt_1.verifyJwt, userControllers_1.accountInfoController);

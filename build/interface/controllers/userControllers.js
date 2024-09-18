@@ -1,58 +1,37 @@
 "use strict";
-// import { NextFunction, Request, Response } from "express";
-// import asyncHandler from "express-async-handler";
-// import { encryptPassword, verifyPassword } from "../../libs/bcrypt";
-// import { AccountSchema } from "../../schema/accountSchema";
-// import { tObjectId } from "../../libs/mongoose";
-// const updateAccount = async (
-//   res: Response,
-//   id: string,
-//   firstName: string | undefined,
-//   lastName: string | undefined,
-//   email: string | undefined,
-//   oldPassword: string | undefined,
-//   password: string | undefined,
-//   passwordInDatabase: string | undefined
-// ) => {
-//   let newData: any = {};
-//   if (firstName && lastName && password) {
-//     // this executes when when newly created account are setting up their profile.
-//     await AccountSchema.findOneAndUpdate({ _id: tObjectId(id) }, { $set: { firstName, lastName, password: await encryptPassword(password) } });
-//   } else if (firstName) {
-//     await AccountSchema.findOneAndUpdate({ _id: tObjectId(id) }, { $set: { firstName } });
-//   } else if (lastName) {
-//     await AccountSchema.findOneAndUpdate({ _id: tObjectId(id) }, { $set: { lastName } });
-//   } else if (email) {
-//     await AccountSchema.findOneAndUpdate({ _id: tObjectId(id) }, { $set: { email } });
-//   } else if (oldPassword && password && passwordInDatabase) {
-//     // check if oldpassword matches the one in the database
-//     if (await verifyPassword(oldPassword, passwordInDatabase)) {
-//       await AccountSchema.findOneAndUpdate({ _id: tObjectId(id) }, { $set: { password: await encryptPassword(password) } });
-//     } else {
-//       res.status(401);
-//       throw new Error("Update failed , Passwords don't match");
-//     }
-//   } else {
-//     res.status(400);
-//     throw new Error("Bad Request,check request body");
-//   }
-// };
-// export const accountUpdateController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("User updating account info....");
-//   const { firstName, lastName, email, password, oldPassword, id } = req.body;
-//   let infoFromDatabase: any = "";
-//   //   console.log(`Id=${id}`)
-//   if (oldPassword) {
-//     console.log("Info been updated is password...");
-//     console.log("Getting old password from database...");
-//     infoFromDatabase = await AccountSchema.find({ _id: tObjectId(id) }).select("password");
-//     console.log("Old passowrd received");
-//   }
-//   await updateAccount(res, id, firstName, lastName, email, oldPassword, password, infoFromDatabase !== "" ? infoFromDatabase[0].password : undefined);
-//   console.log("Account Updated")
-//   res.status(200).json({ message: "Update Successful" });
-// });
-// export const accountInfoController=asyncHandler(async (req: Request, res: Response) =>{
-//     const {account}=req.body
-//     res.status(200).json({message:"Info received successfully",accountInfo:account})
-// })
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.accountInfoController = exports.accountUpdateController = void 0;
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const updateAccountInfo_1 = require("../../useCases/user/updateAccountInfo");
+const User_1 = require("../../domain/entities/User");
+const AppError_1 = require("../../domain/entities/AppError");
+const getAccountInfo_1 = require("../../useCases/user/getAccountInfo");
+exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("User updating account info....");
+    const { firstName, lastName, id } = req.body;
+    if (typeof firstName !== "string" || typeof lastName !== "string")
+        throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
+    const wasDataUpdated = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id }));
+    if (!wasDataUpdated) {
+        throw new AppError_1.AppError("No data passed in the request to be used for the update", 400);
+    }
+    res.status(200).json({ message: "Account updated" });
+}));
+exports.accountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.body;
+    const { firstName, lastName, accountBalance, phone, langPref, subService, unSubService } = yield (0, getAccountInfo_1.getAccountInfo)(Number(id));
+    // get actual sub and unsub service data and add to the response(Not yet implemented)
+    res.status(200).json({ firstName, lastName, accountBalance, phone, langPref });
+}));
