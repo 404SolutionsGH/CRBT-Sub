@@ -9,6 +9,6 @@ export class User extends Model {
   declare phone: string;
   declare langPref: string;
   declare accountBalance: string;
-  declare subService:Array<Number>
-  declare unSubService:Array<Number>
+  declare subService:Array<number>
+  declare unSubService:Array<number>
 }

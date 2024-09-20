@@ -1,4 +1,5 @@
 import { defineAdminTable } from "./tables/adminTable"
+import { defineServiceTable } from "./tables/serviceTable"
 import { defineUserTable } from "./tables/userTable"
 
 
@@ -6,4 +7,5 @@ import { defineUserTable } from "./tables/userTable"
 export const defineAllTables= ()=>{
     defineUserTable()
     defineAdminTable()
+    defineServiceTable()
 }
