@@ -12,6 +12,7 @@ export const defineServiceTable= ()=>{
         ownerId: {
           type: DataTypes.INTEGER(),
           primaryKey: true,
+          allowNull:false,
           validate: {
             notNull: { msg: "ownerId must contain a value" },
             isInt: { msg: "ownerId must be a integer value" },
