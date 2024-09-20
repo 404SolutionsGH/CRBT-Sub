@@ -26,7 +26,5 @@ export const accountInfoController = asyncHandler(async (req: Request, res: Resp
 
   const { firstName, lastName, accountBalance, phone, langPref, subService, unSubService } = await getAccountInfo(Number(id));
 
-  // get actual sub and unsub service data and add to the response(Not yet implemented)
-
-  res.status(200).json({ firstName, lastName, accountBalance, phone, langPref });
+  res.status(200).json({ firstName, lastName, accountBalance, phone, langPref,subService,unSubService });
 });

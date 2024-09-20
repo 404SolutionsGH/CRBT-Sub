@@ -10,10 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccountInfo = void 0;
+const serviceRepoImplementation_1 = require("../../infrastructure/repository/serviceRepoImplementation");
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepo = new userRepoImplemtation_1.UserRepoImp();
+    const serviceRepo = new serviceRepoImplementation_1.ServiceRepoImp();
     const accountInfo = yield userRepo.findUserById(id);
-    return accountInfo;
+    const { firstName, lastName, accountBalance, phone, langPref } = accountInfo;
+    const subService = yield serviceRepo.findServiceWithIds(accountInfo.subService);
+    const unSubService = yield serviceRepo.findServiceWithIds(accountInfo.unSubService);
+    return { firstName, lastName, accountBalance, phone, langPref, subService, unSubService };
 });
 exports.getAccountInfo = getAccountInfo;
