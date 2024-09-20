@@ -41,7 +41,7 @@ class ServiceRepoImp {
     }
     findServiceWithIds(ids) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Service_1.Service.findAll({ where: { id: ids } });
+            return yield Service_1.Service.findAll({ where: { ownerId: ids } });
         });
     }
 }
