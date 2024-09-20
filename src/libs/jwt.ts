@@ -1,20 +1,23 @@
 import jwt, { JwtPayload} from "jsonwebtoken";
 import dotenv from "dotenv";
+import { AppError } from "../domain/entities/AppError";
 dotenv.config();
 
-export const jwtForLogIn = (id: string): string | null => {
+export const jwtForLogIn = (id: string): string  => {
   if (process.env.JwtSecretKey !== undefined) {
     return jwt.sign({ userId: id }, process.env.JwtSecretKey, { expiresIn: "20d" });
   } else {
-    return null;
+    console.log("env variable JwtSecretKey not defined on server");
+    throw new AppError("Server errror",500);
   }
 };
 
-export const jwtForSignUp = (id: string, verfCode: number): string | null => {
+export const jwtForSignUp = (id: string, verfCode: number): string => {
   if (process.env.JwtSecretKey !== undefined) {
     return jwt.sign({ userId: id, code: verfCode }, process.env.JwtSecretKey, { expiresIn: "1hr" });
   } else {
-    return null;
+    console.log("env variable JwtSecretKey not defined on server")
+    throw new AppError("Server errror", 500);
   }
 };
 
