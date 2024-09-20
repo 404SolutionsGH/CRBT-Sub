@@ -23,7 +23,7 @@ exports.accountUpdateController = (0, express_async_handler_1.default)((req, res
     const { firstName, lastName, id } = req.body;
     if (typeof firstName !== "string" || typeof lastName !== "string")
         throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
-    const wasDataUpdated = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id }));
+    const wasDataUpdated = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id) }));
     if (!wasDataUpdated) {
         throw new AppError_1.AppError("No data passed in the request to be used for the update", 400);
     }

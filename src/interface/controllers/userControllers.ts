@@ -13,7 +13,7 @@ export const accountUpdateController = asyncHandler(async (req: Request, res: Re
   if (typeof firstName !== "string" || typeof lastName !== "string")
     throw new AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
 
-  const wasDataUpdated = await updateAccountInfo(User.build({ firstName, lastName, id }));
+  const wasDataUpdated = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id) }));
 
   if (!wasDataUpdated) {
     throw new AppError("No data passed in the request to be used for the update", 400);
