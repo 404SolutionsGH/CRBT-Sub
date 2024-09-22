@@ -21,7 +21,7 @@ const getAccountInfo_1 = require("../../useCases/user/getAccountInfo");
 exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User updating account info....");
     const { firstName, lastName, id } = req.body;
-    if (typeof firstName !== "string" || typeof lastName !== "string")
+    if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
         throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
     const wasDataUpdated = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id) }));
     if (!wasDataUpdated) {

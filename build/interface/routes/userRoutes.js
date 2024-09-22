@@ -6,6 +6,77 @@ const express_1 = require("express");
 const verifyJwt_1 = require("../middlewares/verifyJwt");
 const userControllers_1 = require("../controllers/userControllers");
 exports.userRouter = (0, express_1.Router)();
+/**
+ * @swagger
+ * /api/v1/user/update-account-info:
+ *   put:
+ *     tags:
+ *       - Account
+ *     summary: Update User Account Information
+ *     description: This endpoint allows users to update information about their account. The request body must contain at least one field (`firstName` or `lastName`) or both.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         description: Bearer token obtained during login.
+ *         schema:
+ *           type: string
+ *           example: "Bearer <JWT Token>"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *                 description: First name of the user (optional but required if lastName is not provided).
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *                 description: Last name of the user (optional but required if firstName is not provided).
+ *             required:
+ *               - firstName
+ *               - lastName
+ *             anyOf:
+ *               - required: ["firstName"]
+ *               - required: ["lastName"]
+ *     responses:
+ *       200:
+ *         description: Account information updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Account information updated successfully."
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       401:
+ *         description: Unauthorized. Invalid or missing JWT token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized access. Invalid token."
+ */
 exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userControllers_1.accountUpdateController);
 /**
  * @swagger
