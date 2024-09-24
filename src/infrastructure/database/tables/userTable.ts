@@ -40,7 +40,7 @@ export const defineUserTable = () => {
         allowNull: true,
       },
       accountBalance: DataTypes.STRING(),
-      subService: DataTypes.ARRAY(DataTypes.INTEGER),
+      subService: DataTypes.ARRAY,
       unSubService: DataTypes.ARRAY(DataTypes.INTEGER),
     },
     {

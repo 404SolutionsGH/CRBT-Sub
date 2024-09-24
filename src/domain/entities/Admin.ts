@@ -2,7 +2,7 @@ import { Model } from "sequelize";
 
 
 export class Admin extends Model {
-  declare id: Number;
+  declare id: number;
   declare firstName: string;
   declare lastName: string;
   declare email: string;

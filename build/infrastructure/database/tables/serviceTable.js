@@ -19,6 +19,9 @@ const defineServiceTable = () => {
             type: sequelize_1.DataTypes.STRING(),
             allowNull: false,
             unique: { msg: "The serviceName {VALUE} already exist please select a different name", name: "ServiceName" },
+            validate: {
+                notNull: { msg: "No value passed for serviceName" },
+            },
         },
         planeType: {
             type: sequelize_1.DataTypes.STRING(),
@@ -31,12 +34,15 @@ const defineServiceTable = () => {
         albums: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING()),
         category: {
             type: sequelize_1.DataTypes.STRING(),
-            defaultValue: "CRBT"
+            allowNull: false,
+            validate: {
+                notNull: { msg: "No value passed for category" },
+            },
         },
         numOfSubscribers: {
-            type: sequelize_1.DataTypes.INTEGER(),
-            defaultValue: 0
-        }
+            type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER()),
+            defaultValue: 0,
+        },
     }, { sequelize: connectDb_1.sequelize, tableName: "Services", timestamps: true });
 };
 exports.defineServiceTable = defineServiceTable;
