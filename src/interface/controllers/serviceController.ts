@@ -1,41 +1,20 @@
-// import { NextFunction, Request, Response } from "express";
-// import { AccountSchema } from "../../schema/accountSchema";
-// import { tObjectId } from "../../libs/mongoose";
-// import asyncHandler from "express-async-handler";
-// import { CrbtServiceSchema } from "../../schema/crbtServiceSchema";
-// import { SongSchema } from "../../schema/songSchema";
-// import { AlbumSchema } from "../../schema/albumSchema";
+import { NextFunction, Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import { AppError } from "../../domain/entities/AppError";
+import { createService } from "../../useCases/service/createService";
+import { Service } from "../../domain/entities/Service";
 
-// const allowedPlannedType = ["basic", "silver", "gold"];
+export const newServiceController = asyncHandler(async (req: Request, res: Response) => {
+  console.log("Creating a new Service...");
+  const { email, planType, category, serviceName } = req.body;
+  if (!email) throw new AppError("No data passed for email", 400);
+  await createService(email, Service.build({ planType, serviceName,category }));
+  res.status(200).json({ messge: "Service created sucessfully" });
+});
 
-// export const newServiceController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("Creating a new Service...");
-
-//   const { email, planType, category, serviceName, account } = req.body;
-
-//   if (email && planType && category && allowedPlannedType.includes(planType) && account.accountType === "admin" && serviceName) {
-//     console.log("Checking if account already has a service");
-//     if (account.service) {
-//       console.log("Account already has a service");
-//       throw new Error("Account already has a service");
-//     }
-//     const newService = await CrbtServiceSchema.create({ ownerId: account._id, planType, serviceName });
-//     console.log("Service Created");
-//     console.log("Updating service owner account with with service id..");
-//     await AccountSchema.updateOne({ _id: account._id }, { $set: { service: newService._id } });
-//     console.log("Update done");
-//     res.status(200).json({ message: "Service has been created" });
-//   } else {
-//     res.status(400);
-//     throw new Error(
-//       allowedPlannedType.includes(planType) ? "Invalid data passed for planType in request body" : account.accountType !== "norm" ? "Cannot create service for non admin users" : "Invalid request body"
-//     );
-//   }
-// });
-
-// export const subscribeServiceController = asyncHandler(async (req: Request, res: Response) => {
+export const subscribeServiceController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("A user is subscriping to a service...");
-//   const { id, songId, billingTime, date, nextSubPayment } = req.body;
+  const { id, songId, billingTime, date, nextSubPayment } = req.body;
 
 //   if (songId && billingTime && nextSubPayment) {
 //     console.log("Checking if user is already on a subscrption");
@@ -74,11 +53,20 @@
 //     res.status(400);
 //     throw new Error("Invalid request body");
 //   }
-// });
+
+});
+
+
+
+
+
+
+
+
 
 // export const unsubscribeServiceController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("A user is unsubscribing from a service...");
-//   const { id, songId } = req.body; 
+//   const { id, songId } = req.body;
 
 //   if (songId) {
 //     // 1. Changed condition to check only for songId

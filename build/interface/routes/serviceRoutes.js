@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serviceRouter = void 0;
 const express_1 = require("express");
+const verifyJwt_1 = require("../../interface/middlewares/verifyJwt");
+// import { newServiceController, subscribeServiceController, unsubscribeServiceController } from "../controllers/serviceController";
+const checkForSuperAdmin_1 = require("../../interface/middlewares/checkForSuperAdmin");
+const serviceController_1 = require("../controllers/serviceController");
 exports.serviceRouter = (0, express_1.Router)();
-// serviceRouter.post("/new-service", verifyJwt, isSuperAdminAccount, checkingForAccount, newServiceController);
-// serviceRouter.post("/subscribe", verifyJwt, subscribeServiceController);
+exports.serviceRouter.post("/new-service", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, serviceController_1.newServiceController);
+exports.serviceRouter.post("/subscribe", verifyJwt_1.verifyJwt, serviceController_1.subscribeServiceController);
 // serviceRouter.post("/unsubscribe", verifyJwt, unsubscribeServiceController);
