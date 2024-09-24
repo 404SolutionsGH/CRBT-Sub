@@ -23,7 +23,7 @@ exports.newServiceController = (0, express_async_handler_1.default)((req, res) =
     if (!email)
         throw new AppError_1.AppError("No data passed for email", 400);
     yield (0, createService_1.createService)(email, Service_1.Service.build({ planType, serviceName, category }));
-    res.status(200).json({ messge: "Service created sucessfully" });
+    res.status(201).json({ messge: "Service created sucessfully" });
 }));
 exports.subscribeServiceController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //   console.log("A user is subscriping to a service...");

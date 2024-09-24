@@ -40,7 +40,7 @@ const defineUserTable = () => {
             allowNull: true,
         },
         accountBalance: sequelize_1.DataTypes.STRING(),
-        subService: sequelize_1.DataTypes.ARRAY,
+        subService: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.JSON),
         unSubService: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
     }, {
         sequelize: connectDb_1.sequelize,

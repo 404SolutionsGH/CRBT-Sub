@@ -9,7 +9,7 @@ export const newServiceController = asyncHandler(async (req: Request, res: Respo
   const { email, planType, category, serviceName } = req.body;
   if (!email) throw new AppError("No data passed for email", 400);
   await createService(email, Service.build({ planType, serviceName,category }));
-  res.status(200).json({ messge: "Service created sucessfully" });
+  res.status(201).json({ messge: "Service created sucessfully" });
 });
 
 export const subscribeServiceController = asyncHandler(async (req: Request, res: Response) => {
