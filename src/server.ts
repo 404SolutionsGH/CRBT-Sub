@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
-
 import { errorHandler } from "./interface/middlewares/errorHandler";
 import { authRouter } from "./interface/routes/authRoutes";
 import { userRouter } from "./interface/routes/userRoutes";
@@ -11,6 +10,7 @@ import { serviceRouter } from "./interface/routes/serviceRoutes";
 import { connectToDatabase } from "./infrastructure/database/connectDb";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "./swaggerConfig";
+import { setUpAllEventListners } from "./@common/events/setUpAllListners";
 
 const server = express();
 
@@ -32,6 +32,7 @@ server.use(errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;
 const startServer = async () => {
   try {
+    setUpAllEventListners()
     await connectToDatabase()
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);

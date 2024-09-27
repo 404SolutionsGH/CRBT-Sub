@@ -24,6 +24,7 @@ const serviceRoutes_1 = require("./interface/routes/serviceRoutes");
 const connectDb_1 = require("./infrastructure/database/connectDb");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = require("./swaggerConfig");
+const setUpAllListners_1 = require("./@common/events/setUpAllListners");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
@@ -40,6 +41,7 @@ server.use(errorHandler_1.errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
