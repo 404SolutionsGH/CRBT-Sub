@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminPlanRepoImp = void 0;
+exports.AdminPlanRepoImp = void 0;
 const AdminPlan_1 = require("../../domain/entities/AdminPlan");
-class adminPlanRepoImp {
+class AdminPlanRepoImp {
     createPlan(plan) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { planType, planName, subType, price, benefits } = plan;
-            const [itemCreated, isCreated] = yield AdminPlan_1.AdminPlan.findOrCreate({ where: { subType, planName, planType }, defaults: { planType, planName, subType, price, benefits } });
+            const { planType, subType, price, benefits } = plan;
+            const [itemCreated, isCreated] = yield AdminPlan_1.AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
             if (isCreated)
                 return itemCreated;
             return null;
@@ -49,4 +49,4 @@ class adminPlanRepoImp {
         });
     }
 }
-exports.adminPlanRepoImp = adminPlanRepoImp;
+exports.AdminPlanRepoImp = AdminPlanRepoImp;

@@ -4,7 +4,6 @@ exports.defineAdminTable = void 0;
 const sequelize_1 = require("sequelize");
 const Admin_1 = require("../../../domain/entities/Admin");
 const connectDb_1 = require("../connectDb");
-const AdminPlan_1 = require("../../../domain/entities/AdminPlan");
 const defineAdminTable = () => {
     Admin_1.Admin.init({
         id: {
@@ -57,20 +56,17 @@ const defineAdminTable = () => {
         planId: {
             type: sequelize_1.DataTypes.INTEGER(),
             defaultValue: 0,
-            references: {
-                model: AdminPlan_1.AdminPlan,
-                key: "planId"
-            }
         },
         nextSubPayment: {
             type: sequelize_1.DataTypes.DATEONLY(),
             allowNull: true,
             validate: {
-                isDate: { msg: "nextSubPayment should be string in the data format yy-mm-dd", args: true }
-            }
-        }
+                isDate: { msg: "nextSubPayment should be string in the data format yy-mm-dd", args: true },
+            },
+        },
     }, { sequelize: connectDb_1.sequelize, tableName: "Admins", timestamps: false });
     //  setting up associations
-    Admin_1.Admin.belongsTo(AdminPlan_1.AdminPlan, { foreignKey: "planId" });
+    // Admin.belongsTo(AdminPlan, { foreignKey: "planId" });
+    // AdminPlan.hasMany(Admin, { foreignKey: "planId" });
 };
 exports.defineAdminTable = defineAdminTable;

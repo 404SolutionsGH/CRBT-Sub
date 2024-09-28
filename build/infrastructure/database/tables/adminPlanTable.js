@@ -4,7 +4,6 @@ exports.defineAdminPlanTable = void 0;
 const sequelize_1 = require("sequelize");
 const AdminPlan_1 = require("../../../domain/entities/AdminPlan");
 const connectDb_1 = require("../connectDb");
-const Admin_1 = require("../../../domain/entities/Admin");
 const defineAdminPlanTable = () => {
     AdminPlan_1.AdminPlan.init({
         planId: { type: sequelize_1.DataTypes.INTEGER(), autoIncrement: true, primaryKey: true },
@@ -42,7 +41,5 @@ const defineAdminPlanTable = () => {
         },
         benefits: sequelize_1.DataTypes.JSON()
     }, { sequelize: connectDb_1.sequelize, tableName: "AdminPlans", timestamps: false });
-    // setting up associations
-    AdminPlan_1.AdminPlan.hasMany(Admin_1.Admin, { foreignKey: "planId" });
 };
 exports.defineAdminPlanTable = defineAdminPlanTable;

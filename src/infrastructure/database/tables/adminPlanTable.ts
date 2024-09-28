@@ -46,7 +46,4 @@ export const defineAdminPlanTable= ()=>{
       },
       { sequelize: sequelize, tableName: "AdminPlans", timestamps: false }
     );
-
-    // setting up associations
-    AdminPlan.hasMany(Admin,{foreignKey:"planId"})
 }

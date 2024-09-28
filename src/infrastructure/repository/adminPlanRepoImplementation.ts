@@ -1,11 +1,11 @@
 import { AdminPlan } from "../../domain/entities/AdminPlan";
 import { AdminPlanRepository } from "../../domain/interfaces/adminPlanRepository";
 
-export class adminPlanRepoImp implements AdminPlanRepository {
+export class AdminPlanRepoImp implements AdminPlanRepository {
   async createPlan(plan: AdminPlan): Promise<AdminPlan | null> {
-    const { planType, planName, subType, price, benefits } = plan;
+    const { planType, subType, price, benefits } = plan;
 
-    const [itemCreated, isCreated] = await AdminPlan.findOrCreate({ where: { subType, planName, planType }, defaults: { planType, planName, subType, price, benefits } });
+    const [itemCreated, isCreated] = await AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
 
     if (isCreated) return itemCreated;
     return null;
