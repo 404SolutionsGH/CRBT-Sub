@@ -11,5 +11,6 @@ const defineAllTables = () => {
     (0, adminTable_1.defineAdminTable)();
     (0, serviceTable_1.defineServiceTable)();
     (0, songTable_1.defineSongTable)();
+    (0, adminTable_1.defineAdminTable)();
 };
 exports.defineAllTables = defineAllTables;

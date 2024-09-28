@@ -9,4 +9,5 @@ export const defineAllTables = () => {
   defineAdminTable();
   defineServiceTable();
   defineSongTable();
+  defineAdminTable();
 };

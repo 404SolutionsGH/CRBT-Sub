@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { Admin } from "../../../domain/entities/Admin"
 import { sequelize } from "../connectDb"
+import { AdminPlan } from "../../../domain/entities/AdminPlan";
 
 
 
@@ -58,7 +59,11 @@ export const defineAdminTable=()=>{
 
         planId:{
           type:DataTypes.INTEGER(),
-          defaultValue:0
+          defaultValue:0,
+          references:{
+            model:AdminPlan,
+            key:"planId"
+          }
         },
         nextSubPayment:{
           type:DataTypes.DATEONLY(),
@@ -70,4 +75,8 @@ export const defineAdminTable=()=>{
       },
       { sequelize: sequelize, tableName: "Admins", timestamps: false }
     );
+
+//  setting up associations
+    Admin.belongsTo(AdminPlan,{foreignKey:"planId"})
+
 }
