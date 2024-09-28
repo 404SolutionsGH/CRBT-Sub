@@ -53,6 +53,17 @@ const defineAdminTable = () => {
                 isIn: { args: [["merchant", "system"]], msg: "Value for adminType should be merchant or system not {VALUE}" },
             },
         },
+        planId: {
+            type: sequelize_1.DataTypes.INTEGER(),
+            defaultValue: 0
+        },
+        nextSubPayment: {
+            type: sequelize_1.DataTypes.DATEONLY(),
+            allowNull: true,
+            validate: {
+                isDate: { msg: "nextSubPayment should be string in the data format yy-mm-dd", args: true }
+            }
+        }
     }, { sequelize: connectDb_1.sequelize, tableName: "Admins", timestamps: false });
 };
 exports.defineAdminTable = defineAdminTable;
