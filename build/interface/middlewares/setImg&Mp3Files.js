@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setImgAndMp3Files = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const AppError_1 = require("../../domain/entities/AppError");
 const allowedAudioMimeTypes = [
     "audio/mpeg", // MP3
     "audio/wav", // WAV
@@ -33,7 +34,7 @@ exports.setImgAndMp3Files = (0, express_async_handler_1.default)((req, res, next
                     req.body.profile = { data: profile[0].buffer, exetension: profile[0].mimetype === "image/png" ? ".png" : ".jpeg" };
                 }
                 else {
-                    throw new Error("Profile image is not in the prefered type(ie .png or .jpg)");
+                    throw new AppError_1.AppError("Profile image is not in the prefered type(ie .png or .jpg)", 400);
                 }
             }
             req.body.song = { data: song[0].buffer, exetension: song[0].mimetype === "audio/mpeg" ? ".mp3" : song[0].mimetype === "audio/wav" ? ".wav" : ".aac" };
@@ -41,12 +42,10 @@ exports.setImgAndMp3Files = (0, express_async_handler_1.default)((req, res, next
             next();
         }
         else {
-            res.status(400);
-            throw new Error(song ? "No song file uploaded" : "Audio file not in the reuired file format(ie .mp3 or .wav or .aac)");
+            throw new AppError_1.AppError(song ? "No song file uploaded" : "Audio file not in the reuired file format(ie .mp3 or .wav or .aac)", 400);
         }
     }
     else {
-        res.status(400);
-        throw new Error("Upload Failed , no file present");
+        throw new AppError_1.AppError("Upload Failed , no file present", 400);
     }
 }));

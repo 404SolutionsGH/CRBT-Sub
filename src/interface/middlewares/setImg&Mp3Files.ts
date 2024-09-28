@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import { AppError } from "../../domain/entities/AppError";
 
 const allowedAudioMimeTypes = [
   "audio/mpeg", // MP3
@@ -23,7 +24,7 @@ export const setImgAndMp3Files = asyncHandler(async (req: Request, res: Response
         if (allowedImageMimeType.includes(profile[0].mimetype)) {
           req.body.profile = { data: profile[0].buffer, exetension: profile[0].mimetype === "image/png" ? ".png" : ".jpeg" };
         } else {
-          throw new Error("Profile image is not in the prefered type(ie .png or .jpg)");
+          throw new AppError("Profile image is not in the prefered type(ie .png or .jpg)",400);
         }
       }
 
@@ -33,11 +34,9 @@ export const setImgAndMp3Files = asyncHandler(async (req: Request, res: Response
 
       next();
     } else {
-      res.status(400);
-      throw new Error(song ? "No song file uploaded" : "Audio file not in the reuired file format(ie .mp3 or .wav or .aac)");
+      throw new AppError(song ? "No song file uploaded" : "Audio file not in the reuired file format(ie .mp3 or .wav or .aac)",400);
     }
   } else {
-    res.status(400);
-    throw new Error("Upload Failed , no file present");
+    throw new AppError("Upload Failed , no file present",400);
   }
 });

@@ -2,21 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.songsRouter = void 0;
 const express_1 = require("express");
-// import {
-//   allSongsController,
-//   listenController,
-//   profileController,
-//   recommendationController,
-//   searchController,
-//   songSubDetailController,
-//   toneController,
-//   toneDeletionController,
-//   uploadController,
-// } from "../controllers/songsControllers";
-// import { getFilesFromReq } from "../../libs/multer";
-// import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
+const verifyJwt_1 = require("../middlewares/verifyJwt");
+const multer_1 = require("../../libs/multer");
+const setImg_Mp3Files_1 = require("../middlewares/setImg&Mp3Files");
+const songsControllers_1 = require("../controllers/songsControllers");
 exports.songsRouter = (0, express_1.Router)();
-// songsRouter.post("/upload", getFilesFromReq(), verifyJwt, setImgAndMp3Files, uploadController);
+exports.songsRouter.post("/upload", (0, multer_1.getFilesFromReq)(), verifyJwt_1.verifyJwt, setImg_Mp3Files_1.setImgAndMp3Files, songsControllers_1.uploadController);
 // songsRouter.get("/profile/:fileName", verifyJwt, profileController);
 // songsRouter.get("/listen/:fileName", verifyJwt, listenController);
 // songsRouter.get("/search", verifyJwt, searchController);

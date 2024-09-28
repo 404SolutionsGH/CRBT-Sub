@@ -1,112 +1,24 @@
-// import dotenv from "dotenv";
-// dotenv.config();
-// import { NextFunction, Request, Response } from "express";
-// import asyncHandler from "express-async-handler";
-// import { AccountSchema } from "../../../schema/accountSchema";
-// import { tObjectId } from "../../../libs/mongoose";
-// import { Account } from "../../../components/customDataTypes";
-// import { Schema } from "mongoose";
-// import { SongSchema } from "../../../schema/songSchema";
-// import { writeFile } from "fs/promises";
-// import { isAbsolute, resolve } from "path";
-// import { CrbtServiceSchema } from "../../../schema/crbtServiceSchema";
-// import { Types } from "mongoose";
-// import fs, { access } from "fs/promises";
-// import { AlbumSchema } from "../../../schema/albumSchema";
+import dotenv from "dotenv";
+dotenv.config();
+import { NextFunction, Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import { writeFile } from "fs/promises";
+import { isAbsolute, resolve } from "path";
+import fs, { access } from "fs/promises";
+import { uploadSong } from "../../useCases/song/uploadSong";
+import { Song } from "../../domain/entities/Song";
+import { AppError } from "../../domain/entities/AppError";
+import { File } from "../../@common/customDataTypes/File";
 
-// // helper methods
+export const uploadController = asyncHandler(async (req: Request, res: Response) => {
+  //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
+  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType, price, category } = req.body;
 
-// const checkPathExists = async (path: string): Promise<boolean> => {
-//   try {
-//     await access(path, fs.constants.F_OK);
-//     console.log("Path exists.");
-//     return true;
-//   } catch (err) {
-//     console.log("Path does not exist.");
-//     return false;
-//   }
-// };
+  if (!songTitle||!lang||!subscriptionType) throw new AppError(`No data passed for ${(!songTitle?"songTitle":!lang?"lang":"subscriptionType")}`, 400);
+  await uploadSong(Song.build({ ownerId: id, albumName, songTitle, artisteName, ussdCode, subscriptionType, price, category ,lang}), song as File, profile as File);
 
-// export const uploadController = asyncHandler(async (req: Request, res: Response) => {
-//   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-//   const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType, price, category } = req.body;
-
-//   console.log("Uploading a song...");
-//   console.log("Checking if account is of the appropriate type...");
-//   const accountInfo: Account | null = await AccountSchema.findOne({ _id: tObjectId(id) }).populate("service");
-
-//   if (accountInfo && accountInfo?.accountType !== "norm" && songTitle && artisteName && ussdCode && subscriptionType && price && category) {
-//     // console.log("Checking account songs limit...");
-
-//     if (accountInfo?.service || accountInfo?.accountType === "superAdmin") {
-//       console.log("Songs limit not reached,upload can proceed");
-//       console.log("Checking if songs with this title already exist...");
-//       if ((await SongSchema.find({ ownerId: tObjectId(id), songTitle, artisteName })).length !== 0) {
-//         console.log("A song with this title has already been uploaded");
-//         throw new Error("Song has already been uploaded");
-//       }
-//       console.log("Song does not exist in database");
-
-//       console.log("Saving info about song...");
-//       console.log("Generating songId...");
-//       const songId = new Types.ObjectId();
-//       const songDataSaved = await SongSchema.create({
-//         _id: songId,
-//         songTitle,
-//         artisteName,
-//         price,
-//         category,
-//         lang: lang ? lang : "eng",
-//         ownerId: tObjectId(id),
-//         albumName: albumName ? albumName : "N/A",
-//         ussdCode,
-//         subscriptionType,
-//         profile: profile ? `/${String(songId)}${profile.exetension}` : "/defaultProf.png",
-//         song: `/${String(songId)}${song.exetension}`,
-//       });
-//       console.log("Song Info saved sucessfully");
-
-//       console.log("Checking if there is an albumName and if it already exist..");
-
-//       if (albumName && !(await AlbumSchema.findOne({ name: albumName }))) {
-//         console.log("Album does not exist, creating album ..");
-//         await AlbumSchema.create({ name: albumName, artisteName, numOfSongs: 1, profile: profile ? `/${String(songId)}${profile.exetension}` : "/defaultProf.png" });
-//       } else {
-//         console.log(!albumName ? "No data in albumName in request body" : "An album with this name exist");
-//         if (albumName) {
-//           await AlbumSchema.updateOne({ name: albumName }, { $inc: { numOfSongs: 1 } });
-//         }
-//       }
-
-//       // Saving song's profile image and mp3 file using the ObjectId of it saved info
-//       console.log("Saving song profile image and mp3 files");
-
-//       if (profile) {
-//         // checking if the profile was set(this is because is not compulsory to upload an image when uploading a sond)
-//         await writeFile(resolve(__dirname, `./songsData/songsProfileImages/${songDataSaved._id}${profile.exetension}`), profile.data);
-//       }
-//       await writeFile(resolve(__dirname, `./songsData/songs/${songDataSaved._id}${song.exetension}`), song.data);
-//       console.log("Files sucessfully saved..");
-//       if (accountInfo?.service) {
-//         console.log("Updating this account's crbt service document by adding the saved song's id....");
-//         await CrbtServiceSchema.findOneAndUpdate({ ownerId: tObjectId(id) }, { $push: { songs: { $each: [songDataSaved._id], $position: 0 } } });
-//         console.log("Update done");
-//       }
-//       res.status(200).json({ message: "Song saved successfully" });
-//     } else {
-//       console.log("Do not have an CRBT service to upload songs to");
-//       res.status(400);
-//       throw new Error("Do not have an CRBT service to upload songs to");
-//     }
-//   } else {
-//     if (!songTitle || !artisteName || !ussdCode || !subscriptionType) {
-//       res.status(400);
-//       throw new Error("Song upload failed ,Invalid request body");
-//     }
-//     res.status(401);
-//     throw new Error(!accountInfo?.service ? "Do not have an CRBT service to upload songs to" : "This account type is not authorized to upload a song");
-//   }
-// });
+  res.status(201).json({ message: "Song uploaded sucessfully" });
+});
 
 // export const profileController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("An img is been retrieved....");
