@@ -11,6 +11,7 @@ import { connectToDatabase } from "./infrastructure/database/connectDb";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "./swaggerConfig";
 import { setUpAllEventListners } from "./@common/events/setUpAllListners";
+import { adminPlanRouter } from "./interface/routes/adminPlanRoute";
 
 const server = express();
 
@@ -26,6 +27,7 @@ server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/user", userRouter);
 server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
+server.use("/api/v1/admin-plan",adminPlanRouter)
 // error handling middlware
 server.use(errorHandler);
 
