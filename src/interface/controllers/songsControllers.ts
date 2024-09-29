@@ -5,19 +5,46 @@ import asyncHandler from "express-async-handler";
 import { writeFile } from "fs/promises";
 import { isAbsolute, resolve } from "path";
 import fs, { access } from "fs/promises";
-import { uploadSong } from "../../useCases/song/uploadSong";
+import { uploadSong, uploadTempSong } from "../../useCases/song/uploadSong";
 import { Song } from "../../domain/entities/Song";
 import { AppError } from "../../domain/entities/AppError";
 import { File } from "../../@common/customDataTypes/File";
+import { getAllSongs, getSavedUploads, getTempUploads } from "../../useCases/song/getSongs";
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, subscriptionType, price, category } = req.body;
+  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
 
-  if (!songTitle||!lang||!subscriptionType) throw new AppError(`No data passed for ${(!songTitle?"songTitle":!lang?"lang":"subscriptionType")}`, 400);
-  await uploadSong(Song.build({ ownerId: id, albumName, songTitle, artisteName, ussdCode, subscriptionType, price, category ,lang}), song as File, profile as File);
+  if (!songTitle || !lang || !subscriptionType) throw new AppError(`No data passed for ${!songTitle ? "songTitle" : !lang ? "lang" : "subscriptionType"}`, 400);
+  await uploadSong(Song.build({ ownerId: id, albumName, songTitle, artisteName, ussdCode, subscriptionType, price, category, lang, tune }), song as File, profile as File);
 
   res.status(201).json({ message: "Song uploaded sucessfully" });
+});
+
+export const tempUploadController = asyncHandler(async (req: Request, res: Response) => {
+  const { id, songs } = req.body;
+  await uploadTempSong(id, songs);
+  res.status(201).json({ message: `All ${(songs as Array<File>).length} songs have been uploaded sucessfully` });
+});
+
+export const getUploadedSongsController = asyncHandler(async (req: Request, res: Response) => {
+  const { state } = req.params;
+  const { id } = req.body;
+  let songs: any;
+  if (state === "saved") {
+    songs = await getSavedUploads(id);
+  } else if (state === "temp") {
+    songs = await getTempUploads(id);
+  } else {
+    throw new AppError("The parameter state should have a value saved or temp", 400);
+  }
+  res.status(200).json({ songs });
+});
+
+export const getAllSongsController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.body;
+  const allSongs = await getAllSongs(id);
+  res.status(200).json({ allSongs });
 });
 
 // export const profileController = asyncHandler(async (req: Request, res: Response) => {

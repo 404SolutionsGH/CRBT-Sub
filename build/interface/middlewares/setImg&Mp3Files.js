@@ -22,23 +22,33 @@ const allowedAudioMimeTypes = [
     "audio/ogg", // Ogg Vorbis
 ];
 const allowedImageMimeType = ["image/png", "image/jpeg"];
+const setUpProfile = (req, profile) => {
+    console.log("Setting up profile..");
+    if (profile) {
+        if (allowedImageMimeType.includes(profile[0].mimetype)) {
+            req.body.profile = { data: profile[0].buffer, exetension: profile[0].mimetype === "image/png" ? ".png" : ".jpeg" };
+        }
+        else {
+            throw new AppError_1.AppError("Profile image is not in the prefered type(ie .png or .jpg)", 400);
+        }
+    }
+    console.log("Profile set up done");
+};
 exports.setImgAndMp3Files = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Setting up image and song data in request body....");
     if (!Array.isArray(req.files) && req.files !== undefined) {
         const profile = req.files.profile; // the profile and song are arrays but we are experting them to have only one element
         const song = req.files.song;
+        const { tune } = req.body;
         if (song && allowedAudioMimeTypes.includes(song[0].mimetype)) {
             // setting up song and profile objects and passing them into the request body
-            if (profile) {
-                if (allowedImageMimeType.includes(profile[0].mimetype)) {
-                    req.body.profile = { data: profile[0].buffer, exetension: profile[0].mimetype === "image/png" ? ".png" : ".jpeg" };
-                }
-                else {
-                    throw new AppError_1.AppError("Profile image is not in the prefered type(ie .png or .jpg)", 400);
-                }
-            }
             req.body.song = { data: song[0].buffer, exetension: song[0].mimetype === "audio/mpeg" ? ".mp3" : song[0].mimetype === "audio/wav" ? ".wav" : ".aac" };
+            setUpProfile(req, profile);
             console.log("Set up done");
+            next();
+        }
+        else if (tune) {
+            setUpProfile(req, profile);
             next();
         }
         else {

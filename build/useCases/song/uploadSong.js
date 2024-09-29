@@ -35,24 +35,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadSong = void 0;
+exports.uploadTempSong = exports.uploadSong = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const AppError_1 = require("../../domain/entities/AppError");
-const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
 const serviceRepoImplementation_1 = require("../../infrastructure/repository/serviceRepoImplementation");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const randomData_1 = require("../../@common/helperMethods/randomData");
 const promises_1 = __importStar(require("fs/promises"));
 const objects_1 = require("../../@common/constants/objects");
-const isUserAdmin = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const { findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
-    const accountInfo = yield findAdminById(id);
-    if (!accountInfo)
-        throw new AppError_1.AppError("User not authorized to upload song", 401);
-    return accountInfo.adminType;
-});
-const isMerchantHavingService = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const TempSong_1 = require("../../domain/entities/TempSong");
+const tempSongRepoImplementation_1 = require("../../infrastructure/repository/tempSongRepoImplementation");
+const helpers_1 = require("./helpers");
+const isMerchantOnPlan = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const { findServiceById } = new serviceRepoImplementation_1.ServiceRepoImp();
     const serviceInfo = yield findServiceById(id);
     if (!serviceInfo)
@@ -87,14 +82,27 @@ const createFileNameAndSave = (file) => __awaiter(void 0, void 0, void 0, functi
 const uploadSong = (songInfo, song, proFile) => __awaiter(void 0, void 0, void 0, function* () {
     const { saveSong } = new songRepoImplementaion_1.SongRepoImpl();
     //   check if the account is an admin
-    const adminType = yield isUserAdmin(songInfo.ownerId);
-    // if (adminType === "merchant") {
-    //   await isMerchantHavingService(songInfo.id);
-    // }
-    songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(yield createFileNameAndSave(song))}`;
+    const accountInfo = yield (0, helpers_1.isUserAdmin)(songInfo.ownerId);
+    if (accountInfo.adminType === "merchant" && accountInfo.planId === 0)
+        throw new AppError_1.AppError("This account is not on a plan.Please subscribe to a plan to upload", 401);
+    // check limations on upload base on the plan the Admin is on using the planId(Not implemented.)
+    if (!songInfo.tune) {
+        songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(yield createFileNameAndSave(song))}`;
+    }
     songInfo.profile = `${process.env.BaseUrl}/api/v1/profile/${(yield createFileNameAndSave(proFile))}`;
     // console.log(songInfo.tune)
     //   save the data in the data base
     yield saveSong(songInfo);
 });
 exports.uploadSong = uploadSong;
+const uploadTempSong = (ownerId, allSongs) => __awaiter(void 0, void 0, void 0, function* () {
+    const { createTempSongs } = new tempSongRepoImplementation_1.TempSongRepoImpl();
+    const songsData = [];
+    for (let file of allSongs) {
+        const tempSongInfo = TempSong_1.TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/listen/${(yield createFileNameAndSave(file))}` });
+        songsData.push(tempSongInfo);
+    }
+    // console.log(`ownerId=${songsData[0].ownerId} ${songsData[1].ownerId} ${songsData[2].ownerId} ${songsData[3].ownerId}`);
+    yield createTempSongs(songsData);
+});
+exports.uploadTempSong = uploadTempSong;

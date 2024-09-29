@@ -10,18 +10,13 @@ import { RandomData } from "../../@common/helperMethods/randomData";
 import { isAbsolute, resolve } from "path";
 import fs, { access } from "fs/promises";
 import { event } from "../../@common/constants/objects";
+import { TempSong } from "../../domain/entities/TempSong";
+import { TempSongRepoImpl } from "../../infrastructure/repository/tempSongRepoImplementation";
+import { isUserAdmin } from "./helpers";
 
-const isUserAdmin = async (id: number) => {
-  const { findAdminById } = new AdminRepoImp();
 
-  const accountInfo = await findAdminById(id);
 
-  if (!accountInfo) throw new AppError("User not authorized to upload song", 401);
-
-  return accountInfo.adminType;
-};
-
-const isMerchantHavingService = async (id: number) => {
+const isMerchantOnPlan = async (id: number) => {
   const { findServiceById } = new ServiceRepoImp();
   const serviceInfo = await findServiceById(id);
   if (!serviceInfo) throw new AppError("This Account does not have a service, please contact system Adimns to get one", 404);
@@ -49,27 +44,40 @@ const createFileNameAndSave = async (file: File) => {
     // check if the file exist
     if (!(await checkPathExists(path))) {
       // emit the File path and buffer for storage
-      event.emit("saveFile", file.data,path);
+      event.emit("saveFile", file.data, path);
       return fileName;
     }
   }
 };
 
-
 export const uploadSong = async (songInfo: Song, song: File, proFile: File) => {
   const { saveSong } = new SongRepoImpl();
 
   //   check if the account is an admin
-  const adminType = await isUserAdmin(songInfo.ownerId);
+  const accountInfo = await isUserAdmin(songInfo.ownerId);
 
-  // if (adminType === "merchant") {
-  //   await isMerchantHavingService(songInfo.id);
-  // }
+  if (accountInfo.adminType === "merchant" && accountInfo.planId === 0) throw new AppError("This account is not on a plan.Please subscribe to a plan to upload", 401);
 
-  songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(await createFileNameAndSave(song))!}`;
+  // check limations on upload base on the plan the Admin is on using the planId(Not implemented.)
+
+  if(!songInfo.tune){
+    songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(await createFileNameAndSave(song))!}`;
+  }
   songInfo.profile = `${process.env.BaseUrl}/api/v1/profile/${(await createFileNameAndSave(proFile))!}`;
 
   // console.log(songInfo.tune)
   //   save the data in the data base
   await saveSong(songInfo);
+};
+
+export const uploadTempSong = async (ownerId: number, allSongs: Array<File>) => {
+  const { createTempSongs } = new TempSongRepoImpl();
+  const songsData: Array<TempSong> = [];
+  for (let file of allSongs) {
+    const tempSongInfo = TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/listen/${(await createFileNameAndSave(file))!}` });
+    songsData.push(tempSongInfo);
+  }
+
+  // console.log(`ownerId=${songsData[0].ownerId} ${songsData[1].ownerId} ${songsData[2].ownerId} ${songsData[3].ownerId}`);
+  await createTempSongs(songsData);
 };

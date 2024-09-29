@@ -1,11 +1,24 @@
 import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
-import { getFilesFromReq } from "../../libs/multer";
+import { getArrayOfFiles, getFilesFromReq } from "../../libs/multer";
 import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
-import { uploadController } from "../controllers/songsControllers";
+import { getAllSongsController, getUploadedSongsController, tempUploadController, uploadController } from "../controllers/songsControllers";
+import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
 
 export const songsRouter = Router();
+
 songsRouter.post("/upload", getFilesFromReq(), verifyJwt, setImgAndMp3Files, uploadController);
+
+songsRouter.post("/temp/upload",getArrayOfFiles(),verifyJwt,setupMp3FilesInReq,tempUploadController)
+
+//endpoit for getting only songs an Admin has uploaded.
+songsRouter.get("/:state",verifyJwt,getUploadedSongsController) 
+
+// endpoint for super admin to get all songs
+songsRouter.get("/",verifyJwt,getAllSongsController)
+
+
+
 // songsRouter.get("/profile/:fileName", verifyJwt, profileController);
 // songsRouter.get("/listen/:fileName", verifyJwt, listenController);
 // songsRouter.get("/search", verifyJwt, searchController);
