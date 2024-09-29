@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllSongs = exports.getSavedUploads = exports.getTempUploads = void 0;
-const AppError_1 = require("../../domain/entities/AppError");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const tempSongRepoImplementation_1 = require("../../infrastructure/repository/tempSongRepoImplementation");
 const helpers_1 = require("./helpers");
@@ -27,10 +26,9 @@ const getSavedUploads = (ownerId) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.getSavedUploads = getSavedUploads;
 const getAllSongs = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const { adminType } = yield (0, helpers_1.isUserAdmin)(id);
+    // const {adminType} = await isUserAdmin(id);
+    // if(adminType!=="system")throw new AppError("This account is not authorized to get all songs in the system",401)
     const { getAllSongs } = new songRepoImplementaion_1.SongRepoImpl();
-    if (adminType !== "system")
-        throw new AppError_1.AppError("This account is not authorized to get all songs in the system", 401);
     return yield getAllSongs();
 });
 exports.getAllSongs = getAllSongs;

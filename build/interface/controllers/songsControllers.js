@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.uploadController = void 0;
+exports.listenController = exports.profileController = exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -53,39 +53,16 @@ exports.getAllSongsController = (0, express_async_handler_1.default)((req, res) 
     const allSongs = yield (0, getSongs_1.getAllSongs)(id);
     res.status(200).json({ allSongs });
 }));
-// export const profileController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("An img is been retrieved....");
-//   const { fileName } = req.params;
-//   console.log("Creating file path....");
-//   const pathToFile = resolve(__dirname, `./songsData/songsProfileImages/${fileName}`);
-//   console.log("File path created");
-//   console.log("Checking if file path exist....");
-//   if (await checkPathExists(pathToFile)) {
-//     res.status(200);
-//     res.download(pathToFile);
-//   } else {
-//     res.status(200);
-//     res.download(resolve(__dirname, "./songsData/songsProfileImages/brokenProf.png"));
-//   }
-// });
-// export const listenController = asyncHandler(async (req: Request, res: Response) => {
-//   console.log("A song is been retrieved....");
-//   const { fileName } = req.params;
-//   console.log("Creating file path....");
-//   const pathToFile = resolve(__dirname, `./songsData/songs/${fileName}`);
-//   console.log("File path created");
-//   console.log("Checking if file path exist....");
-//   if (await checkPathExists(pathToFile)) {
-//     console.log("Updating numberOfListeners of songInfo...");
-//     await SongSchema.findOneAndUpdate({ _id: tObjectId(fileName.split(".")[0]) }, { $inc: { numberOfListeners: 1 } });
-//     console.log("Update done");
-//     res.status(200);
-//     res.download(pathToFile);
-//   } else {
-//     res.status(404);
-//     throw new Error("No song file with this id exist");
-//   }
-// });
+exports.profileController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("An img is been retrieved....");
+    const { path } = req.body;
+    res.status(200).download(path);
+}));
+exports.listenController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("A song is been retrieved....");
+    const { path } = req.body;
+    res.status(200).download(path);
+}));
 // export const searchController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("A search is been done...");
 //   const { songTitle, artisteName, lang, albumName, category } = req.query;

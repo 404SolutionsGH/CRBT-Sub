@@ -16,9 +16,8 @@ export const getSavedUploads = async (ownerId: number) => {
 };
 
 export const getAllSongs = async (id: number) => {
-  const {adminType} = await isUserAdmin(id);
-  const {getAllSongs}=new SongRepoImpl()  
-  if(adminType!=="system")throw new AppError("This account is not authorized to get all songs in the system",401)
-  return await getAllSongs()  
-
+  // const {adminType} = await isUserAdmin(id);
+  // if(adminType!=="system")throw new AppError("This account is not authorized to get all songs in the system",401)
+  const { getAllSongs } = new SongRepoImpl();
+  return await getAllSongs();
 };

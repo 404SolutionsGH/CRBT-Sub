@@ -12,6 +12,10 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpecs } from "./swaggerConfig";
 import { setUpAllEventListners } from "./@common/events/setUpAllListners";
 import { adminPlanRouter } from "./interface/routes/adminPlanRoute";
+import { TempSong } from "./domain/entities/TempSong";
+import { Song } from "./domain/entities/Song";
+import { Admin } from "./domain/entities/Admin";
+import { encryptPassword } from "./libs/bcrypt";
 
 const server = express();
 
@@ -36,6 +40,18 @@ const startServer = async () => {
   try {
     setUpAllEventListners()
     await connectToDatabase()
+      await connectToDatabase();
+      // await TempSong.truncate();
+      // await Song.truncate();
+      // console.log("data deleted");
+      // await Admin.truncate()
+      // await Admin.create({
+      //   email: "admin@gmail.com",
+      //   firstName: "adminFirstName",
+      //   lastName: "adminLastName",
+      //   password: await encryptPassword("Admin1234"),
+      //   adminType: "system",
+      // });
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

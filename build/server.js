@@ -45,6 +45,18 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
+        yield (0, connectDb_1.connectToDatabase)();
+        // await TempSong.truncate();
+        // await Song.truncate();
+        // console.log("data deleted");
+        // await Admin.truncate()
+        // await Admin.create({
+        //   email: "admin@gmail.com",
+        //   firstName: "adminFirstName",
+        //   lastName: "adminLastName",
+        //   password: await encryptPassword("Admin1234"),
+        //   adminType: "system",
+        // });
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
         });

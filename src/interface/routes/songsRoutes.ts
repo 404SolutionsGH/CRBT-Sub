@@ -2,8 +2,9 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { getArrayOfFiles, getFilesFromReq } from "../../libs/multer";
 import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
-import { getAllSongsController, getUploadedSongsController, tempUploadController, uploadController } from "../controllers/songsControllers";
+import { getAllSongsController, getUploadedSongsController, listenController, profileController, tempUploadController, uploadController } from "../controllers/songsControllers";
 import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
+import { getFileFromSys } from "../middlewares/getFile";
 
 export const songsRouter = Router();
 
@@ -19,8 +20,9 @@ songsRouter.get("/",verifyJwt,getAllSongsController)
 
 
 
-// songsRouter.get("/profile/:fileName", verifyJwt, profileController);
-// songsRouter.get("/listen/:fileName", verifyJwt, listenController);
+
+songsRouter.get("/profile/:fileName",getFileFromSys,profileController);
+songsRouter.get("/listen/:fileName", getFileFromSys, listenController);
 // songsRouter.get("/search", verifyJwt, searchController);
 // songsRouter.get("/subscription-details", verifyJwt, songSubDetailController);
 // songsRouter.get("/recommendation", verifyJwt, recommendationController);
