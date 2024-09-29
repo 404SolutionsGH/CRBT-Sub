@@ -24,6 +24,8 @@ const serviceRoutes_1 = require("./interface/routes/serviceRoutes");
 const connectDb_1 = require("./infrastructure/database/connectDb");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = require("./swaggerConfig");
+const setUpAllListners_1 = require("./@common/events/setUpAllListners");
+const adminPlanRoute_1 = require("./interface/routes/adminPlanRoute");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
@@ -35,12 +37,26 @@ server.use("/api/v1/auth", authRoutes_1.authRouter);
 server.use("/api/v1/user", userRoutes_1.userRouter);
 server.use("/api/v1/songs", songsRoutes_1.songsRouter);
 server.use("/api/v1/service", serviceRoutes_1.serviceRouter);
+server.use("/api/v1/admin-plan", adminPlanRoute_1.adminPlanRouter);
 // error handling middlware
 server.use(errorHandler_1.errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
+        yield (0, connectDb_1.connectToDatabase)();
+        // await TempSong.truncate();
+        // await Song.truncate();
+        // console.log("data deleted");
+        // await Admin.truncate()
+        // await Admin.create({
+        //   email: "admin@gmail.com",
+        //   firstName: "adminFirstName",
+        //   lastName: "adminLastName",
+        //   password: await encryptPassword("Admin1234"),
+        //   adminType: "system",
+        // });
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
         });

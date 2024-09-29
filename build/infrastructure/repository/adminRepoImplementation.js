@@ -40,5 +40,13 @@ class AdminRepoImp {
             return yield Admin_1.Admin.findByPk(id);
         });
     }
+    setUpPaymentData(planId, nextSubPayment, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const [numOfRows] = yield Admin_1.Admin.update({ planId, nextSubPayment }, { where: { id } });
+            if (numOfRows == 1)
+                return true;
+            return false;
+        });
+    }
 }
 exports.AdminRepoImp = AdminRepoImp;

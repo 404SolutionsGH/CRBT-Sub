@@ -29,4 +29,5 @@ export class ServiceRepoImp implements ServiceRepository {
   async findServiceWithIds(ids: Array<number>): Promise<Array<Service>> {
     return await Service.findAll({ where: { ownerId: ids } });
   }
+
 }

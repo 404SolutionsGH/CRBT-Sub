@@ -10,7 +10,7 @@ export const accountUpdateController = asyncHandler(async (req: Request, res: Re
   console.log("User updating account info....");
   const { firstName, lastName, id } = req.body;
 
-  if (typeof firstName !== "string" || typeof lastName !== "string")
+  if ((typeof firstName !== "string"&& firstName) ||( typeof lastName !== "string"&&lastName))
     throw new AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
 
   const wasDataUpdated = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id) }));

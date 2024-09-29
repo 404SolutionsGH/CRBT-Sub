@@ -16,8 +16,7 @@ const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepo = new userRepoImplemtation_1.UserRepoImp();
     const serviceRepo = new serviceRepoImplementation_1.ServiceRepoImp();
     const accountInfo = yield userRepo.findUserById(id);
-    const { firstName, lastName, accountBalance, phone, langPref } = accountInfo;
-    const subService = yield serviceRepo.findServiceWithIds(accountInfo.subService);
+    const { firstName, lastName, accountBalance, phone, langPref, subService } = accountInfo;
     const unSubService = yield serviceRepo.findServiceWithIds(accountInfo.unSubService);
     return { firstName, lastName, accountBalance, phone, langPref, subService, unSubService };
 });

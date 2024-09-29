@@ -18,6 +18,10 @@ const option: swaggerJsdoc.Options = {
         name: "Account",
         description: "All operations relating to account",
       },
+      {
+        name: "Service",
+        description: "All operations relating to services",
+      },
     ],
     components: {
       securitySchemes: {

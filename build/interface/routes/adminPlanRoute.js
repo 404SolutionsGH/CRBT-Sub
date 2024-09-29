@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.adminPlanRouter = void 0;
+const express_1 = require("express");
+const verifyJwt_1 = require("../middlewares/verifyJwt");
+const adminPlanControllers_1 = require("../controllers/adminPlanControllers");
+const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
+exports.adminPlanRouter = (0, express_1.Router)();
+exports.adminPlanRouter.post("/create", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminPlanControllers_1.createPlanController);
+exports.adminPlanRouter.get("/all", verifyJwt_1.verifyJwt, adminPlanControllers_1.getAllPlansController);
+exports.adminPlanRouter.post("/subscribe/:planId", verifyJwt_1.verifyJwt, adminPlanControllers_1.planSubcriptionController);
