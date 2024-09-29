@@ -96,7 +96,7 @@ const defineSongTable = () => {
             validate: {
                 notNull: { msg: "No value passed for subscriptionType" },
                 notEmpty: { msg: "subscriptionType cannot contain an empty string" },
-                isIn: { msg: "Value for subscriptionType should be either weekly monthly or by_weekly not {VALUE}", args: [["weekily", "monthly", "by_weekily"]] },
+                isIn: { msg: "Value for subscriptionType should be either weekly monthly or by_weekly ", args: [["weekly", "monthly", "by_weekly"]] },
             },
         },
         numberOfSubscribers: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),

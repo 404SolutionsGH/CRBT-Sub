@@ -27,6 +27,14 @@ export class SongRepoImpl implements SongRepository {
     throw new AppError("This song has already been uploaded", 409);
   }
   async findSongById(id: number): Promise<Song | null> {
-    return Song.findByPk(id);
+    return await Song.findByPk(id);
+  }
+
+  async findSongsByOwnersId(ownerId:number):Promise<Array<Song>>{
+    return await Song.findAll({where:{ownerId}})
+  }
+
+  async getAllSongs():Promise<Array<Song>>{
+    return await Song.findAll()
   }
 }

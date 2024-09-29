@@ -2,14 +2,15 @@ import { defineAdminPlanTable } from "./tables/adminPlanTable";
 import { defineAdminTable } from "./tables/adminTable";
 import { defineServiceTable } from "./tables/serviceTable";
 import { defineSongTable } from "./tables/songTable";
+import { defineTempSongTable } from "./tables/tempSongTable";
 import { defineUserTable } from "./tables/userTable";
 
 // method for defining all table structures using the models
 export const defineAllTables = () => {
   defineUserTable();
-   defineAdminPlanTable();
+  defineAdminPlanTable();
   defineAdminTable();
   defineServiceTable();
   defineSongTable();
- 
+  defineTempSongTable();
 };

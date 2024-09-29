@@ -40,7 +40,17 @@ class SongRepoImpl {
     }
     findSongById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Song_1.Song.findByPk(id);
+            return yield Song_1.Song.findByPk(id);
+        });
+    }
+    findSongsByOwnersId(ownerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Song_1.Song.findAll({ where: { ownerId } });
+        });
+    }
+    getAllSongs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Song_1.Song.findAll();
         });
     }
 }
