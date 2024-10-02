@@ -22,6 +22,10 @@ const option: swaggerJsdoc.Options = {
         name: "Service",
         description: "All operations relating to services",
       },
+      {
+        name: "Songs",
+        description: "All operations relating to songs",
+      },
     ],
     components: {
       securitySchemes: {

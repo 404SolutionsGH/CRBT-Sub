@@ -14,8 +14,8 @@ import { setUpAllEventListners } from "./@common/events/setUpAllListners";
 import { adminPlanRouter } from "./interface/routes/adminPlanRoute";
 import { TempSong } from "./domain/entities/TempSong";
 import { Song } from "./domain/entities/Song";
-import { Admin } from "./domain/entities/Admin";
 import { encryptPassword } from "./libs/bcrypt";
+import { Admin } from "./domain/entities/Admin";
 
 const server = express();
 
@@ -40,16 +40,16 @@ const startServer = async () => {
   try {
     setUpAllEventListners()
     await connectToDatabase()
-      await connectToDatabase();
       await TempSong.truncate();
       await Song.truncate();
       console.log("data deleted");
-      await Admin.truncate()
+      await Admin.truncate();
+      const password= await encryptPassword("Admin1234");
       await Admin.create({
         email: "admin@gmail.com",
         firstName: "adminFirstName",
         lastName: "adminLastName",
-        password: await encryptPassword("Admin1234"),
+        password:password,
         adminType: "system",
       });
     server.listen(port, () => {
