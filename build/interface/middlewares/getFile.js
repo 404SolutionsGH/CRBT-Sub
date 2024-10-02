@@ -16,10 +16,12 @@ exports.getFileFromSys = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const path_1 = require("../../@common/helperMethods/path");
+const path_2 = require("path");
 exports.getFileFromSys = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("getting a file from system....");
     const { fileName } = req.params;
-    const path = `${__dirname.replace("\\build\\interface\\middleware", `\\songsData\\${fileName}`)}`;
+    const path = (0, path_2.join)(__dirname, "..", "..", "..", "/songsData", fileName);
+    //   const path = `${__dirname.replace("\\build\\interface\\middleware", `\\songsData\\${fileName}`)}`;
     console.log("Checking if the file exist....");
     if (!(yield (0, path_1.checkPathExists)(path))) {
         console.log("File does not exist");

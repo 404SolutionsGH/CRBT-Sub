@@ -41,17 +41,17 @@ const startServer = async () => {
     setUpAllEventListners()
     await connectToDatabase()
       await connectToDatabase();
-      // await TempSong.truncate();
-      // await Song.truncate();
-      // console.log("data deleted");
-      // await Admin.truncate()
-      // await Admin.create({
-      //   email: "admin@gmail.com",
-      //   firstName: "adminFirstName",
-      //   lastName: "adminLastName",
-      //   password: await encryptPassword("Admin1234"),
-      //   adminType: "system",
-      // });
+      await TempSong.truncate();
+      await Song.truncate();
+      console.log("data deleted");
+      await Admin.truncate()
+      await Admin.create({
+        email: "admin@gmail.com",
+        firstName: "adminFirstName",
+        lastName: "adminLastName",
+        password: await encryptPassword("Admin1234"),
+        adminType: "system",
+      });
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

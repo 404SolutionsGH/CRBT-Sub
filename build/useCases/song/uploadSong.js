@@ -42,6 +42,7 @@ const AppError_1 = require("../../domain/entities/AppError");
 const serviceRepoImplementation_1 = require("../../infrastructure/repository/serviceRepoImplementation");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const randomData_1 = require("../../@common/helperMethods/randomData");
+const path_1 = require("path");
 const promises_1 = __importStar(require("fs/promises"));
 const objects_1 = require("../../@common/constants/objects");
 const TempSong_1 = require("../../domain/entities/TempSong");
@@ -70,7 +71,8 @@ const createFileNameAndSave = (file) => __awaiter(void 0, void 0, void 0, functi
     let fileName;
     while (!isNameUnique) {
         fileName = `${getRandomString(20)}${file.exetension}`;
-        const path = `${__dirname.replace("\\build\\useCases\\song", `\\songsData\\${fileName}`)}`;
+        const path = (0, path_1.join)(__dirname, "..", "..", "..", "/songsData", fileName);
+        // const path = `${__dirname.replace("\\build\\useCases\\song", `\\songsData\\${fileName}`)}`;
         // check if the file exist
         if (!(yield checkPathExists(path))) {
             // emit the File path and buffer for storage
@@ -87,9 +89,9 @@ const uploadSong = (songInfo, song, proFile) => __awaiter(void 0, void 0, void 0
         throw new AppError_1.AppError("This account is not on a plan.Please subscribe to a plan to upload", 401);
     // check limations on upload base on the plan the Admin is on using the planId(Not implemented.)
     if (!songInfo.tune) {
-        songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(yield createFileNameAndSave(song))}`;
+        songInfo.tune = `${process.env.BaseUrl}/api/v1/songs/listen/${(yield createFileNameAndSave(song))}`;
     }
-    songInfo.profile = `${process.env.BaseUrl}/api/v1/profile/${(yield createFileNameAndSave(proFile))}`;
+    songInfo.profile = `${process.env.BaseUrl}/api/v1/songs/profile/${(yield createFileNameAndSave(proFile))}`;
     // console.log(songInfo.tune)
     //   save the data in the data base
     yield saveSong(songInfo);

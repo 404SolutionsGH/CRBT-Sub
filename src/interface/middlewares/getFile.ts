@@ -3,11 +3,13 @@ import asyncHandler from "express-async-handler";
 import { AppError } from "../../domain/entities/AppError";
 import { checkPathExists } from "../../@common/helperMethods/path";
 import { readFile } from "fs/promises";
+import { join } from "path";
 
 export const getFileFromSys = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   console.log("getting a file from system....");
   const { fileName } = req.params;
-  const path = `${__dirname.replace("\\build\\interface\\middleware", `\\songsData\\${fileName}`)}`;
+  const path=join(__dirname,"..","..","..","/songsData",fileName)
+//   const path = `${__dirname.replace("\\build\\interface\\middleware", `\\songsData\\${fileName}`)}`;
    console.log("Checking if the file exist....");  
   if (!(await checkPathExists(path))) {
      console.log("File does not exist");

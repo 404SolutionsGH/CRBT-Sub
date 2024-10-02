@@ -7,7 +7,7 @@ import { AdminRepoImp } from "../../infrastructure/repository/adminRepoImplement
 import { ServiceRepoImp } from "../../infrastructure/repository/serviceRepoImplementation";
 import { SongRepoImpl } from "../../infrastructure/repository/songRepoImplementaion";
 import { RandomData } from "../../@common/helperMethods/randomData";
-import { isAbsolute, resolve } from "path";
+import { isAbsolute, join, resolve } from "path";
 import fs, { access } from "fs/promises";
 import { event } from "../../@common/constants/objects";
 import { TempSong } from "../../domain/entities/TempSong";
@@ -39,7 +39,8 @@ const createFileNameAndSave = async (file: File) => {
   let fileName: string;
   while (!isNameUnique) {
     fileName = `${getRandomString(20)}${file.exetension}`;
-    const path = `${__dirname.replace("\\build\\useCases\\song", `\\songsData\\${fileName}`)}`;
+    const path= join(__dirname,"..","..","..","/songsData",fileName)
+    // const path = `${__dirname.replace("\\build\\useCases\\song", `\\songsData\\${fileName}`)}`;
 
     // check if the file exist
     if (!(await checkPathExists(path))) {
@@ -61,9 +62,9 @@ export const uploadSong = async (songInfo: Song, song: File, proFile: File) => {
   // check limations on upload base on the plan the Admin is on using the planId(Not implemented.)
 
   if(!songInfo.tune){
-    songInfo.tune = `${process.env.BaseUrl}/api/v1/listen/${(await createFileNameAndSave(song))!}`;
+    songInfo.tune = `${process.env.BaseUrl}/api/v1/songs/listen/${(await createFileNameAndSave(song))!}`;
   }
-  songInfo.profile = `${process.env.BaseUrl}/api/v1/profile/${(await createFileNameAndSave(proFile))!}`;
+  songInfo.profile = `${process.env.BaseUrl}/api/v1/songs/profile/${(await createFileNameAndSave(proFile))!}`;
 
   // console.log(songInfo.tune)
   //   save the data in the data base
