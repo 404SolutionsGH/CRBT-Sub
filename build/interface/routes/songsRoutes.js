@@ -207,13 +207,6 @@ exports.songsRouter.post("/temp/upload", (0, multer_1.getArrayOfFiles)(), verify
  *           type: string
  *           enum: [saved, temp]
  *           example: saved
- *       - in: header
- *         name: Authorization
- *         required: true
- *         description: JWT token in Bearer schema.
- *         schema:
- *           type: string
- *           example: "Bearer <JWT Token>"
  *     responses:
  *       200:
  *         description: A list of uploaded songs with metadata and links to the actual songs.

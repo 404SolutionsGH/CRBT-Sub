@@ -23,12 +23,12 @@ const option = {
                 description: "All operations relating to account",
             },
             {
-                name: "Service",
-                description: "All operations relating to services",
-            },
-            {
                 name: "Songs",
                 description: "All operations relating to songs",
+            },
+            {
+                name: "MerchantPlans",
+                description: "All operations relating to plans merchants subscribe to.",
             },
         ],
         components: {
