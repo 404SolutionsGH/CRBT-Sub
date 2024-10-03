@@ -20,9 +20,13 @@ const AdminPlan_1 = require("../../domain/entities/AdminPlan");
 const getAllPlans_1 = require("../../useCases/plans/getAllPlans");
 const subcribePlan_1 = require("../../useCases/plans/subcribePlan");
 const validateBenefitsObj = (beneFitsObj) => {
-    const { songLimit } = beneFitsObj;
-    if (!songLimit)
-        throw new AppError_1.AppError("benefits object lacks the field songLimit", 400);
+    const { songLimit, subscriberLimit, numberOfSongsPerUpload } = beneFitsObj;
+    if (!songLimit && typeof songLimit !== "number")
+        throw new AppError_1.AppError(!songLimit ? "benefits object lacks the field songLimit" : "songLimit must be a number", 400);
+    else if (!subscriberLimit && typeof subscriberLimit !== "number")
+        throw new AppError_1.AppError(!subscriberLimit ? "benefits object lacks the field subscriberLimit" : "subscribersLimit must be a number", 400);
+    else if (!numberOfSongsPerUpload && typeof numberOfSongsPerUpload !== "number")
+        throw new AppError_1.AppError(!numberOfSongsPerUpload ? "benefits object lacks the field  numberOfSongsPerUpload" : "numberOfSongsPerUpload must be number", 400);
     //   future validations can come here
 };
 const checkIdValidy = (id) => {
@@ -49,7 +53,7 @@ exports.getAllPlansController = (0, express_async_handler_1.default)((req, res) 
 exports.planSubcriptionController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     const { planId } = req.params;
-    const numRegExp = RegExp('^\d+$');
+    const numRegExp = RegExp("^d+$");
     checkIdValidy(planId);
     yield (0, subcribePlan_1.subscibeToPlan)(id, Number(planId));
     res.status(201).json({ message: "Subscribtion sucessfull" });

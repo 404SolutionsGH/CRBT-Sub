@@ -9,10 +9,14 @@ import { subscibeToPlan } from "../../useCases/plans/subcribePlan";
 // helper methods and class
 interface Benefits {
   songLimit: number;
+  subscriberLimit: number;
+  numberOfSongsPerUpload: number;
 }
 const validateBenefitsObj = (beneFitsObj: Benefits) => {
-  const { songLimit } = beneFitsObj;
-  if (!songLimit) throw new AppError("benefits object lacks the field songLimit", 400);
+  const { songLimit, subscriberLimit, numberOfSongsPerUpload } = beneFitsObj;
+  if (!songLimit && typeof songLimit !== "number") throw new AppError(!songLimit ? "benefits object lacks the field songLimit" : "songLimit must be a number", 400);
+  else if (!subscriberLimit && typeof subscriberLimit !== "number") throw new AppError(!subscriberLimit ? "benefits object lacks the field subscriberLimit" : "subscribersLimit must be a number", 400);
+  else if (!numberOfSongsPerUpload && typeof numberOfSongsPerUpload !== "number") throw new AppError(!numberOfSongsPerUpload ? "benefits object lacks the field  numberOfSongsPerUpload" : "numberOfSongsPerUpload must be number", 400);
   //   future validations can come here
 };
 
@@ -41,9 +45,9 @@ export const getAllPlansController = asyncHandler(async (req: Request, res: Resp
 export const planSubcriptionController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
   const { planId } = req.params;
-  const numRegExp = RegExp('^\d+$');
+  const numRegExp = RegExp("^d+$");
 
-  checkIdValidy(planId)
+  checkIdValidy(planId);
   await subscibeToPlan(id, Number(planId));
 
   res.status(201).json({ message: "Subscribtion sucessfull" });
