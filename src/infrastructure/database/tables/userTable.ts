@@ -39,9 +39,14 @@ export const defineUserTable = () => {
         type: DataTypes.STRING(),
         allowNull: true,
       },
-      accountBalance: DataTypes.STRING(),
-      subService: DataTypes.ARRAY(DataTypes.JSON),
-      unSubService: DataTypes.ARRAY(DataTypes.INTEGER),
+      accountBalance:{
+        type: DataTypes.STRING(),
+        defaultValue:"0.00"
+      },
+      subSongId: {
+        type: DataTypes.INTEGER(),
+        defaultValue: 0,
+      },
     },
     {
       sequelize: sequelize,

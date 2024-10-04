@@ -39,9 +39,14 @@ const defineUserTable = () => {
             type: sequelize_1.DataTypes.STRING(),
             allowNull: true,
         },
-        accountBalance: sequelize_1.DataTypes.STRING(),
-        subService: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.JSON),
-        unSubService: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
+        accountBalance: {
+            type: sequelize_1.DataTypes.STRING(),
+            defaultValue: "0.00"
+        },
+        subSongId: {
+            type: sequelize_1.DataTypes.INTEGER(),
+            defaultValue: 0,
+        },
     }, {
         sequelize: connectDb_1.sequelize,
         tableName: "Users",
