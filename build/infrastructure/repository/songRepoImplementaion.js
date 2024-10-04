@@ -50,7 +50,7 @@ class SongRepoImpl {
     }
     getAllSongs() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Song_1.Song.findAll();
+            return yield Song_1.Song.findAll({ attributes: { exclude: ['ownerId', 'updatedAt'] } });
         });
     }
 }

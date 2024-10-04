@@ -35,6 +35,6 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async getAllSongs():Promise<Array<Song>>{
-    return await Song.findAll()
+    return await Song.findAll({attributes:{exclude:['ownerId','updatedAt']}})
   }
 }
