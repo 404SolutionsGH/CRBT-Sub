@@ -50,7 +50,17 @@ class SongRepoImpl {
     }
     getAllSongs() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Song_1.Song.findAll({ attributes: { exclude: ['ownerId', 'updatedAt'] } });
+            return yield Song_1.Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
+        });
+    }
+    increaseNumberOfSubscribers(ammount, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
+        });
+    }
+    increaseNumberOfListeners(ammount, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Song_1.Song.increment("numberOfListeners", { by: ammount, where: { id } });
         });
     }
 }

@@ -100,8 +100,14 @@ export const defineSongTable = () => {
         },
       },
 
-      numberOfSubscribers: DataTypes.ARRAY(DataTypes.INTEGER),
-      numberOfListeners: DataTypes.ARRAY(DataTypes.INTEGER),
+      numberOfSubscribers: {
+        type: DataTypes.INTEGER(),
+        defaultValue: 0,
+      },
+      numberOfListeners: {
+        type: DataTypes.INTEGER(),
+        defaultValue: 0,
+      },
     },
     { sequelize: sequelize, tableName: "Songs", timestamps: true }
   );

@@ -15,6 +15,6 @@ export class Song extends Model {
   declare lang: string;
   declare profile:string;
   declare subscriptionType: "weekly" | "monthly" | "by_weekly";
-  declare numberOfListeners: Array<number>;
-  declare numberOfSubscribers: Array<number>;
+  declare numberOfListeners: number;
+  declare numberOfSubscribers:number;
 }

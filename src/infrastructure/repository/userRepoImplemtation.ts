@@ -40,4 +40,10 @@ export class UserRepoImp implements UserRepository {
     if (updatedData[0] == 1) return true;
     return false;
   }
+
+  async updateSubSongId(subSongId: number, id: number): Promise<boolean> {
+    const updatedData = await User.update({ subSongId }, { where: { id } });
+    if (updatedData[0] == 1) return true;
+    return false;
+  }
 }

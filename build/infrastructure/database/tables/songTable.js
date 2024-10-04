@@ -99,8 +99,14 @@ const defineSongTable = () => {
                 isIn: { msg: "Value for subscriptionType should be either weekly monthly or by_weekly ", args: [["weekly", "monthly", "by_weekly"]] },
             },
         },
-        numberOfSubscribers: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
-        numberOfListeners: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.INTEGER),
+        numberOfSubscribers: {
+            type: sequelize_1.DataTypes.INTEGER(),
+            defaultValue: 0,
+        },
+        numberOfListeners: {
+            type: sequelize_1.DataTypes.INTEGER(),
+            defaultValue: 0,
+        },
     }, { sequelize: connectDb_1.sequelize, tableName: "Songs", timestamps: true });
 };
 exports.defineSongTable = defineSongTable;

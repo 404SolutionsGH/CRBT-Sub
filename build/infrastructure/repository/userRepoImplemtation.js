@@ -58,5 +58,13 @@ class UserRepoImp {
             return false;
         });
     }
+    updateSubSongId(subSongId, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updatedData = yield User_1.User.update({ subSongId }, { where: { id } });
+            if (updatedData[0] == 1)
+                return true;
+            return false;
+        });
+    }
 }
 exports.UserRepoImp = UserRepoImp;

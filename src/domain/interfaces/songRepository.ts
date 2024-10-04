@@ -8,4 +8,6 @@ export interface SongRepository {
   findSongById(id: number): Promise<Song | null>;
   findSongsByOwnersId(ownerId: number): Promise<Array<Song>>;
   getAllSongs(): Promise<Array<Song>>;
+  increaseNumberOfSubscribers(ammount: number, idd: number): Promise<void>;
+  increaseNumberOfListeners(ammount: number, idd: number): Promise<void>;
 }

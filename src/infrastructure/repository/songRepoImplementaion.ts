@@ -4,7 +4,7 @@ import { SongRepository } from "../../domain/interfaces/songRepository";
 
 export class SongRepoImpl implements SongRepository {
   async saveSong(songData: Song): Promise<Song | null> {
-    const { id,ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
     const [itemCreated, isCreated] = await Song.findOrCreate({
       where: { ownerId, songTitle, lang, subscriptionType },
       defaults: {
@@ -30,11 +30,18 @@ export class SongRepoImpl implements SongRepository {
     return await Song.findByPk(id);
   }
 
-  async findSongsByOwnersId(ownerId:number):Promise<Array<Song>>{
-    return await Song.findAll({where:{ownerId}})
+  async findSongsByOwnersId(ownerId: number): Promise<Array<Song>> {
+    return await Song.findAll({ where: { ownerId } });
   }
 
-  async getAllSongs():Promise<Array<Song>>{
-    return await Song.findAll({attributes:{exclude:['ownerId','updatedAt']}})
+  async getAllSongs(): Promise<Array<Song>> {
+    return await Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
+  }
+
+  async increaseNumberOfSubscribers(ammount: number, id: number): Promise<void>{
+    await Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
+  }
+  async increaseNumberOfListeners(ammount: number, id: number): Promise<void>{
+    await Song.increment("numberOfListeners", { by: ammount, where: { id } });
   }
 }
