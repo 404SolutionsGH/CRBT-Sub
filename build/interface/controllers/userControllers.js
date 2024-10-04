@@ -31,6 +31,6 @@ exports.accountUpdateController = (0, express_async_handler_1.default)((req, res
 }));
 exports.accountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
-    const { firstName, lastName, accountBalance, phone, langPref, subService, unSubService } = yield (0, getAccountInfo_1.getAccountInfo)(Number(id));
-    res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, subService, unSubService });
+    const { firstName, lastName, accountBalance, phone, langPref, subSongDetails } = yield (0, getAccountInfo_1.getAccountInfo)(Number(id));
+    res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, subSongDetails });
 }));

@@ -11,13 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccountInfo = void 0;
 const serviceRepoImplementation_1 = require("../../infrastructure/repository/serviceRepoImplementation");
+const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepo = new userRepoImplemtation_1.UserRepoImp();
+    const { findSongById } = new songRepoImplementaion_1.SongRepoImpl();
     const serviceRepo = new serviceRepoImplementation_1.ServiceRepoImp();
     const accountInfo = yield userRepo.findUserById(id);
-    const { firstName, lastName, accountBalance, phone, langPref, subService } = accountInfo;
-    const unSubService = yield serviceRepo.findServiceWithIds(accountInfo.unSubService);
-    return { firstName, lastName, accountBalance, phone, langPref, subService, unSubService };
+    const { firstName, lastName, accountBalance, phone, langPref, subSongId } = accountInfo;
+    let subSongDetails = null;
+    if (subSongId !== 0) {
+        const { artisteName, songTitle, subscriptionType, price, profile } = (yield findSongById(subSongId));
+        subSongDetails = { artisteName, songTitle, subscriptionType, price, profile };
+    }
+    return { firstName, lastName, accountBalance, phone, langPref, subSongDetails };
 });
 exports.getAccountInfo = getAccountInfo;
