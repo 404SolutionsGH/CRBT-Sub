@@ -374,6 +374,8 @@ exports.songsRouter.get("/:state", verifyJwt_1.verifyJwt, songsControllers_1.get
  */
 // endpoint for getting all songs to get all songs
 exports.songsRouter.get("/", songsControllers_1.getAllSongsController);
+// endpoint for subscribing to song
+exports.songsRouter.post("/subcribe", verifyJwt_1.verifyJwt, songsControllers_1.subcribeController);
 exports.songsRouter.get("/profile/:fileName", getFile_1.getFileFromSys, songsControllers_1.profileController);
 exports.songsRouter.get("/listen/:fileName", getFile_1.getFileFromSys, songsControllers_1.listenController);
 // songsRouter.get("/search", verifyJwt, searchController);

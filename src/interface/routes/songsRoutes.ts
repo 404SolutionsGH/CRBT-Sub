@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { getArrayOfFiles, getFilesFromReq } from "../../libs/multer";
 import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
-import { getAllSongsController, getUploadedSongsController, listenController, profileController, tempUploadController, uploadController } from "../controllers/songsControllers";
+import { getAllSongsController, getUploadedSongsController, listenController, profileController, subcribeController, tempUploadController, uploadController } from "../controllers/songsControllers";
 import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
 import { getFileFromSys } from "../middlewares/getFile";
 
@@ -385,6 +385,9 @@ songsRouter.get("/:state",verifyJwt,getUploadedSongsController)
  */
 // endpoint for getting all songs to get all songs
 songsRouter.get("/",getAllSongsController)
+
+// endpoint for subscribing to song
+songsRouter.post("/subcribe", verifyJwt, subcribeController);
 
 
 

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listenController = exports.profileController = exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.uploadController = void 0;
+exports.subcribeController = exports.listenController = exports.profileController = exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -20,6 +20,7 @@ const uploadSong_1 = require("../../useCases/song/uploadSong");
 const Song_1 = require("../../domain/entities/Song");
 const AppError_1 = require("../../domain/entities/AppError");
 const getSongs_1 = require("../../useCases/song/getSongs");
+const subscribe_1 = require("../../useCases/song/subscribe");
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
     const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
@@ -61,7 +62,16 @@ exports.profileController = (0, express_async_handler_1.default)((req, res) => _
 exports.listenController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("A song is been retrieved....");
     const { path } = req.body;
+    // const{increaseNumberOfListeners}=new SongRepoImpl()
+    // await increaseNumberOfListeners(1,)
     res.status(200).download(path);
+}));
+exports.subcribeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, songId } = req.body;
+    if (!songId || typeof songId !== "number")
+        throw new AppError_1.AppError(!songId ? "No value passed for songId" : "songId must be a number", 400);
+    yield (0, subscribe_1.subscribeToSong)(id, songId);
+    res.status(201).json({ message: "Song subscription sucessfull" });
 }));
 // export const searchController = asyncHandler(async (req: Request, res: Response) => {
 //   console.log("A search is been done...");

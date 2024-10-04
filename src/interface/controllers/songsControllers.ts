@@ -10,6 +10,8 @@ import { Song } from "../../domain/entities/Song";
 import { AppError } from "../../domain/entities/AppError";
 import { File } from "../../@common/customDataTypes/File";
 import { getAllSongs, getSavedUploads, getTempUploads } from "../../useCases/song/getSongs";
+import { subscribeToSong } from "../../useCases/song/subscribe";
+import { SongRepoImpl } from "../../infrastructure/repository/songRepoImplementaion";
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
@@ -50,13 +52,22 @@ export const getAllSongsController = asyncHandler(async (req: Request, res: Resp
 export const profileController = asyncHandler(async (req: Request, res: Response) => {
   console.log("An img is been retrieved....");
   const { path } = req.body;
-  res.status(200).download(path as string)
+  res.status(200).download(path as string);
 });
 
 export const listenController = asyncHandler(async (req: Request, res: Response) => {
   console.log("A song is been retrieved....");
   const { path } = req.body;
+  // const{increaseNumberOfListeners}=new SongRepoImpl()
+  // await increaseNumberOfListeners(1,)
   res.status(200).download(path as string);
+});
+
+export const subcribeController = asyncHandler(async (req: Request, res: Response) => {
+  const { id, songId } = req.body;
+  if (!songId || typeof songId !== "number") throw new AppError(!songId ? "No value passed for songId" : "songId must be a number", 400);
+  await subscribeToSong(id, songId);
+  res.status(201).json({ message: "Song subscription sucessfull" });
 });
 
 // export const searchController = asyncHandler(async (req: Request, res: Response) => {
