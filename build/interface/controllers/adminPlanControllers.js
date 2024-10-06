@@ -19,6 +19,7 @@ const createAdminPlan_1 = require("../../useCases/plans/createAdminPlan");
 const AdminPlan_1 = require("../../domain/entities/AdminPlan");
 const getAllPlans_1 = require("../../useCases/plans/getAllPlans");
 const subcribePlan_1 = require("../../useCases/plans/subcribePlan");
+const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
 const validateBenefitsObj = (beneFitsObj) => {
     const { songLimit, subscriberLimit, numberOfSongsPerUpload } = beneFitsObj;
     if (!songLimit && typeof songLimit !== "number")
@@ -28,16 +29,6 @@ const validateBenefitsObj = (beneFitsObj) => {
     else if (!numberOfSongsPerUpload && typeof numberOfSongsPerUpload !== "number")
         throw new AppError_1.AppError(!numberOfSongsPerUpload ? "benefits object lacks the field  numberOfSongsPerUpload" : "numberOfSongsPerUpload must be number", 400);
     //   future validations can come here
-};
-const checkIdValidy = (id) => {
-    const alphaReg = /[a-zA-Z]/;
-    const decimalReg = /\./;
-    if (alphaReg.test(id)) {
-        throw new AppError_1.AppError("Item id must be an integer not a character or alphanumeric characters", 400);
-    }
-    else if (decimalReg.test(id)) {
-        throw new AppError_1.AppError("Item id must be an integer not decimal", 400);
-    }
 };
 exports.createPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { planType, price, subType, benefits } = req.body;
@@ -54,7 +45,7 @@ exports.planSubcriptionController = (0, express_async_handler_1.default)((req, r
     const { id } = req.body;
     const { planId } = req.params;
     const numRegExp = RegExp("^d+$");
-    checkIdValidy(planId);
+    (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
     yield (0, subcribePlan_1.subscibeToPlan)(id, Number(planId));
     res.status(201).json({ message: "Subscribtion sucessfull" });
 }));

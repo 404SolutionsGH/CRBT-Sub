@@ -15,12 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginController = exports.signUpController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
-const createUser_1 = require("../../useCases/auth/createUser");
 const User_1 = require("../../domain/entities/User");
 const createAdmin_1 = require("../../useCases/auth/createAdmin");
 const Admin_1 = require("../../domain/entities/Admin");
 const userLogin_1 = require("../../useCases/auth/userLogin");
 const adminLogin_1 = require("../../useCases/auth/adminLogin");
+const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
 // import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 // // helper methods
 const nullAndStringTypeChecker = (data1, data2, d1Name, d2Name) => {
@@ -31,19 +31,19 @@ const nullAndStringTypeChecker = (data1, data2, d1Name, d2Name) => {
 };
 exports.signUpController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
-    const { phone, langPref, email, accountType, password, firstName, lastName } = req.body;
-    if (!accountType || RegExp(/^\d+$/).test(accountType)) {
-        throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : "Value passed for account type must be a string"}`, 400);
+    const { email, accountType, password, firstName, lastName, planId } = req.body;
+    if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
+        throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
     }
-    if (accountType === "user") {
-        if (!phone)
-            throw new AppError_1.AppError("No data passed for phone in request body", 400);
-        res.status(201).json({ message: "User account created sucessfully", token: yield (0, createUser_1.createUserAccount)(User_1.User.build({ phone, langPref })) });
-    }
-    else if (accountType === "admin") {
+    // if (accountType === "user") {
+    //   if (!phone) throw new AppError("No data passed for phone in request body", 400);
+    //   res.status(201).json({ message: "User account created sucessfully", token: await createUserAccount(User.build({ phone, langPref })) });
+    // }
+    if (accountType === "admin") {
         if (!email)
             throw new AppError_1.AppError("No data passed for email", 400);
-        yield (0, createAdmin_1.createAdminAccount)(Admin_1.Admin.build({ email, password, adminType: "merchant", firstName, lastName }));
+        (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
+        yield (0, createAdmin_1.createAdminAccount)(Admin_1.Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId);
         res.status(201).json({ message: "Admin account created successfully" });
     }
     else
@@ -51,12 +51,12 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
 }));
 exports.loginController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User logging in ...");
-    const { idFromFirebase, phone, email, password, accountType } = req.body;
+    const { langPref, phone, email, password, accountType } = req.body;
     let jwtToken;
     if (accountType === "user") {
-        nullAndStringTypeChecker(idFromFirebase, phone, "idFromFirebase", "phone");
+        nullAndStringTypeChecker(langPref, phone, "langPref", "phone");
         //use case for user login
-        jwtToken = yield (0, userLogin_1.userLogin)(idFromFirebase, phone);
+        jwtToken = yield (0, userLogin_1.userLogin)(User_1.User.build({ phone, langPref }));
     }
     else if (accountType == "admin") {
         nullAndStringTypeChecker(email, password, "email", "password");

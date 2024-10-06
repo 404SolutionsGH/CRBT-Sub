@@ -5,6 +5,7 @@ import { createAdminPlan } from "../../useCases/plans/createAdminPlan";
 import { AdminPlan } from "../../domain/entities/AdminPlan";
 import { getAllPlans } from "../../useCases/plans/getAllPlans";
 import { subscibeToPlan } from "../../useCases/plans/subcribePlan";
+import { isStringContentNumber } from "../../@common/helperMethods/isStringNumber";
 
 // helper methods and class
 interface Benefits {
@@ -20,15 +21,7 @@ const validateBenefitsObj = (beneFitsObj: Benefits) => {
   //   future validations can come here
 };
 
-const checkIdValidy = (id: string) => {
-  const alphaReg = /[a-zA-Z]/;
-  const decimalReg = /\./;
-  if (alphaReg.test(id)) {
-    throw new AppError("Item id must be an integer not a character or alphanumeric characters", 400);
-  } else if (decimalReg.test(id)) {
-    throw new AppError("Item id must be an integer not decimal", 400);
-  }
-};
+
 
 export const createPlanController = asyncHandler(async (req: Request, res: Response) => {
   const { planType, price, subType, benefits } = req.body;
@@ -47,7 +40,7 @@ export const planSubcriptionController = asyncHandler(async (req: Request, res: 
   const { planId } = req.params;
   const numRegExp = RegExp("^d+$");
 
-  checkIdValidy(planId);
+  isStringContentNumber(planId,"planId")
   await subscibeToPlan(id, Number(planId));
 
   res.status(201).json({ message: "Subscribtion sucessfull" });

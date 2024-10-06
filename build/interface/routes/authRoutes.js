@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRouter = void 0;
 const express_1 = require("express");
 const authControllers_1 = require("../controllers/authControllers");
+const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
 exports.authRouter = (0, express_1.Router)();
 // endpoint for creating account for users and mercahnts
 /**
@@ -10,60 +11,47 @@ exports.authRouter = (0, express_1.Router)();
  * /api/v1/auth/signup:
  *   post:
  *     tags:
- *       - Account
- *     summary: Create a new account (User or Merchant)
- *     description: |
- *       This endpoint allows the creation of accounts for both users and merchants. The request body format depends on the type of account being created.
+ *       - MerchantPlans
+ *     summary: Create a merchant account
+ *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             oneOf:
- *               - type: object
- *                 required:
- *                   - accountType
- *                   - phone
- *                   - langPref
- *                 properties:
- *                   accountType:
- *                     type: string
- *                     enum: [user]
- *                     description: Indicates the account is for a user.
- *                   phone:
- *                     type: string
- *                     description: Must be a valid phone number in international format.
- *                   langPref:
- *                     type: string
- *                     description: Preferred language (e.g., "eng").
- *               - type: object
- *                 required:
- *                   - accountType
- *                   - email
- *                   - firstName
- *                   - lastName
- *                   - password
- *                 properties:
- *                   accountType:
- *                     type: string
- *                     enum: [admin]
- *                     description: Indicates the account is for a merchant (admin).
- *                   email:
- *                     type: string
- *                     format: email
- *                     description: Must be a valid email address.
- *                   firstName:
- *                     type: string
- *                     description: First name of the merchant.
- *                   lastName:
- *                     type: string
- *                     description: Last name of the merchant.
- *                   password:
- *                     type: string
- *                     description: Password for the merchant's account.
+ *             type: object
+ *             required:
+ *               - email
+ *               - accountType
+ *               - password
+ *               - firstName
+ *               - lastName
+ *               - planId
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "merchant@example.com"
+ *               accountType:
+ *                 type: string
+ *                 enum: [admin]
+ *                 example: "admin"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               planId:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       201:
- *         description: Account created successfully.
+ *         description: Admin account created successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -71,9 +59,9 @@ exports.authRouter = (0, express_1.Router)();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "<Message indicating the account has been created>"
+ *                   example: "Admin account created successfully"
  *       400:
- *         description: Bad request. Invalid or missing fields.
+ *         description: Bad request. The request is malformed.
  *         content:
  *           application/json:
  *             schema:
@@ -81,9 +69,29 @@ exports.authRouter = (0, express_1.Router)();
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "<Error message indicating why the request was unsuccessful>"
+ *                   example: "<Message indicating why the request failed>"
+ *       401:
+ *         description: Unauthorized. The client is not authorized to create an admin account.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
+ *       404:
+ *         description: Plan or account not found. Either the plan ID does not exist or the client account doesn't exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
  *       409:
- *         description: Conflict. Account with email or phone already exists.
+ *         description: Conflict. Merchant account already exists.
  *         content:
  *           application/json:
  *             schema:
@@ -91,9 +99,9 @@ exports.authRouter = (0, express_1.Router)();
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "<Error message indicating conflict with existing account>"
+ *                   example: "Merchant account already exists"
  */
-exports.authRouter.post("/signup", authControllers_1.signUpController);
+exports.authRouter.post("/signup", checkForSuperAdmin_1.isSuperAdminAccount, authControllers_1.signUpController);
 /**
  * @swagger
  * /api/v1/auth/login:
@@ -113,7 +121,7 @@ exports.authRouter.post("/signup", authControllers_1.signUpController);
  *                 required:
  *                   - accountType
  *                   - phone
- *                   - idFromFirebase
+ *                   -  langPref
  *                 properties:
  *                   accountType:
  *                     type: string
@@ -122,9 +130,9 @@ exports.authRouter.post("/signup", authControllers_1.signUpController);
  *                   phone:
  *                     type: string
  *                     description: Must be a valid phone number in international format.
- *                   idFromFirebase:
+ *                    langPref:
  *                     type: string
- *                     description: JWT token from Firebase for authentication.
+ *                     description: The prefered language of the user.
  *               - type: object
  *                 required:
  *                   - accountType
