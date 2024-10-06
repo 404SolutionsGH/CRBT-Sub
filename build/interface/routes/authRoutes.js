@@ -11,7 +11,7 @@ exports.authRouter = (0, express_1.Router)();
  * /api/v1/auth/signup:
  *   post:
  *     tags:
- *       - MerchantPlans
+ *       - Account
  *     summary: Create a merchant account
  *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
  *     security:
@@ -121,7 +121,7 @@ exports.authRouter.post("/signup", checkForSuperAdmin_1.isSuperAdminAccount, aut
  *                 required:
  *                   - accountType
  *                   - phone
- *                   -  langPref
+ *                   - langPref
  *                 properties:
  *                   accountType:
  *                     type: string
@@ -130,7 +130,7 @@ exports.authRouter.post("/signup", checkForSuperAdmin_1.isSuperAdminAccount, aut
  *                   phone:
  *                     type: string
  *                     description: Must be a valid phone number in international format.
- *                    langPref:
+ *                   langPref:
  *                     type: string
  *                     description: The prefered language of the user.
  *               - type: object

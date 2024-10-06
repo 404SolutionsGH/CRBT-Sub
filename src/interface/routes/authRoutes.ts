@@ -11,7 +11,7 @@ export const authRouter = Router();
  * /api/v1/auth/signup:
  *   post:
  *     tags:
- *       - MerchantPlans
+ *       - Account
  *     summary: Create a merchant account
  *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
  *     security:
@@ -123,7 +123,7 @@ authRouter.post("/signup",isSuperAdminAccount ,signUpController);
  *                 required:
  *                   - accountType
  *                   - phone
- *                   -  langPref
+ *                   - langPref
  *                 properties:
  *                   accountType:
  *                     type: string
@@ -132,7 +132,7 @@ authRouter.post("/signup",isSuperAdminAccount ,signUpController);
  *                   phone:
  *                     type: string
  *                     description: Must be a valid phone number in international format.
- *                    langPref:
+ *                   langPref:
  *                     type: string
  *                     description: The prefered language of the user.
  *               - type: object
@@ -198,6 +198,7 @@ authRouter.post("/signup",isSuperAdminAccount ,signUpController);
  *                   example: "Invalid credentials"
  */
 authRouter.post("/login",  loginController);
+
 // // authRouter.post("/send-confirmationCode", checkingForAccount, sendConfirmationCodeController);
 // authRouter.post("/admin/login", checkingForAccount, loginControllerForAdmins);
 // authRouter.post("/login", checkingForAccount, loginController);
