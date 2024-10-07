@@ -101,7 +101,7 @@ const uploadTempSong = (ownerId, allSongs) => __awaiter(void 0, void 0, void 0, 
     const { createTempSongs } = new tempSongRepoImplementation_1.TempSongRepoImpl();
     const songsData = [];
     for (let file of allSongs) {
-        const tempSongInfo = TempSong_1.TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/listen/${(yield createFileNameAndSave(file))}` });
+        const tempSongInfo = TempSong_1.TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/songs/listen/${(yield createFileNameAndSave(file))}`, originalName: file.originalName });
         songsData.push(tempSongInfo);
     }
     // console.log(`ownerId=${songsData[0].ownerId} ${songsData[1].ownerId} ${songsData[2].ownerId} ${songsData[3].ownerId}`);

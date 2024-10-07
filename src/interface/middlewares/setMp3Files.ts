@@ -20,7 +20,7 @@ export const setupMp3FilesInReq = asyncHandler(async (req: Request, res: Respons
 
     for (let file of songs) {
       if (!allowedAudioMimeTypes.includes(file.mimetype)) throw new AppError("Only music files should be uploaded", 400);
-      allSongs.push({ data: file.buffer, exetension: file.mimetype === "audio/mpeg" ? ".mp3" : file.mimetype === "audio/wav" ? ".wav" : ".aac" });
+      allSongs.push({ data: file.buffer, exetension: file.mimetype === "audio/mpeg" ? ".mp3" : file.mimetype === "audio/wav" ? ".wav" : ".aac", originalName :file.originalname});
     }
     req.body.songs = allSongs;
     next();

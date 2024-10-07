@@ -75,7 +75,7 @@ export const uploadTempSong = async (ownerId: number, allSongs: Array<File>) => 
   const { createTempSongs } = new TempSongRepoImpl();
   const songsData: Array<TempSong> = [];
   for (let file of allSongs) {
-    const tempSongInfo = TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/listen/${(await createFileNameAndSave(file))!}` });
+    const tempSongInfo = TempSong.build({ ownerId, tune: `${process.env.BaseUrl}/api/v1/songs/listen/${(await createFileNameAndSave(file))!}`, originalName:file.originalName });
     songsData.push(tempSongInfo);
   }
 

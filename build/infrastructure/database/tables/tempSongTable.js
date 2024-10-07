@@ -27,6 +27,14 @@ const defineTempSongTable = () => {
                 notEmpty: { msg: "tune cannot contain an empty string" },
             },
         },
+        originalName: {
+            type: sequelize_1.DataTypes.STRING(),
+            allowNull: false,
+            validate: {
+                notNull: { msg: "No value passed for originalName" },
+                notEmpty: { msg: "originalName cannot contain an empty string" },
+            },
+        },
     }, { sequelize: connectDb_1.sequelize, tableName: "TempSongs", timestamps: true });
 };
 exports.defineTempSongTable = defineTempSongTable;

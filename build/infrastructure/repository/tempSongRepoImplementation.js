@@ -15,9 +15,9 @@ class TempSongRepoImpl {
     createTempSongs(songsData) {
         return __awaiter(this, void 0, void 0, function* () {
             songsData.forEach((items) => __awaiter(this, void 0, void 0, function* () {
-                const { tune, ownerId } = items;
+                const { tune, ownerId, originalName } = items;
                 // console.log(`tune=${items.tune},ownerId=${items.ownerId}`)
-                yield TempSong_1.TempSong.create({ tune, ownerId });
+                yield TempSong_1.TempSong.create({ tune, ownerId, originalName });
             }));
         });
     }

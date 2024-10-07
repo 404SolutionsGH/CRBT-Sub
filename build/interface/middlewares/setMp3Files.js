@@ -32,7 +32,7 @@ exports.setupMp3FilesInReq = (0, express_async_handler_1.default)((req, res, nex
         for (let file of songs) {
             if (!allowedAudioMimeTypes.includes(file.mimetype))
                 throw new AppError_1.AppError("Only music files should be uploaded", 400);
-            allSongs.push({ data: file.buffer, exetension: file.mimetype === "audio/mpeg" ? ".mp3" : file.mimetype === "audio/wav" ? ".wav" : ".aac" });
+            allSongs.push({ data: file.buffer, exetension: file.mimetype === "audio/mpeg" ? ".mp3" : file.mimetype === "audio/wav" ? ".wav" : ".aac", originalName: file.originalname });
         }
         req.body.songs = allSongs;
         next();
