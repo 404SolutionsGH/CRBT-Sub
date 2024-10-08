@@ -374,11 +374,16 @@ exports.songsRouter.get("/:state", verifyJwt_1.verifyJwt, songsControllers_1.get
  */
 // endpoint for getting all songs to get all songs
 exports.songsRouter.get("/", songsControllers_1.getAllSongsController);
-// endpoint for subscribing to song
+// endpoint for subscribing and unsubscribing to song
 exports.songsRouter.post("/subcribe", verifyJwt_1.verifyJwt, songsControllers_1.subcribeController);
+exports.songsRouter.post("/unsubscribe", verifyJwt_1.verifyJwt, songsControllers_1.unsubcribeController);
+// endpoint for updating a song
+exports.songsRouter.put("/", verifyJwt_1.verifyJwt, songsControllers_1.updateSavedSongController);
+// endpoint for getting a song
+exports.songsRouter.get("/one/:id", verifyJwt_1.verifyJwt, songsControllers_1.songController);
+exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.searchController);
 exports.songsRouter.get("/profile/:fileName", getFile_1.getFileFromSys, songsControllers_1.profileController);
 exports.songsRouter.get("/listen/:fileName", getFile_1.getFileFromSys, songsControllers_1.listenController);
-// songsRouter.get("/search", verifyJwt, searchController);
 // songsRouter.get("/subscription-details", verifyJwt, songSubDetailController);
 // songsRouter.get("/recommendation", verifyJwt, recommendationController);
 // songsRouter.get("/tone/:id", verifyJwt, toneController);

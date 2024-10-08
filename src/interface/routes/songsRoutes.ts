@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { getArrayOfFiles, getFilesFromReq } from "../../libs/multer";
 import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
-import { getAllSongsController, getUploadedSongsController, listenController, profileController, subcribeController, tempUploadController, uploadController } from "../controllers/songsControllers";
+import { getAllSongsController, getUploadedSongsController, listenController, profileController, searchController, songController, subcribeController, tempUploadController, unsubcribeController, updateSavedSongController, uploadController } from "../controllers/songsControllers";
 import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
 import { getFileFromSys } from "../middlewares/getFile";
 
@@ -386,14 +386,29 @@ songsRouter.get("/:state",verifyJwt,getUploadedSongsController)
 // endpoint for getting all songs to get all songs
 songsRouter.get("/",getAllSongsController)
 
-// endpoint for subscribing to song
+// endpoint for subscribing and unsubscribing to song
 songsRouter.post("/subcribe", verifyJwt, subcribeController);
+songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
 
+// endpoint for updating a song
+songsRouter.put("/",verifyJwt,updateSavedSongController)
 
+// endpoint for getting a song
+songsRouter.get("/one/:id", verifyJwt, songController);
+
+songsRouter.get("/search", verifyJwt, searchController);
 
 songsRouter.get("/profile/:fileName",getFileFromSys,profileController);
 songsRouter.get("/listen/:fileName", getFileFromSys, listenController);
-// songsRouter.get("/search", verifyJwt, searchController);
+
+
+
+
+
+
+
+
+
 // songsRouter.get("/subscription-details", verifyJwt, songSubDetailController);
 // songsRouter.get("/recommendation", verifyJwt, recommendationController);
 // songsRouter.get("/tone/:id", verifyJwt, toneController);
