@@ -3,7 +3,7 @@ import { Model } from "sequelize";
 
 export class SubSongs extends Model{
 declare id:number;
-declare songOwnerId:number;
+declare songId:number;
 declare subscriberId:number;
 declare subscriptionDate:string;
 declare price:string;

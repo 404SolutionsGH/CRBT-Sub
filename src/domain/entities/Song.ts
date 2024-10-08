@@ -18,3 +18,19 @@ export class Song extends Model {
   declare numberOfListeners: number;
   declare numberOfSubscribers:number;
 }
+
+
+export interface SongI {
+  id: number;
+  ownerId: number;
+  songTitle: string;
+  artisteName: string;
+  albumName: string;
+  ussdCode: string;
+  price: string;
+  category: string;
+  tune: string;
+  lang: string;
+  profile: string;
+  subscriptionType: "weekly" | "monthly" | "by_weekly";
+}

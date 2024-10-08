@@ -11,7 +11,7 @@ const defineSubSongsTable = () => {
             autoIncrement: true,
             primaryKey: true,
         },
-        songOwnerId: {
+        songId: {
             type: sequelize_1.DataTypes.INTEGER(),
             allowNull: false,
             validate: {

@@ -15,11 +15,10 @@ const Song_1 = require("../../domain/entities/Song");
 class SongRepoImpl {
     saveSong(songData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+            const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
             const [itemCreated, isCreated] = yield Song_1.Song.findOrCreate({
                 where: { ownerId, songTitle, lang, subscriptionType },
                 defaults: {
-                    id,
                     ownerId,
                     songTitle,
                     albumName,
@@ -36,6 +35,15 @@ class SongRepoImpl {
             if (isCreated)
                 return itemCreated;
             throw new AppError_1.AppError("This song has already been uploaded", 409);
+        });
+    }
+    updateSongInfo(songData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+            const updatedSongInfo = yield Song_1.Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType }, { where: { id, ownerId }, returning: true });
+            if (updatedSongInfo[0] === 1)
+                return updatedSongInfo[1][0];
+            return null;
         });
     }
     findSongById(id) {
@@ -58,8 +66,11 @@ class SongRepoImpl {
             yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
         });
     }
-    increaseNumberOfListeners(ammount, id) {
-        return __awaiter(this, void 0, void 0, function* () {
+    increaseNumberOfListeners(ammount_1, id_1) {
+        return __awaiter(this, arguments, void 0, function* (ammount, id, url = null) {
+            console.log(`Song url=${url}`);
+            if (id === 0 && url)
+                yield Song_1.Song.increment("numberOfListeners", { by: ammount, where: { tune: url } });
             yield Song_1.Song.increment("numberOfListeners", { by: ammount, where: { id } });
         });
     }

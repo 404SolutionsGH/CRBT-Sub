@@ -10,7 +10,7 @@ export const defineSubSongsTable = () => {
         autoIncrement: true,
         primaryKey: true,
       },
-      songOwnerId: {
+      songId: {
         type: DataTypes.INTEGER(),
         allowNull: false,
         validate: {

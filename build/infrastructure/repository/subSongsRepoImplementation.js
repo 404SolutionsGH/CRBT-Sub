@@ -10,17 +10,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubSongsRepoImp = void 0;
+const AppError_1 = require("../../domain/entities/AppError");
 const SubSongs_1 = require("../../domain/entities/SubSongs");
 class SubSongsRepoImp {
     createSubscription(subDetails) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { price, songOwnerId, subscriberId } = subDetails;
-            return yield SubSongs_1.SubSongs.create({ price, songOwnerId, subscriberId });
+            const { price, songId, subscriberId } = subDetails;
+            return yield SubSongs_1.SubSongs.create({ price, songId, subscriberId });
         });
     }
-    findSubscriptionsByOwnerId(ownerId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield SubSongs_1.SubSongs.findOne({ where: { songOwnerId: ownerId } });
+    findSubscriptionsBySubscriberId(subscriberId_1) {
+        return __awaiter(this, arguments, void 0, function* (subscriberId, isSubValid = null, update = false) {
+            if (update) {
+                const updatedData = yield SubSongs_1.SubSongs.update({ isSubValid: false }, { where: { subscriberId, isSubValid }, returning: true });
+                if (updatedData[0] === 1)
+                    return updatedData[1][0];
+                throw new AppError_1.AppError("User has already unsubscribed", 404);
+            }
+            if (isSubValid === null)
+                return yield SubSongs_1.SubSongs.findOne({ where: { subscriberId } });
+            return yield SubSongs_1.SubSongs.findOne({ where: { subscriberId, isSubValid } });
         });
     }
     findSubscriptionById(id) {

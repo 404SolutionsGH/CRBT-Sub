@@ -2,8 +2,8 @@ import { SubSongs } from "../entities/SubSongs";
 
 
 
-export interface subSongsRepository {
+export interface SubSongsRepository {
   createSubscription(subDetails: SubSongs): Promise<SubSongs>;
-  findSubscriptionsByOwnerId(ownerId: number): Promise<SubSongs | null>;
+  findSubscriptionsBySubscriberId(subscriberId: number, isSubValid: boolean | null, update: boolean): Promise<SubSongs | null>;
   findSubscriptionById(id: number): Promise<SubSongs | null>;
 }
