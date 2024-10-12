@@ -2,6 +2,7 @@ import { defineAdminPlanTable } from "./tables/adminPlanTable";
 import { defineAdminTable } from "./tables/adminTable";
 import { defineServiceTable } from "./tables/serviceTable";
 import { defineSongTable } from "./tables/songTable";
+import { defineSubAdminPlansTable } from "./tables/subAdminPlansTable";
 import { defineSubSongsTable } from "./tables/subSongsTable";
 import { defineTempSongTable } from "./tables/tempSongTable";
 import { defineUserTable } from "./tables/userTable";
@@ -15,4 +16,5 @@ export const defineAllTables = () => {
   defineSongTable();
   defineTempSongTable();
   defineSubSongsTable();
+  defineSubAdminPlansTable();
 };

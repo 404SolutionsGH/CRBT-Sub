@@ -5,6 +5,7 @@ const adminPlanTable_1 = require("./tables/adminPlanTable");
 const adminTable_1 = require("./tables/adminTable");
 const serviceTable_1 = require("./tables/serviceTable");
 const songTable_1 = require("./tables/songTable");
+const subAdminPlansTable_1 = require("./tables/subAdminPlansTable");
 const subSongsTable_1 = require("./tables/subSongsTable");
 const tempSongTable_1 = require("./tables/tempSongTable");
 const userTable_1 = require("./tables/userTable");
@@ -17,5 +18,6 @@ const defineAllTables = () => {
     (0, songTable_1.defineSongTable)();
     (0, tempSongTable_1.defineTempSongTable)();
     (0, subSongsTable_1.defineSubSongsTable)();
+    (0, subAdminPlansTable_1.defineSubAdminPlansTable)();
 };
 exports.defineAllTables = defineAllTables;
