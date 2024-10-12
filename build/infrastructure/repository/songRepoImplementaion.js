@@ -49,7 +49,7 @@ class SongRepoImpl {
     }
     findSongById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Song_1.Song.findByPk(id);
+            return yield Song_1.Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
         });
     }
     findSongsByOwnersId(ownerId) {
@@ -62,8 +62,11 @@ class SongRepoImpl {
             return yield Song_1.Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
         });
     }
-    increaseNumberOfSubscribers(ammount, id) {
-        return __awaiter(this, void 0, void 0, function* () {
+    increaseNumberOfSubscribers(ammount_1, id_1) {
+        return __awaiter(this, arguments, void 0, function* (ammount, id, flag = null) {
+            if (flag) {
+                yield Song_1.Song.decrement("numberOfSubscribers", { by: ammount, where: { id } });
+            }
             yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
         });
     }

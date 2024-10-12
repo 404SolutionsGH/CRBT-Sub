@@ -10,9 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unsubscribe = void 0;
+const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const subSongsRepoImplementation_1 = require("../../infrastructure/repository/subSongsRepoImplementation");
+const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const unsubscribe = (subscriberId) => __awaiter(void 0, void 0, void 0, function* () {
     const { findSubscriptionsBySubscriberId } = new subSongsRepoImplementation_1.SubSongsRepoImp();
+    const { updateSubSongId, findUserById } = new userRepoImplemtation_1.UserRepoImp();
+    const { increaseNumberOfSubscribers } = new songRepoImplementaion_1.SongRepoImpl();
+    const { subSongId } = (yield findUserById(subscriberId));
+    yield increaseNumberOfSubscribers(1, subSongId, 'dec');
+    yield updateSubSongId(0, subscriberId);
     yield findSubscriptionsBySubscriberId(subscriberId, true, true);
 });
 exports.unsubscribe = unsubscribe;
