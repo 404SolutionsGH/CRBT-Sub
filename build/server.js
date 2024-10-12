@@ -26,10 +26,6 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = require("./swaggerConfig");
 const setUpAllListners_1 = require("./@common/events/setUpAllListners");
 const adminPlanRoute_1 = require("./interface/routes/adminPlanRoute");
-const TempSong_1 = require("./domain/entities/TempSong");
-const Song_1 = require("./domain/entities/Song");
-const bcrypt_1 = require("./libs/bcrypt");
-const Admin_1 = require("./domain/entities/Admin");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
@@ -49,18 +45,18 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
-        yield TempSong_1.TempSong.truncate();
-        yield Song_1.Song.truncate();
-        console.log("data deleted");
-        yield Admin_1.Admin.truncate();
-        const password = yield (0, bcrypt_1.encryptPassword)("Admin1234");
-        yield Admin_1.Admin.create({
-            email: "admin@gmail.com",
-            firstName: "adminFirstName",
-            lastName: "adminLastName",
-            password: password,
-            adminType: "system",
-        });
+        // await TempSong.truncate();
+        // await Song.truncate();
+        // console.log("data deleted");
+        // await Admin.truncate();
+        // const password= await encryptPassword("Admin1234");
+        // await Admin.create({
+        //   email: "admin@gmail.com",
+        //   firstName: "adminFirstName",
+        //   lastName: "adminLastName",
+        //   password:password,
+        //   adminType: "system",
+        // });
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
         });

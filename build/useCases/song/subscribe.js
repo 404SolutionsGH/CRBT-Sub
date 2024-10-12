@@ -28,7 +28,10 @@ const subscribeToSong = (subscriberId, songId) => __awaiter(void 0, void 0, void
     if (yield isOnSubscription(subscriberId))
         throw new AppError_1.AppError("User Already on a subscription", 409);
     yield increaseNumberOfSubscribers(1, songId);
-    const { price } = (yield findSongById(songId));
+    const songDetails = yield findSongById(songId);
+    if (!songDetails)
+        throw new AppError_1.AppError("No such song with this id exist", 404);
+    const { price } = songDetails;
     yield updateSubSongId(songId, subscriberId);
     yield createSubscription(SubSongs_1.SubSongs.build({ subscriberId, price, songId }));
 });

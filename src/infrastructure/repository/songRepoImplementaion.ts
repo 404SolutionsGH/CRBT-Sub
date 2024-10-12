@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { AppError } from "../../domain/entities/AppError";
 import { Song } from "../../domain/entities/Song";
 import { SongRepository } from "../../domain/interfaces/songRepository";
@@ -27,9 +28,9 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async updateSongInfo(songData: Song): Promise<Song | null> {
-    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType } = songData;
 
-    const updatedSongInfo = await Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType }, { where: { id, ownerId }, returning: true });
+    const updatedSongInfo = await Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType }, { where: { id, ownerId }, returning: true });
     if (updatedSongInfo[0] === 1) return updatedSongInfo[1][0];
     return null;
   }
@@ -49,9 +50,9 @@ export class SongRepoImpl implements SongRepository {
   async increaseNumberOfSubscribers(ammount: number, id: number): Promise<void> {
     await Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
   }
-  async increaseNumberOfListeners(ammount: number, id: number, url: string | null = null): Promise<void> {
-    console.log(`Song url=${url}`);
-    if (id === 0 && url) await Song.increment("numberOfListeners", { by: ammount, where: { tune: url } });
-    await Song.increment("numberOfListeners", { by: ammount, where: { id } });
+  async increaseNumberOfListeners(amount: number, id: number, url: string | null = null): Promise<void> {
+    // console.log(`Song url=${url}`);
+    if (id === 0 && url) await Song.increment("numberOfListeners", { by: amount, where: { tune: { [Op.like]: `%${url}` } } });
+    else await Song.increment("numberOfListeners", { by: amount, where: { id } });
   }
 }

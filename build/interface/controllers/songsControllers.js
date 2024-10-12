@@ -35,11 +35,26 @@ exports.uploadController = (0, express_async_handler_1.default)((req, res) => __
     res.status(201).json({ message: "Song uploaded sucessfully" });
 }));
 exports.updateSavedSongController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { updatedSongData } = req.body;
-    const { id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category } = updatedSongData;
+    console.log("Updating Saved Song");
+    const { id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
+    let newSong;
+    let newProfile;
+    if (!Array.isArray(req.files) && req.files !== undefined) {
+        if (req.files.newSong) {
+            console.log("New Song File present");
+            newSong = req.files.newSong[0].buffer;
+        }
+        if (req.files.newProfile) {
+            console.log("New Profile File present");
+            newProfile = req.files.newProfile[0].buffer;
+        }
+        else {
+            throw new AppError_1.AppError("The field names for uploading files should either be profile(for images) or song(for tunes)", 400);
+        }
+    }
     if (!id)
         throw new AppError_1.AppError("No data passed for id in the updatedSongData object in request body", 400);
-    yield (0, updateSavedSong_1.updateSavedSong)(Song_1.Song.build({ id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id }));
+    yield (0, updateSavedSong_1.updateSavedSong)(Song_1.Song.build({ id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id }), newSong, newProfile);
     res.status(201).json({ message: "Song updated sucessfully" });
 }));
 exports.tempUploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -79,10 +94,12 @@ exports.listenController = (0, express_async_handler_1.default)((req, res) => __
     res.status(200).download(path);
 }));
 exports.subcribeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, songId } = req.body;
-    if (!songId || typeof songId !== "number")
-        throw new AppError_1.AppError(!songId ? "No value passed for songId" : "songId must be a number", 400);
-    yield (0, subscribe_1.subscribeToSong)(id, songId);
+    const { id } = req.body;
+    const { songId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(songId, "songId");
+    if (!songId)
+        throw new AppError_1.AppError("No value passed for songId", 400);
+    yield (0, subscribe_1.subscribeToSong)(id, Number(songId));
     res.status(201).json({ message: "Song subscription sucessfull" });
 }));
 exports.unsubcribeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

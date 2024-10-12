@@ -27,7 +27,7 @@ class SubSongsRepoImp {
                     return updatedData[1][0];
                 throw new AppError_1.AppError("User has already unsubscribed", 404);
             }
-            if (isSubValid === null)
+            else if (isSubValid === null)
                 return yield SubSongs_1.SubSongs.findOne({ where: { subscriberId } });
             return yield SubSongs_1.SubSongs.findOne({ where: { subscriberId, isSubValid } });
         });

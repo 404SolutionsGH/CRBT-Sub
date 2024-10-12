@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getArrayOfFiles = exports.getFilesFromReq = void 0;
 const multer_1 = __importDefault(require("multer"));
-const getFilesFromReq = () => {
+const getFilesFromReq = (profilleName = null, songName = null) => {
     return (0, multer_1.default)().fields([
-        { name: "profile", maxCount: 1 },
-        { name: "song", maxCount: 1 },
+        { name: profilleName ? profilleName : "profile", maxCount: 1 },
+        { name: songName ? songName : "song", maxCount: 1 },
     ]);
 };
 exports.getFilesFromReq = getFilesFromReq;

@@ -29,10 +29,26 @@ export const uploadController = asyncHandler(async (req: Request, res: Response)
 });
 
 export const updateSavedSongController = asyncHandler(async (req: Request, res: Response) => {
-  const { updatedSongData } = req.body;
-  const { id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category } = updatedSongData as SongI;
+  console.log("Updating Saved Song");
+  const { id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
+  let newSong: Buffer | undefined;
+  let newProfile: Buffer | undefined;
+
+  if (!Array.isArray(req.files) && req.files !== undefined) {
+    if (req.files.newSong) {
+      console.log("New Song File present");
+      newSong = req.files.newSong[0].buffer;
+    }
+    if (req.files.newProfile) {
+      console.log("New Profile File present");
+      newProfile = req.files.newProfile[0].buffer;
+    } else {
+      throw new AppError("The field names for uploading files should either be profile(for images) or song(for tunes)", 400);
+    }
+  }
+
   if (!id) throw new AppError("No data passed for id in the updatedSongData object in request body", 400);
-  await updateSavedSong(Song.build({ id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id }));
+  await updateSavedSong(Song.build({ id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id }), newSong, newProfile);
 
   res.status(201).json({ message: "Song updated sucessfully" });
 });
@@ -77,9 +93,11 @@ export const listenController = asyncHandler(async (req: Request, res: Response)
 });
 
 export const subcribeController = asyncHandler(async (req: Request, res: Response) => {
-  const { id, songId } = req.body;
-  if (!songId || typeof songId !== "number") throw new AppError(!songId ? "No value passed for songId" : "songId must be a number", 400);
-  await subscribeToSong(id, songId);
+  const { id } = req.body;
+  const { songId } = req.params;
+  isStringContentNumber(songId, "songId");
+  if (!songId) throw new AppError("No value passed for songId", 400);
+  await subscribeToSong(id, Number(songId));
   res.status(201).json({ message: "Song subscription sucessfull" });
 });
 

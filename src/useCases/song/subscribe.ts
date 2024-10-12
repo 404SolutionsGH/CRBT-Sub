@@ -15,9 +15,11 @@ const isOnSubscription = async (subscriberId: number) => {
 export const subscribeToSong = async (subscriberId: number, songId: number) => {
   const { updateSubSongId } = new UserRepoImp();
   const { findSongById, increaseNumberOfSubscribers } = new SongRepoImpl();
-  if(await isOnSubscription(subscriberId)) throw new AppError("User Already on a subscription",409)
+  if (await isOnSubscription(subscriberId)) throw new AppError("User Already on a subscription", 409);
   await increaseNumberOfSubscribers(1, songId);
-  const { price } = (await findSongById(songId))!;
+  const songDetails = await findSongById(songId);
+  if (!songDetails) throw new AppError("No such song with this id exist", 404);
+  const { price } = songDetails;
   await updateSubSongId(songId, subscriberId);
   await createSubscription(SubSongs.build({ subscriberId, price, songId }));
 };

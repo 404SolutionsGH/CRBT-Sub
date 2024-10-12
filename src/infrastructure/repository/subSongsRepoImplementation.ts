@@ -13,7 +13,7 @@ export class SubSongsRepoImp implements SubSongsRepository {
       if (updatedData[0] === 1) return updatedData[1][0];
       throw new AppError("User has already unsubscribed", 404);
     }
-    if (isSubValid === null) return await SubSongs.findOne({ where: { subscriberId } });
+    else if (isSubValid === null) return await SubSongs.findOne({ where: { subscriberId } });
     return await SubSongs.findOne({ where: { subscriberId, isSubValid } });
   }
   async findSubscriptionById(id: number): Promise<SubSongs | null> {

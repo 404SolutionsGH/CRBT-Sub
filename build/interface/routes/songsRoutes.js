@@ -375,11 +375,251 @@ exports.songsRouter.get("/:state", verifyJwt_1.verifyJwt, songsControllers_1.get
 // endpoint for getting all songs to get all songs
 exports.songsRouter.get("/", songsControllers_1.getAllSongsController);
 // endpoint for subscribing and unsubscribing to song
-exports.songsRouter.post("/subcribe", verifyJwt_1.verifyJwt, songsControllers_1.subcribeController);
+/**
+ * @swagger
+ * /api/v1/songs/subscribe/{songId}:
+ *   post:
+ *     tags:
+ *       - Songs
+ *     summary: Subscribe to a song
+ *     description: This is the endpoint for users to subscribe to songs. Requires an Auth header.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: songId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the song to subscribe to.
+ *     responses:
+ *       201:
+ *         description: Song subscription successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Song subscription successful"
+ *       400:
+ *         description: Bad request. The request is malformed or missing required data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
+ *       404:
+ *         description: Song not found. No song exists with the provided ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Song with the provided ID does not exist"
+ *       409:
+ *         description: Conflict. The user is already subscribed to this song.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User is already subscribed to this song"
+ */
+exports.songsRouter.post("/subscribe/:songId", verifyJwt_1.verifyJwt, songsControllers_1.subcribeController);
+/**
+ * @swagger
+ * /api/v1/songs/unsubscribe:
+ *   post:
+ *     tags:
+ *       - Songs
+ *     summary: Unsubscribe from a song
+ *     description: This is the endpoint for users to unsubscribe from songs. Requires an Auth header.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Unsubscription successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unsubscription successful"
+ *       404:
+ *         description: User has already unsubscribed or song not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User has already unsubscribed"
+ */
 exports.songsRouter.post("/unsubscribe", verifyJwt_1.verifyJwt, songsControllers_1.unsubcribeController);
 // endpoint for updating a song
-exports.songsRouter.put("/", verifyJwt_1.verifyJwt, songsControllers_1.updateSavedSongController);
+/**
+ * @swagger
+ * /api/v1/songs/:
+ *   put:
+ *     tags:
+ *       - Songs
+ *     summary: Update saved songs
+ *     description: This is the endpoint for merchants and the superAdmin to update saved songs.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: number
+ *                 description: The ID of the song to update.
+ *               albumName:
+ *                 type: string
+ *                 description: The album name.
+ *               songTitle:
+ *                 type: string
+ *                 description: The song title.
+ *               artisteName:
+ *                 type: string
+ *                 description: The name of the artiste.
+ *               profile:
+ *                 type: string
+ *                 description: Profile picture or image URL.
+ *               lang:
+ *                 type: string
+ *                 description: The language of the song.
+ *               ussdCode:
+ *                 type: string
+ *                 description: The USSD code associated with the song.
+ *               tune:
+ *                 type: string
+ *                 description: The song tune (optional if no song file is provided).
+ *               subscriptionType:
+ *                 type: string
+ *                 description: Subscription type (e.g., weekly, monthly).
+ *               price:
+ *                 type: string
+ *                 description: The price of the song.
+ *               category:
+ *                 type: string
+ *                 description: The category of the song.
+ *               newSong:
+ *                 type: string
+ *                 format: binary
+ *                 description: The song file (optional).
+ *               newProfile:
+ *                 type: string
+ *                 format: binary
+ *                 description: The profile image file (optional).
+ *     responses:
+ *       201:
+ *         description: Song updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Song updated successfully"
+ *       400:
+ *         description: Invalid input or missing required fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No Data pass for id in request body."
+ *       404:
+ *         description: Song or file content not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No song with the provided ID exists or the file content does not exist"
+ */
+exports.songsRouter.put("/", (0, multer_1.getFilesFromReq)("newProfile", "newSong"), verifyJwt_1.verifyJwt, songsControllers_1.updateSavedSongController);
 // endpoint for getting a song
+/**
+ * @swagger
+ * /api/v1/songs/one/{id}:
+ *   get:
+ *     tags:
+ *       - Songs
+ *     summary: Get single song information by ID
+ *     description: This is the endpoint for retrieving a single song's information using its ID.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the song to retrieve.
+ *     responses:
+ *       200:
+ *         description: Song data retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example: {
+ *                 id: 1,
+ *                 songTitle: "Mad over you",
+ *                 artisteName: "Runtown",
+ *                 albumName: "Afrobeat Mix",
+ *                 ussdCode: "*123*45#",
+ *                 price: "7.99",
+ *                 category: "Entertainment",
+ *                 tune: "https://example.com/song.mp3",
+ *                 lang: "English",
+ *                 profile: "https://example.com/profile.jpg",
+ *                 subscriptionType: "monthly",
+ *                 createdAt: "2024-10-02T17:07:04.045Z"
+ *               }
+ *       400:
+ *         description: Invalid ID format (not a number).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "The provided ID is not a number."
+ *       404:
+ *         description: Song not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No song with the provided ID exists."
+ */
 exports.songsRouter.get("/one/:id", verifyJwt_1.verifyJwt, songsControllers_1.songController);
 exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.searchController);
 exports.songsRouter.get("/profile/:fileName", getFile_1.getFileFromSys, songsControllers_1.profileController);

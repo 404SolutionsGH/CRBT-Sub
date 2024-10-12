@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SongRepoImpl = void 0;
+const sequelize_1 = require("sequelize");
 const AppError_1 = require("../../domain/entities/AppError");
 const Song_1 = require("../../domain/entities/Song");
 class SongRepoImpl {
@@ -39,8 +40,8 @@ class SongRepoImpl {
     }
     updateSongInfo(songData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
-            const updatedSongInfo = yield Song_1.Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType }, { where: { id, ownerId }, returning: true });
+            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType } = songData;
+            const updatedSongInfo = yield Song_1.Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType }, { where: { id, ownerId }, returning: true });
             if (updatedSongInfo[0] === 1)
                 return updatedSongInfo[1][0];
             return null;
@@ -66,12 +67,13 @@ class SongRepoImpl {
             yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
         });
     }
-    increaseNumberOfListeners(ammount_1, id_1) {
-        return __awaiter(this, arguments, void 0, function* (ammount, id, url = null) {
-            console.log(`Song url=${url}`);
+    increaseNumberOfListeners(amount_1, id_1) {
+        return __awaiter(this, arguments, void 0, function* (amount, id, url = null) {
+            // console.log(`Song url=${url}`);
             if (id === 0 && url)
-                yield Song_1.Song.increment("numberOfListeners", { by: ammount, where: { tune: url } });
-            yield Song_1.Song.increment("numberOfListeners", { by: ammount, where: { id } });
+                yield Song_1.Song.increment("numberOfListeners", { by: amount, where: { tune: { [sequelize_1.Op.like]: `%${url}` } } });
+            else
+                yield Song_1.Song.increment("numberOfListeners", { by: amount, where: { id } });
         });
     }
 }
