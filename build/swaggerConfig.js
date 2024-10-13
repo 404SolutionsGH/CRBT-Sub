@@ -30,6 +30,10 @@ const option = {
                 name: "MerchantPlans",
                 description: "All operations relating to plans merchants subscribe to.",
             },
+            {
+                name: "Admins",
+                description: "All operations relating to Admin user management",
+            },
         ],
         components: {
             securitySchemes: {
