@@ -17,11 +17,17 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
 const AppError_1 = require("../../domain/entities/AppError");
 exports.isSuperAdminAccount = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Checking if account belongs to a superAdmin..");
-    const { id } = req.body;
-    const { findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
-    const accountInfo = yield findAdminById(Number(id));
-    if (!accountInfo || accountInfo.adminType !== "system")
-        throw new AppError_1.AppError("This Account is not authorized to create a service", 401);
-    next();
+    const { type } = req.params;
+    if (type && type === "sub")
+        next();
+    else {
+        console.log("Checking if account belongs to a superAdmin..");
+        const { id } = req.body;
+        const { findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
+        const accountInfo = yield findAdminById(Number(id));
+        if (!accountInfo || (accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.adminType) !== "system")
+            throw new AppError_1.AppError("This Account is not authorized to create a service", 401);
+        console.log("Account belongs to SuperAdmin");
+        next();
+    }
 }));
