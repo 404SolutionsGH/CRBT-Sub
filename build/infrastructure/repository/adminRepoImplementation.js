@@ -48,5 +48,10 @@ class AdminRepoImp {
             return false;
         });
     }
+    getAllMerchants() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Admin_1.Admin.findAll({ where: { adminType: "merchant" } });
+        });
+    }
 }
 exports.AdminRepoImp = AdminRepoImp;

@@ -10,8 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubAdminPlansRepoImp = void 0;
+const sequelize_1 = require("sequelize");
 const AppError_1 = require("../../domain/entities/AppError");
 const SubAdminplans_1 = require("../../domain/entities/SubAdminplans");
+const Admin_1 = require("../../domain/entities/Admin");
 class SubAdminPlansRepoImp {
     createSubscription(subDetails) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +37,13 @@ class SubAdminPlansRepoImp {
     findSubscriptionById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield SubAdminplans_1.SubAdminPlans.findByPk(id);
+        });
+    }
+    findSubscriptionByPlanIds(planIds_1) {
+        return __awaiter(this, arguments, void 0, function* (planIds, type = "sub") {
+            if (type === "unSub")
+                return yield SubAdminplans_1.SubAdminPlans.findAll({ where: { planId: { [sequelize_1.Op.in]: planIds }, isSubValid: false }, include: Admin_1.Admin, attributes: { exclude: ["id", "subscriptionDate", "subscriberId"] } });
+            return yield SubAdminplans_1.SubAdminPlans.findAll({ where: { planId: { [sequelize_1.Op.in]: planIds }, isSubValid: true }, include: Admin_1.Admin, attributes: { exclude: ["id", "unSubscriptionDate", "subscriberId"] } });
         });
     }
 }

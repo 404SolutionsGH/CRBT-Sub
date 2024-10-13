@@ -33,4 +33,8 @@ export class AdminRepoImp implements AdminRepository {
 
     return false;
   }
+
+  async getAllMerchants(): Promise<Admin[]> {
+    return await Admin.findAll({ where: { adminType: "merchant" } });
+  }
 }

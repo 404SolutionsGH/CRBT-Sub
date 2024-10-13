@@ -1,6 +1,8 @@
+import { Op } from "sequelize";
 import { AppError } from "../../domain/entities/AppError";
 import { SubAdminPlans } from "../../domain/entities/SubAdminplans";
 import { SubadminPlansRepository } from "../../domain/interfaces/subAdminPlansRepository";
+import { Admin } from "../../domain/entities/Admin";
 
 export class SubAdminPlansRepoImp implements SubadminPlansRepository {
   async createSubscription(subDetails: SubAdminPlans): Promise<SubAdminPlans> {
@@ -17,5 +19,9 @@ export class SubAdminPlansRepoImp implements SubadminPlansRepository {
   }
   async findSubscriptionById(id: number): Promise<SubAdminPlans | null> {
     return await SubAdminPlans.findByPk(id);
+  }
+  async findSubscriptionByPlanIds(planIds: number[], type: "sub" | "unSub" = "sub"): Promise<Array<SubAdminPlans>> {
+    if(type==="unSub") return await SubAdminPlans.findAll({ where: { planId: { [Op.in]: planIds }, isSubValid: false }, include: Admin, attributes: { exclude: ["id", "subscriptionDate", "subscriberId"] } });
+    return await SubAdminPlans.findAll({ where: { planId: { [Op.in]: planIds }, isSubValid: true }, include: Admin, attributes: { exclude: ["id", "unSubscriptionDate", "subscriberId"] } });
   }
 }

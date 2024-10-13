@@ -21,6 +21,7 @@ const defineSubSongsTable = () => {
         },
         subscriberId: {
             type: sequelize_1.DataTypes.INTEGER(),
+            references: { model: "Users", key: "id" },
             allowNull: false,
             validate: {
                 notNull: { msg: "No data passed subscriberId" },

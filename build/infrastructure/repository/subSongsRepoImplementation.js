@@ -10,8 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubSongsRepoImp = void 0;
+const sequelize_1 = require("sequelize");
 const AppError_1 = require("../../domain/entities/AppError");
 const SubSongs_1 = require("../../domain/entities/SubSongs");
+const User_1 = require("../../domain/entities/User");
 class SubSongsRepoImp {
     createSubscription(subDetails) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +37,13 @@ class SubSongsRepoImp {
     findSubscriptionById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield SubSongs_1.SubSongs.findByPk(id);
+        });
+    }
+    findSubscriptionBySongIds(songIds_1) {
+        return __awaiter(this, arguments, void 0, function* (songIds, type = "sub") {
+            if (type === "unSub")
+                return yield SubSongs_1.SubSongs.findAll({ where: { songId: { [sequelize_1.Op.in]: songIds }, isSubValid: false }, include: User_1.User, attributes: { exclude: ["id", "subscriptionDate", "subscriberId"] } });
+            return yield SubSongs_1.SubSongs.findAll({ where: { songId: { [sequelize_1.Op.in]: songIds }, isSubValid: true }, include: User_1.User, attributes: { exclude: ["id", "unSubscriptionDate", "subscriberId"] } });
         });
     }
 }

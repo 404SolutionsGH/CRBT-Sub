@@ -64,10 +64,10 @@ class SongRepoImpl {
     }
     increaseNumberOfSubscribers(ammount_1, id_1) {
         return __awaiter(this, arguments, void 0, function* (ammount, id, flag = null) {
-            if (flag) {
+            if (flag)
                 yield Song_1.Song.decrement("numberOfSubscribers", { by: ammount, where: { id } });
-            }
-            yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
+            else
+                yield Song_1.Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
         });
     }
     increaseNumberOfListeners(amount_1, id_1) {

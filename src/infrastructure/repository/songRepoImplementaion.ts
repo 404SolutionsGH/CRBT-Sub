@@ -36,7 +36,7 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async findSongById(id: number): Promise<Song | null> {
-    return await Song.findByPk(id,{attributes: { exclude: ["ownerId", "updatedAt"]}});
+    return await Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
   }
 
   async findSongsByOwnersId(ownerId: number): Promise<Array<Song>> {
@@ -47,16 +47,13 @@ export class SongRepoImpl implements SongRepository {
     return await Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
   }
 
-  async increaseNumberOfSubscribers(ammount: number, id: number,flag:'dec'|null=null): Promise<void> {
-    if(flag){
-      await Song.decrement("numberOfSubscribers", { by: ammount, where: { id } })
-    }
-    await Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
+  async increaseNumberOfSubscribers(ammount: number, id: number, flag: "dec" | null = null): Promise<void> {
+    if (flag) await Song.decrement("numberOfSubscribers", { by: ammount, where: { id } });
+    else await Song.increment("numberOfSubscribers", { by: ammount, where: { id } });
   }
   async increaseNumberOfListeners(amount: number, id: number, url: string | null = null): Promise<void> {
     // console.log(`Song url=${url}`);
     if (id === 0 && url) await Song.increment("numberOfListeners", { by: amount, where: { tune: { [Op.like]: `%${url}` } } });
     else await Song.increment("numberOfListeners", { by: amount, where: { id } });
-    
   }
 }

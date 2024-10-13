@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
-import { SubSongs } from "../../../domain/entities/SubSongs";
 import { sequelize } from "../connectDb";
+import { SubAdminPlans } from "../../../domain/entities/SubAdminplans";
 
 export const defineSubAdminPlansTable = () => {
-  SubSongs.init(
+  SubAdminPlans.init(
     {
       id: {
         type: DataTypes.INTEGER(),
@@ -14,13 +14,14 @@ export const defineSubAdminPlansTable = () => {
         type: DataTypes.INTEGER(),
         allowNull: false,
         validate: {
-          notNull: { msg: "No data passed songOwnerId" },
-          isInt: { msg: "the value passed for songOwnerId must be an integer" },
+          notNull: { msg: "No data passed planId" },
+          isInt: { msg: "the value passed for planId must be an integer" },
         },
       },
       subscriberId: {
         type: DataTypes.INTEGER(),
         allowNull: false,
+        references: { model: "Admins", key: "id" },
         validate: {
           notNull: { msg: "No data passed subscriberId" },
           isInt: { msg: "the value passed for subscriberId must be an integer" },

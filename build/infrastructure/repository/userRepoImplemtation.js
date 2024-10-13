@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepoImp = void 0;
 const User_1 = require("../../domain/entities/User");
 class UserRepoImp {
+    getUsers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.User.findAll();
+        });
+    }
     createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
             const { phone, langPref, firstName, lastName } = userData;

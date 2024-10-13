@@ -25,11 +25,11 @@ const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Database connection sucessful");
     // models definition
     console.log("Defining Tables Structures...");
-    (0, defineAllTables_1.defineAllTables)();
+    yield (0, defineAllTables_1.defineAllTables)();
     console.log("Table Structures defined");
     //models syncronization
     console.log("Database syncronising..");
-    yield exports.sequelize.sync({ force: true });
+    yield exports.sequelize.sync({ alter: true });
     console.log("Syncronization sucessfull");
 });
 exports.connectToDatabase = connectToDatabase;

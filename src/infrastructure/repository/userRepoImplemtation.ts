@@ -3,6 +3,9 @@ import { User } from "../../domain/entities/User";
 import { UserRepository } from "../../domain/interfaces/userRepository";
 
 export class UserRepoImp implements UserRepository {
+  async getUsers(): Promise<Array<User>> {
+    return await User.findAll();
+  }
   async createUser(userData: User): Promise<User | null> {
     const { phone, langPref, firstName, lastName } = userData;
     const [itemCreated, isCreated] = await User.findOrCreate({
