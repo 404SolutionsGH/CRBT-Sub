@@ -4,6 +4,7 @@ exports.authRouter = void 0;
 const express_1 = require("express");
 const authControllers_1 = require("../controllers/authControllers");
 const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
+const verifyJwt_1 = require("../middlewares/verifyJwt");
 exports.authRouter = (0, express_1.Router)();
 // endpoint for creating account for users and mercahnts
 /**
@@ -101,7 +102,7 @@ exports.authRouter = (0, express_1.Router)();
  *                   type: string
  *                   example: "Merchant account already exists"
  */
-exports.authRouter.post("/signup", checkForSuperAdmin_1.isSuperAdminAccount, authControllers_1.signUpController);
+exports.authRouter.post("/signup", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, authControllers_1.signUpController);
 /**
  * @swagger
  * /api/v1/auth/login:

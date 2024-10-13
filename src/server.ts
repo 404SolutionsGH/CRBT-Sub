@@ -16,6 +16,7 @@ import { TempSong } from "./domain/entities/TempSong";
 import { Song } from "./domain/entities/Song";
 import { encryptPassword } from "./libs/bcrypt";
 import { Admin } from "./domain/entities/Admin";
+import { adminRouter } from "./interface/routes/adminRoutes";
 
 const server = express();
 
@@ -29,6 +30,7 @@ server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], creden
 // routes
 server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/user", userRouter);
+server.use("/api/v1/admin",adminRouter)
 server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
 server.use("/api/v1/admin-plan",adminPlanRouter)
@@ -40,10 +42,6 @@ const startServer = async () => {
   try {
     setUpAllEventListners()
     await connectToDatabase()
-      await TempSong.truncate();
-      await Song.truncate();
-      console.log("data deleted");
-      await Admin.truncate();
       const password= await encryptPassword("Admin1234");
       await Admin.create({
         email: "admin@gmail.com",

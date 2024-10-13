@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { loginController, signUpController } from "../controllers/authControllers";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
+import { verifyJwt } from "../middlewares/verifyJwt";
 
 export const authRouter = Router();
 
@@ -101,7 +102,7 @@ export const authRouter = Router();
  *                   type: string
  *                   example: "Merchant account already exists"
  */
-authRouter.post("/signup",isSuperAdminAccount ,signUpController);
+authRouter.post("/signup",verifyJwt,isSuperAdminAccount ,signUpController);
 
 
 /**
