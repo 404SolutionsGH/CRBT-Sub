@@ -113,3 +113,7 @@ adminRouter.get("/users/:type", verifyJwt,isSuperAdminAccount,getUsersController
  *                   example: "Unauthorized access. Only superAdmins can get all merchants."
  */
 adminRouter.get("/merchants/:cat",verifyJwt,isSuperAdminAccount,getMerchantsController)
+
+
+
+

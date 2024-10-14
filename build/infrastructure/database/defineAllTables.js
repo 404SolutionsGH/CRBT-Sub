@@ -16,6 +16,7 @@ const SubSongs_1 = require("../../domain/entities/SubSongs");
 const User_1 = require("../../domain/entities/User");
 const adminPlanTable_1 = require("./tables/adminPlanTable");
 const adminTable_1 = require("./tables/adminTable");
+const packageTables_1 = require("./tables/packageTables");
 const serviceTable_1 = require("./tables/serviceTable");
 const songTable_1 = require("./tables/songTable");
 const subAdminPlansTable_1 = require("./tables/subAdminPlansTable");
@@ -32,6 +33,7 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, tempSongTable_1.defineTempSongTable)();
     (0, subSongsTable_1.defineSubSongsTable)();
     (0, subAdminPlansTable_1.defineSubAdminPlansTable)();
+    (0, packageTables_1.definePackageTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");
