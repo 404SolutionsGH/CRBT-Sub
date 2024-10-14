@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMerchantsController, getUsersController } from "../controllers/adminControllers";
+import { createPackagesController, deletePackagesController, getMerchantsController, getUsersController, updatePackagesController } from "../controllers/adminControllers";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
 
@@ -116,4 +116,9 @@ adminRouter.get("/merchants/:cat",verifyJwt,isSuperAdminAccount,getMerchantsCont
 
 
 
+adminRouter.post("/package",verifyJwt,isSuperAdminAccount,createPackagesController)
+
+adminRouter.put("/package/:id",verifyJwt,isSuperAdminAccount,updatePackagesController)
+
+adminRouter.delete("/package/:id",verifyJwt,isSuperAdminAccount,deletePackagesController)
 

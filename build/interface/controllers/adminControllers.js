@@ -12,11 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMerchantsController = exports.getUsersController = void 0;
+exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
 const getMerchants_1 = require("../../useCases/admin/getMerchants");
+const addPackage_1 = require("../../useCases/admin/addPackage");
+const Package_1 = require("../../domain/entities/Package");
+const updatePackage_1 = require("../../useCases/admin/updatePackage");
+const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
+const deletePackage_1 = require("../../useCases/admin/deletePackage");
 exports.getUsersController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { type } = req.params;
     const { id } = req.body;
@@ -43,4 +48,24 @@ exports.getMerchantsController = (0, express_async_handler_1.default)((req, res)
     else
         throw new AppError_1.AppError("Invalid value passed for cat url parameter value should be either all or sub", 400);
     res.status(200).json(merchants);
+}));
+exports.createPackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { packageName, packageDescription, packageImg, packageType, ussdCode } = req.body;
+    if (!packageName || !packageType)
+        throw new AppError_1.AppError(!packageName ? "No value passed for packageName in body" : "No value passed for packageType in body", 400);
+    yield (0, addPackage_1.addPackage)(Package_1.Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode }));
+    res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
+}));
+exports.updatePackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { packageName, packageDescription, packageImg, packageType, ussdCode } = req.body;
+    (0, isStringNumber_1.isStringContentNumber)(req.params.id, "id");
+    const id = Number(req.params.id);
+    yield (0, updatePackage_1.updatePackage)(Package_1.Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode }));
+    res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
+}));
+exports.deletePackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(id, "id");
+    yield (0, deletePackage_1.deletePackage)(Number(id));
+    res.status(200).json({ messge: "Package Deletion sucessfull" });
 }));

@@ -112,3 +112,6 @@ exports.adminRouter.get("/users/:type", verifyJwt_1.verifyJwt, checkForSuperAdmi
  *                   example: "Unauthorized access. Only superAdmins can get all merchants."
  */
 exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.getMerchantsController);
+exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.createPackagesController);
+exports.adminRouter.put("/package/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.updatePackagesController);
+exports.adminRouter.delete("/package/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.deletePackagesController);

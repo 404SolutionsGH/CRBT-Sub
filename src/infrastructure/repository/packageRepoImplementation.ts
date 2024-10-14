@@ -20,13 +20,13 @@ export class PackageRepoImpl implements PackageRespository {
   async getAllPackages(): Promise<Package[]> {
     return await Package.findAll();
   }
-  async updatePackageById(id: number, updatePackage: Package): Promise<Boolean> {
+  async updatePackageById(id: number, updatePackage: Package): Promise<boolean> {
     const { packageName, packageDescription, packageImg, packageType, ussdCode } = updatePackage;
     const updatedData = await Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode }, { where: { id }, returning: true });
     if (updatedData[0] === 1) return true;
     return false;
   }
-  async deletePackageById(id: number): Promise<Boolean> {
+  async deletePackageById(id: number): Promise<boolean> {
     const numOfDel = await Package.destroy({ where: { id } });
     if (numOfDel === 1) return true;
     return false;
