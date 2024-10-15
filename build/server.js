@@ -29,6 +29,7 @@ const adminPlanRoute_1 = require("./interface/routes/adminPlanRoute");
 const bcrypt_1 = require("./libs/bcrypt");
 const Admin_1 = require("./domain/entities/Admin");
 const adminRoutes_1 = require("./interface/routes/adminRoutes");
+const packageRoutes_1 = require("./interface/routes/packageRoutes");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
@@ -42,6 +43,7 @@ server.use("/api/v1/admin", adminRoutes_1.adminRouter);
 server.use("/api/v1/songs", songsRoutes_1.songsRouter);
 server.use("/api/v1/service", serviceRoutes_1.serviceRouter);
 server.use("/api/v1/admin-plan", adminPlanRoute_1.adminPlanRouter);
+server.use("/api/v1/package", packageRoutes_1.packageRouter);
 // error handling middlware
 server.use(errorHandler_1.errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;
