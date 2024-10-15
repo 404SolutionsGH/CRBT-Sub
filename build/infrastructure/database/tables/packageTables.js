@@ -53,8 +53,7 @@ const definePackageTable = () => {
         },
         packageImg: {
             type: sequelize_1.DataTypes.TEXT,
-            allowNull: false,
-            // defaultValue: "skd",
+            allowNull: true,
             validate: {
                 is: { msg: "Value passed for packageImg should be in base64 format", args: /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/ },
             },
