@@ -114,14 +114,14 @@ exports.adminRouter.get("/users/:type", verifyJwt_1.verifyJwt, checkForSuperAdmi
 exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.getMerchantsController);
 /**
  * @swagger
- * /api/v1/admin/package/:
+ * /api/v1/admin/package:
  *   post:
- *     tags:
- *       - Admins
- *     summary: Create a new package
- *     description: This is the endpoint for superAdmins to create packages.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Admins
+ *     summary: Create a package
+ *     description: This endpoint allows superAdmins to create new packages. Requires an authentication header and a request body.
  *     requestBody:
  *       required: true
  *       content:
@@ -131,27 +131,27 @@ exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperA
  *             properties:
  *               packageName:
  *                 type: string
- *                 example: Jumbobundle
  *                 description: The name of the package.
  *               packageDescription:
  *                 type: string
- *                 example: "This is a bundle for people looking for huge data packages."
- *                 description: Description of the package.
+ *                 description: A brief description of the package.
  *               packageImg:
  *                 type: string
- *                 example: "<Base64 string of the package image>"
- *                 description: Image of the package encoded as a Base64 string.
+ *                 nullable: true
+ *                 description: A Base64 string representing the package image (optional).
  *               packageType:
  *                 type: string
- *                 example: "2D"
- *                 description: The type of package (e.g., 2D for 2 days, 3W for 3 weeks, 6M for 6 months).
+ *                 enum: [any, voice, sms, data]
+ *                 description: The type of package.
  *               ussdCode:
  *                 type: string
- *                 example: "*123*34#"
  *                 description: The USSD code associated with the package.
+ *               packageValidity:
+ *                 type: string
+ *                 description: The validity period of the package (e.g., 1D for 1 day, 2W for 2 weeks, 3M for 3 months, 0I for non-expiry).
  *     responses:
- *       200:
- *         description: Package created successfully.
+ *       201:
+ *         description: Package successfully created.
  *         content:
  *           application/json:
  *             schema:
@@ -159,9 +159,9 @@ exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperA
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Package created successfully."
+ *                   example: Package created successfully.
  *       400:
- *         description: Bad request due to invalid input.
+ *         description: Bad request. Invalid input or missing required fields.
  *         content:
  *           application/json:
  *             schema:
@@ -169,9 +169,9 @@ exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperA
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Invalid request data."
+ *                   example: Invalid request body.
  *       401:
- *         description: Unauthorized access. Only superAdmins can create packages.
+ *         description: Unauthorized. Only superAdmins can perform this action.
  *         content:
  *           application/json:
  *             schema:
@@ -179,9 +179,9 @@ exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperA
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Unauthorized access."
+ *                   example: You must be a superAdmin to create a package.
  *       409:
- *         description: Conflict error if the package already exists.
+ *         description: Conflict. The package already exists.
  *         content:
  *           application/json:
  *             schema:
@@ -189,26 +189,26 @@ exports.adminRouter.get("/merchants/:cat", verifyJwt_1.verifyJwt, checkForSuperA
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Package already exists."
+ *                   example: The package with this name already exists.
  */
 exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.createPackagesController);
 /**
  * @swagger
  * /api/v1/admin/package/{id}:
  *   put:
- *     tags:
- *       - Admins
- *     summary: Update an existing package
- *     description: This is the endpoint for superAdmins to update packages.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Admins
+ *     summary: Update a package
+ *     description: This endpoint allows superAdmins to update packages. Requires a valid package ID in the URL path, authentication header, and request body.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the package to update.
+ *         description: The ID of the package to update (must be a valid package ID).
  *     requestBody:
  *       required: true
  *       content:
@@ -218,27 +218,27 @@ exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1
  *             properties:
  *               packageName:
  *                 type: string
- *                 example: Jumbobundle
  *                 description: The name of the package.
  *               packageDescription:
  *                 type: string
- *                 example: "This is a bundle for people looking for huge data packages."
- *                 description: Description of the package.
+ *                 description: A brief description of the package.
  *               packageImg:
  *                 type: string
- *                 example: "/9j/4AAQSkZJRgABAQAAAQABAAD/4QB9RXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAAAEAAAAAAAABAAEAAAABAAMAAAABAAEAAAEBAAMAAAABAAEAAAAAAAD/2wBDAP////////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAAmACkDASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAAECAwQFBgcI/8QAKhAAAgIBAwIFAwQCAwEAAAAAAQIDBBEFBhIhMVETIoEUQnGBIzJCU5KhscHwYpLh8Qf/."
- *                 description: Image of the package encoded as a Base64 string.
+ *                 nullable: true
+ *                 description: A Base64 string representing the package image (optional).
  *               packageType:
  *                 type: string
- *                 example: "2D"
- *                 description: The type of package (e.g., 2D for 2 days, 3W for 3 weeks, 6M for 6 months).
+ *                 enum: [any, voice, sms, data]
+ *                 description: The type of package.
  *               ussdCode:
  *                 type: string
- *                 example: "*123*34#"
  *                 description: The USSD code associated with the package.
+ *               packageValidity:
+ *                 type: string
+ *                 description: The validity period of the package (e.g., 1D for 1 day, 2W for 2 weeks, 3M for 3 months, 0I for non-expiry).
  *     responses:
  *       200:
- *         description: Package updated successfully.
+ *         description: Package successfully updated.
  *         content:
  *           application/json:
  *             schema:
@@ -246,9 +246,9 @@ exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Package updated successfully."
+ *                   example: Package updated successfully.
  *       400:
- *         description: Bad request due to invalid input or missing package ID.
+ *         description: Bad request. Invalid input or missing required fields.
  *         content:
  *           application/json:
  *             schema:
@@ -256,9 +256,9 @@ exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Invalid request data or package ID."
+ *                   example: Invalid package ID or request body.
  *       401:
- *         description: Unauthorized access. Only superAdmins can update packages.
+ *         description: Unauthorized. Only superAdmins can perform this action.
  *         content:
  *           application/json:
  *             schema:
@@ -266,7 +266,7 @@ exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Unauthorized access."
+ *                   example: You must be a superAdmin to update this package.
  *       404:
  *         description: Package not found.
  *         content:
@@ -276,7 +276,7 @@ exports.adminRouter.post("/package", verifyJwt_1.verifyJwt, checkForSuperAdmin_1
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "No package with the provided ID exists."
+ *                   example: No package found with the provided ID.
  */
 exports.adminRouter.put("/package/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.updatePackagesController);
 /**
