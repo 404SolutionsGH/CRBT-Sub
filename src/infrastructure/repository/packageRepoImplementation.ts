@@ -4,11 +4,11 @@ import { PackageRespository } from "../../domain/interfaces/packageRespository";
 
 export class PackageRepoImpl implements PackageRespository {
   async createPackage(packageData: Package): Promise<Package | null> {
-    const { packageName, packageDescription, packageImg, packageType, ussdCode } = packageData;
+    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = packageData;
 
     const [itemCreated, isCreated] = packageImg
-      ? await Package.findOrCreate({ where: { packageName, packageType }, defaults: { packageName, packageDescription, packageImg, packageType, ussdCode } })
-      : await Package.findOrCreate({ where: { packageName, packageType }, defaults: { packageName, packageDescription, packageType, ussdCode } });
+      ? await Package.findOrCreate({ where: { packageName, packageType, packageValidity }, defaults: { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } })
+      : await Package.findOrCreate({ where: { packageName, packageType, packageValidity }, defaults: { packageName, packageDescription, packageType, ussdCode, packageValidity } });
 
     if (isCreated) return itemCreated;
 
@@ -21,8 +21,8 @@ export class PackageRepoImpl implements PackageRespository {
     return await Package.findAll();
   }
   async updatePackageById(id: number, updatePackage: Package): Promise<boolean> {
-    const { packageName, packageDescription, packageImg, packageType, ussdCode } = updatePackage;
-    const updatedData = await Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode }, { where: { id }, returning: true });
+    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = updatePackage;
+    const updatedData = await Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }, { where: { id }, returning: true });
     if (updatedData[0] === 1) return true;
     return false;
   }

@@ -14,10 +14,10 @@ const Package_1 = require("../../domain/entities/Package");
 class PackageRepoImpl {
     createPackage(packageData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { packageName, packageDescription, packageImg, packageType, ussdCode } = packageData;
+            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = packageData;
             const [itemCreated, isCreated] = packageImg
-                ? yield Package_1.Package.findOrCreate({ where: { packageName, packageType }, defaults: { packageName, packageDescription, packageImg, packageType, ussdCode } })
-                : yield Package_1.Package.findOrCreate({ where: { packageName, packageType }, defaults: { packageName, packageDescription, packageType, ussdCode } });
+                ? yield Package_1.Package.findOrCreate({ where: { packageName, packageType, packageValidity }, defaults: { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } })
+                : yield Package_1.Package.findOrCreate({ where: { packageName, packageType, packageValidity }, defaults: { packageName, packageDescription, packageType, ussdCode, packageValidity } });
             if (isCreated)
                 return itemCreated;
             return null;
@@ -35,8 +35,8 @@ class PackageRepoImpl {
     }
     updatePackageById(id, updatePackage) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { packageName, packageDescription, packageImg, packageType, ussdCode } = updatePackage;
-            const updatedData = yield Package_1.Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode }, { where: { id }, returning: true });
+            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = updatePackage;
+            const updatedData = yield Package_1.Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }, { where: { id }, returning: true });
             if (updatedData[0] === 1)
                 return true;
             return false;

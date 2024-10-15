@@ -46,8 +46,16 @@ export const definePackageTable = () => {
         type: DataTypes.STRING(),
         allowNull: false,
         validate: {
-          notNull: { msg: "No value passed for packageName in body" },
-          is: { msg: "Values passed for packageType should be in forms like this 1D(ie 1 day) 2W(2 weeks) 3M(3 months) etc.", args: /^\d+[DWM]$/ },
+          notNull: { msg: "No value passed for packType in body" },
+          isIn: { msg: "Values passed for packageType should be one of the following 'data' 'sms' 'voice' 'any' ", args: [["any", "voice", "sms", "data"]] },
+        },
+      },
+      packageValidity: {
+        type: DataTypes.STRING(),
+        allowNull: false,
+        validate: {
+          notNull: { msg: "No value passed for packageValidity in body" },
+          is: { msg: "Values passed for packageValidity should be in forms like this 1D(ie 1 day) 2W(2 weeks) 3M(3 months) etc.", args: /^\d+[DWM]$/ },
         },
       },
       packageImg: {

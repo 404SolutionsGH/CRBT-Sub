@@ -33,17 +33,18 @@ export const getMerchantsController = asyncHandler(async (req: Request, res: Res
 });
 
 export const createPackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode } = req.body;
-  if (!packageName || !packageType) throw new AppError(!packageName ? "No value passed for packageName in body" : "No value passed for packageType in body", 400);
-  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode }));
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = req.body;
+  if (!packageName || !packageType || !packageValidity)
+    throw new AppError(!packageName ? "No value passed for packageName in body" : !packageType ? "No value passed for packageType in body" : "No value passed for packageValidity", 400);
+  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }));
   res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
 });
 
 export const updatePackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode } = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = req.body;
   isStringContentNumber(req.params.id, "id");
   const id = Number(req.params.id);
-  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode }));
+  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }));
   res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
 });
 

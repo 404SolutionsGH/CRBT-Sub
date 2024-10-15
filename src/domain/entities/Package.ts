@@ -7,6 +7,7 @@ export class Package extends Model {
   declare packageDescription:string;
   declare ussdCode:string;
   declare price:string;
-  declare packageType:string;
+  declare packageType:"voice"|"data"|"sms"|"any";
+  declare packageValidity:string;
   declare packageImg:string;
 }
