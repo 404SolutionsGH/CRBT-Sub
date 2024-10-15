@@ -9,5 +9,6 @@ export class Package extends Model {
   declare price:string;
   declare packageType:"voice"|"data"|"sms"|"any";
   declare packageValidity:string;
+  declare packageCatId:number
   declare packageImg:string;
 }

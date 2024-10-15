@@ -10,6 +10,15 @@ export const definePackageTable = () => {
         autoIncrement: true,
         primaryKey: true,
       },
+      packageCatId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references:{model:"Packages",key:"id"},
+        validate: {
+          notNull: { msg: "No value passed for packageCatId" },
+          isInt: { msg: "Value for packageCatId must be an integer" },
+        },
+      },
       packageName: {
         type: DataTypes.STRING(),
         allowNull: false,

@@ -11,11 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.defineAllTables = void 0;
 const Admin_1 = require("../../domain/entities/Admin");
+const Package_1 = require("../../domain/entities/Package");
+const PackageCategory_1 = require("../../domain/entities/PackageCategory");
 const SubAdminplans_1 = require("../../domain/entities/SubAdminplans");
 const SubSongs_1 = require("../../domain/entities/SubSongs");
 const User_1 = require("../../domain/entities/User");
 const adminPlanTable_1 = require("./tables/adminPlanTable");
 const adminTable_1 = require("./tables/adminTable");
+const packageCatTable_1 = require("./tables/packageCatTable");
 const packageTables_1 = require("./tables/packageTables");
 const serviceTable_1 = require("./tables/serviceTable");
 const songTable_1 = require("./tables/songTable");
@@ -34,16 +37,20 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, subSongsTable_1.defineSubSongsTable)();
     (0, subAdminPlansTable_1.defineSubAdminPlansTable)();
     (0, packageTables_1.definePackageTable)();
+    (0, packageCatTable_1.definePackageCategoryTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");
 });
 exports.defineAllTables = defineAllTables;
 const settingUpTableAssociations = () => {
-    // setting up link btw User and SubSongs
+    // setting up link btw Users and SubSongs
     User_1.User.hasMany(SubSongs_1.SubSongs, { foreignKey: "subscriberId" });
     SubSongs_1.SubSongs.belongsTo(User_1.User, { foreignKey: "subscriberId" });
-    // setting up link btw Admin and SubAdminPlans
+    // setting up link btw Admins and SubAdminPlans
     Admin_1.Admin.hasMany(SubAdminplans_1.SubAdminPlans, { foreignKey: "subscriberId" });
     SubAdminplans_1.SubAdminPlans.belongsTo(Admin_1.Admin, { foreignKey: "subscriberId" });
+    // setting up link btw Packages and PackageCatgories
+    PackageCategory_1.PackageCategory.hasMany(Package_1.Package, { foreignKey: "packageCatId" });
+    Package_1.Package.belongsTo(PackageCategory_1.PackageCategory, { foreignKey: "packageCatId" });
 };
