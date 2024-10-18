@@ -33,18 +33,27 @@ export const getMerchantsController = asyncHandler(async (req: Request, res: Res
 });
 
 export const createPackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = req.body;
-  if (!packageName || !packageType || !packageValidity)
-    throw new AppError(!packageName ? "No value passed for packageName in body" : !packageType ? "No value passed for packageType in body" : "No value passed for packageValidity", 400);
-  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }));
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
+  if (!packageName || !packageType || !packageValidity || !packageCatId)
+    throw new AppError(
+      !packageName
+        ? "No value passed for packageName in body"
+        : !packageType
+        ? "No value passed for packageType in body"
+        : !packageCatId
+        ? "No value passed for packageCatId in body"
+        : "No value passed for packageValidity",
+      400
+    );
+  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
   res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
 });
 
 export const updatePackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity } = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
   isStringContentNumber(req.params.id, "id");
   const id = Number(req.params.id);
-  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity }));
+  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
   res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
 });
 
