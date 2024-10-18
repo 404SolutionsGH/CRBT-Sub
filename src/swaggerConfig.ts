@@ -30,6 +30,10 @@ const option: swaggerJsdoc.Options = {
         name: "Admins",
         description: "All operations relating to Admin user management",
       },
+      {
+        name: "Packages",
+        description: "All operations relating to getting packages and their category",
+      },
     ],
     components: {
       securitySchemes: {

@@ -159,6 +159,12 @@ adminRouter.get("/merchants/:cat", verifyJwt, isSuperAdminAccount, getMerchantsC
  *               packageValidity:
  *                 type: string
  *                 description: The validity period of the package (e.g., 1D for 1 day, 2W for 2 weeks, 3M for 3 months, 0I for non-expiry).
+ *               packageCatId:
+ *                 type: number
+ *                 description: A valid package category ID.
+ *               price:
+ *                 type: string
+ *                 description: price to be paid to get the package.
  *     responses:
  *       201:
  *         description: Package successfully created.
@@ -247,6 +253,12 @@ adminRouter.post("/package", verifyJwt, isSuperAdminAccount, createPackagesContr
  *               packageValidity:
  *                 type: string
  *                 description: The validity period of the package (e.g., 1D for 1 day, 2W for 2 weeks, 3M for 3 months, 0I for non-expiry).
+ *               packageCatId:
+ *                 type: number
+ *                 description: A valid package category ID.
+ *               price:
+ *                 type: string
+ *                 description: price to be paid to get the package.
  *     responses:
  *       200:
  *         description: Package successfully updated.
@@ -290,6 +302,7 @@ adminRouter.post("/package", verifyJwt, isSuperAdminAccount, createPackagesContr
  *                   example: No package found with the provided ID.
  */
 adminRouter.put("/package/:id", verifyJwt, isSuperAdminAccount, updatePackagesController);
+
 
 /**
  * @swagger
@@ -352,6 +365,207 @@ adminRouter.put("/package/:id", verifyJwt, isSuperAdminAccount, updatePackagesCo
  */
 adminRouter.delete("/package/:id", verifyJwt, isSuperAdminAccount, deletePackagesController);
 
+
+/**
+ * @swagger
+ * /api/v1/admin/package-category:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admins
+ *     summary: Create a package category
+ *     description: This is the endpoint for superAdmins to create a package category. Requires an authentication header and a request body.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The title of the package category.
+ *               description:
+ *                 type: string
+ *                 description: A brief description of the package category.
+ *     responses:
+ *       201:
+ *         description: Package category successfully created.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Package category created successfully.
+ *       400:
+ *         description: Bad request. Invalid input or missing required fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid request body.
+ *       401:
+ *         description: Unauthorized. Only superAdmins can perform this action.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: You must be a superAdmin to create a package category.
+ *       409:
+ *         description: Conflict. The package category already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: The package category with this title already exists.
+ */
 adminRouter.post("/package-category", verifyJwt, isSuperAdminAccount, createPackageCategoriesController);
+
+
+/**
+ * @swagger
+ * /api/v1/admin/package-category/{id}:
+ *   put:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admins
+ *     summary: Update a package category
+ *     description: This is the endpoint for superAdmins to update a package category. Requires a valid package category ID in the URL path, authentication header, and request body.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the package category to update (must be a valid package category ID).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The updated title of the package category.
+ *               description:
+ *                 type: string
+ *                 description: The updated description of the package category.
+ *     responses:
+ *       200:
+ *         description: Package category successfully updated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Package category updated successfully.
+ *       400:
+ *         description: Bad request. Invalid input or missing required fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid request body or package category ID.
+ *       401:
+ *         description: Unauthorized. Only superAdmins can perform this action.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: You must be a superAdmin to update a package category.
+ *       404:
+ *         description: Package category not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: No package category found with the provided ID.
+ */
 adminRouter.put("/package-category/:id", verifyJwt, isSuperAdminAccount, updatePackageCategoriesController);
+
+
+/**
+ * @swagger
+ * /api/v1/admin/package-category/{id}:
+ *   delete:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Admins
+ *     summary: Delete a package category
+ *     description: This is the endpoint for superAdmins to delete a package category and all associated packages. Requires a valid package category ID in the URL path and an authentication header.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the package category to delete (must be a valid package category ID).
+ *     responses:
+ *       200:
+ *         description: Package category successfully deleted.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Package category deleted successfully.
+ *       400:
+ *         description: Bad request. Invalid input or missing required fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid request body or package category ID.
+ *       401:
+ *         description: Unauthorized. Only superAdmins can perform this action.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: You must be a superAdmin to delete this package category.
+ *       404:
+ *         description: Package category not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: No package category found with the provided ID.
+ */
 adminRouter.delete("/package-category/:id", verifyJwt, isSuperAdminAccount, delePackageCategoriesController);
