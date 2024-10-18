@@ -37,7 +37,7 @@ export const getMerchantsController = asyncHandler(async (req: Request, res: Res
 });
 
 export const createPackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price} = req.body;
   if (!packageName || !packageType || !packageValidity || !packageCatId)
     throw new AppError(
       !packageName
@@ -49,15 +49,15 @@ export const createPackagesController = asyncHandler(async (req: Request, res: R
         : "No value passed for packageValidity",
       400
     );
-  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
+  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price}));
   res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
 });
 
 export const updatePackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId,price } = req.body;
   isStringContentNumber(req.params.id, "id");
   const id = Number(req.params.id);
-  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
+  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price}));
   res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
 });
 

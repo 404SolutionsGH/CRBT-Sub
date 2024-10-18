@@ -54,7 +54,7 @@ exports.getMerchantsController = (0, express_async_handler_1.default)((req, res)
     res.status(200).json(merchants);
 }));
 exports.createPackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
+    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = req.body;
     if (!packageName || !packageType || !packageValidity || !packageCatId)
         throw new AppError_1.AppError(!packageName
             ? "No value passed for packageName in body"
@@ -63,14 +63,14 @@ exports.createPackagesController = (0, express_async_handler_1.default)((req, re
                 : !packageCatId
                     ? "No value passed for packageCatId in body"
                     : "No value passed for packageValidity", 400);
-    yield (0, addPackage_1.addPackage)(Package_1.Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
+    yield (0, addPackage_1.addPackage)(Package_1.Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price }));
     res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
 }));
 exports.updatePackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = req.body;
+    const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = req.body;
     (0, isStringNumber_1.isStringContentNumber)(req.params.id, "id");
     const id = Number(req.params.id);
-    yield (0, updatePackage_1.updatePackage)(Package_1.Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }));
+    yield (0, updatePackage_1.updatePackage)(Package_1.Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price }));
     res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
 }));
 exports.deletePackagesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

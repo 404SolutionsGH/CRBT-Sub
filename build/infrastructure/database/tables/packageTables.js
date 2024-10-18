@@ -65,7 +65,7 @@ const definePackageTable = () => {
             allowNull: false,
             validate: {
                 notNull: { msg: "No value passed for packageValidity in body" },
-                is: { msg: "Values passed for packageValidity should be in forms like this 1D(ie 1 day) 2W(2 weeks) 3M(3 months) etc.", args: /^\d+[DWM]$/ },
+                is: { msg: "Values passed for packageValidity should be in forms like this 1D(ie 1 day) 2W(2 weeks) 3M(3 months) etc.", args: /^\d+[DWMI]$/ },
             },
         },
         packageImg: {

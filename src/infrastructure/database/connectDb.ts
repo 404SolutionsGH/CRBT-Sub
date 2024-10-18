@@ -16,6 +16,6 @@ export const connectToDatabase = async () => {
   console.log("Table Structures defined");
   //models syncronization
   console.log("Database syncronising..");
-  await sequelize.sync({alter:true});
+  await sequelize.sync({force:true});
   console.log("Syncronization sucessfull");
 };

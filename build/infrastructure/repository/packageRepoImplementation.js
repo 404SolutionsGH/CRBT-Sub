@@ -14,15 +14,15 @@ const Package_1 = require("../../domain/entities/Package");
 class PackageRepoImpl {
     createPackage(packageData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = packageData;
+            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = packageData;
             const [itemCreated, isCreated] = packageImg
                 ? yield Package_1.Package.findOrCreate({
                     where: { packageName, packageType, packageValidity, packageCatId },
-                    defaults: { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId },
+                    defaults: { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price },
                 })
                 : yield Package_1.Package.findOrCreate({
                     where: { packageName, packageType, packageValidity, packageCatId },
-                    defaults: { packageName, packageDescription, packageType, ussdCode, packageValidity, packageCatId },
+                    defaults: { packageName, packageDescription, packageType, ussdCode, packageValidity, packageCatId, price },
                 });
             if (isCreated)
                 return itemCreated;
@@ -41,8 +41,8 @@ class PackageRepoImpl {
     }
     updatePackageById(id, updatePackage) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId } = updatePackage;
-            const updatedData = yield Package_1.Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId }, { where: { id }, returning: true });
+            const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = updatePackage;
+            const updatedData = yield Package_1.Package.update({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price }, { where: { id }, returning: true });
             if (updatedData[0] === 1)
                 return true;
             return false;

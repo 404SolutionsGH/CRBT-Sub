@@ -14,10 +14,9 @@ export const getPackageController = asyncHandler(async (req: Request, res: Respo
   res.status(200).json(await getPackage(Number(id)));
 });
 
-
-export const getPackageCatsController=asyncHandler(async (req: Request, res: Response) => {
-res.status(200).json(await allPackageCategories())
-})
+export const getPackageCatsController = asyncHandler(async (req: Request, res: Response) => {
+  res.status(200).json(await allPackageCategories());
+});
 
 export const getPackageCatController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
