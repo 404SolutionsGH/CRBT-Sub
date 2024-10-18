@@ -6,3 +6,5 @@ const packageController_1 = require("../controllers/packageController");
 exports.packageRouter = (0, express_1.Router)();
 exports.packageRouter.get("/", packageController_1.getPackagesController);
 exports.packageRouter.get("/:id", packageController_1.getPackageController);
+exports.packageRouter.get("/category", packageController_1.getPackageCatsController);
+exports.packageRouter.get("/category/:id", packageController_1.getPackageCatController);
