@@ -37,4 +37,9 @@ export class PackageRepoImpl implements PackageRespository {
     if (numOfDel === 1) return true;
     return false;
   }
+  async deletPackagesByCatId(id: number): Promise<boolean>{
+    const numOfDel = await Package.destroy({ where: { packageCatId:id } });
+     if (numOfDel === 1) return true;
+     return false;
+  }
 }

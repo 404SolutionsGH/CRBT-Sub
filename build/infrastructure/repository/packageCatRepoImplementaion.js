@@ -29,7 +29,7 @@ class PackageCategoryRepoImp {
     }
     getAllPackageCategories() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield PackageCategory_1.PackageCategory.findAll();
+            return yield PackageCategory_1.PackageCategory.findAll({ include: [{ model: Package_1.Package }] });
         });
     }
     updatePackageCategoryById(id, updatedPackageCategory) {

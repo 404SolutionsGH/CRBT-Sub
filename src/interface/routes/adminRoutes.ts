@@ -1,5 +1,14 @@
 import { Router } from "express";
-import { createPackagesController, deletePackagesController, getMerchantsController, getUsersController, updatePackagesController } from "../controllers/adminControllers";
+import {
+  createPackageCategoriesController,
+  createPackagesController,
+  delePackageCategoriesController,
+  deletePackagesController,
+  getMerchantsController,
+  getUsersController,
+  updatePackageCategoriesController,
+  updatePackagesController,
+} from "../controllers/adminControllers";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
 
@@ -342,3 +351,7 @@ adminRouter.put("/package/:id", verifyJwt, isSuperAdminAccount, updatePackagesCo
  *                   example: "No package with the provided ID exists."
  */
 adminRouter.delete("/package/:id", verifyJwt, isSuperAdminAccount, deletePackagesController);
+
+adminRouter.post("/package-category", verifyJwt, isSuperAdminAccount, createPackageCategoriesController);
+adminRouter.put("/package-category/:id", verifyJwt, isSuperAdminAccount, updatePackageCategoriesController);
+adminRouter.delete("/package-category/:id", verifyJwt, isSuperAdminAccount, delePackageCategoriesController);

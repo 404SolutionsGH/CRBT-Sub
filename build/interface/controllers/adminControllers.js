@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = void 0;
+exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
@@ -22,6 +22,10 @@ const Package_1 = require("../../domain/entities/Package");
 const updatePackage_1 = require("../../useCases/admin/updatePackage");
 const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
 const deletePackage_1 = require("../../useCases/admin/deletePackage");
+const addPackageCat_1 = require("../../useCases/admin/addPackageCat");
+const PackageCategory_1 = require("../../domain/entities/PackageCategory");
+const updatePackageCat_1 = require("../../useCases/admin/updatePackageCat");
+const deletePackageCat_1 = require("../../useCases/admin/deletePackageCat");
 exports.getUsersController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { type } = req.params;
     const { id } = req.body;
@@ -74,4 +78,22 @@ exports.deletePackagesController = (0, express_async_handler_1.default)((req, re
     (0, isStringNumber_1.isStringContentNumber)(id, "id");
     yield (0, deletePackage_1.deletePackage)(Number(id));
     res.status(200).json({ messge: "Package Deletion sucessfull" });
+}));
+exports.createPackageCategoriesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, description } = req.body;
+    yield (0, addPackageCat_1.addPackageCat)(PackageCategory_1.PackageCategory.build({ title, description }));
+    res.status(201).json({ message: `The package category ${title} has been created sucessfully` });
+}));
+exports.updatePackageCategoriesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, description } = req.body;
+    (0, isStringNumber_1.isStringContentNumber)(req.params.id, "id");
+    const id = Number(req.params.id);
+    yield (0, updatePackageCat_1.updatePackageCategory)(PackageCategory_1.PackageCategory.build({ title, description, id }));
+    res.status(200).json({ message: `The package category ${title} has been updated sucessfully` });
+}));
+exports.delePackageCategoriesController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(id, "id");
+    yield (0, deletePackageCat_1.deletePackageCategory)(Number(id));
+    res.status(200).json({ messge: "Package Category and it related package items has been deleted sucessfull" });
 }));

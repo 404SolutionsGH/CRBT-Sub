@@ -6,4 +6,5 @@ export interface PackageRespository {
   getAllPackages(): Promise<Package[]>;
   updatePackageById(id: number,updatePackage:Package): Promise<boolean>;
   deletePackageById(id: number): Promise<boolean>;
+  deletPackagesByCatId(id:number):Promise<boolean>
 }

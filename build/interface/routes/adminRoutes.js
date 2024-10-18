@@ -339,3 +339,6 @@ exports.adminRouter.put("/package/:id", verifyJwt_1.verifyJwt, checkForSuperAdmi
  *                   example: "No package with the provided ID exists."
  */
 exports.adminRouter.delete("/package/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.deletePackagesController);
+exports.adminRouter.post("/package-category", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.createPackageCategoriesController);
+exports.adminRouter.put("/package-category/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.updatePackageCategoriesController);
+exports.adminRouter.delete("/package-category/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.delePackageCategoriesController);

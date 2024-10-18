@@ -56,5 +56,13 @@ class PackageRepoImpl {
             return false;
         });
     }
+    deletPackagesByCatId(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const numOfDel = yield Package_1.Package.destroy({ where: { packageCatId: id } });
+            if (numOfDel === 1)
+                return true;
+            return false;
+        });
+    }
 }
 exports.PackageRepoImpl = PackageRepoImpl;

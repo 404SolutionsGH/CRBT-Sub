@@ -8,6 +8,10 @@ import { Package } from "../../domain/entities/Package";
 import { updatePackage } from "../../useCases/admin/updatePackage";
 import { isStringContentNumber } from "../../@common/helperMethods/isStringNumber";
 import { deletePackage } from "../../useCases/admin/deletePackage";
+import { addPackageCat } from "../../useCases/admin/addPackageCat";
+import { PackageCategory } from "../../domain/entities/PackageCategory";
+import { updatePackageCategory } from "../../useCases/admin/updatePackageCat";
+import { deletePackageCategory } from "../../useCases/admin/deletePackageCat";
 
 export const getUsersController = asyncHandler(async (req: Request, res: Response) => {
   const { type } = req.params;
@@ -62,4 +66,25 @@ export const deletePackagesController = asyncHandler(async (req: Request, res: R
   isStringContentNumber(id, "id");
   await deletePackage(Number(id));
   res.status(200).json({ messge: "Package Deletion sucessfull" });
+});
+
+export const createPackageCategoriesController = asyncHandler(async (req: Request, res: Response) => {
+  const { title, description } = req.body;
+  await addPackageCat(PackageCategory.build({ title, description }));
+  res.status(201).json({ message: `The package category ${title} has been created sucessfully` });
+});
+
+export const updatePackageCategoriesController = asyncHandler(async (req: Request, res: Response) => {
+  const { title, description } = req.body;
+  isStringContentNumber(req.params.id, "id");
+  const id = Number(req.params.id);
+  await updatePackageCategory(PackageCategory.build({ title, description, id }));
+  res.status(200).json({ message: `The package category ${title} has been updated sucessfully` });
+});
+
+export const delePackageCategoriesController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  isStringContentNumber(id, "id");
+  await deletePackageCategory(Number(id));
+  res.status(200).json({ messge: "Package Category and it related package items has been deleted sucessfull" });
 });
