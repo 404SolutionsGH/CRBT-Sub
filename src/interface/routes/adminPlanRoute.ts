@@ -96,6 +96,8 @@ export const adminPlanRouter= Router()
 adminPlanRouter.post("/create",verifyJwt,isSuperAdminAccount,createPlanController)
 
 
+
+
 /**
  * @swagger
  * /api/v1/admin-plan/all:

@@ -6,13 +6,9 @@ import { AdminPlan } from "../../domain/entities/AdminPlan";
 import { getAllPlans } from "../../useCases/plans/getAllPlans";
 import { subscibeToPlan } from "../../useCases/plans/subcribePlan";
 import { isStringContentNumber } from "../../@common/helperMethods/isStringNumber";
+import { Benefits } from "../../@common/customDataTypes/Benefits";
 
-// helper methods and class
-interface Benefits {
-  songLimit: number;
-  subscriberLimit: number;
-  numberOfSongsPerUpload: number;
-}
+
 const validateBenefitsObj = (beneFitsObj: Benefits) => {
   const { songLimit, subscriberLimit, numberOfSongsPerUpload } = beneFitsObj;
   if (!songLimit && typeof songLimit !== "number") throw new AppError(!songLimit ? "benefits object lacks the field songLimit" : "songLimit must be a number", 400);

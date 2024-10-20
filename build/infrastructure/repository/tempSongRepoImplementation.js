@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TempSongRepoImpl = void 0;
+const sequelize_1 = require("sequelize");
 const TempSong_1 = require("../../domain/entities/TempSong");
 class TempSongRepoImpl {
     createTempSongs(songsData) {
@@ -29,6 +30,11 @@ class TempSongRepoImpl {
     findTempSongById(songId) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield TempSong_1.TempSong.findByPk(songId);
+        });
+    }
+    findByTuneAndDelete(tune) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield TempSong_1.TempSong.destroy({ where: { tune: { [sequelize_1.Op.like]: `%${tune}%` } } });
         });
     }
 }
