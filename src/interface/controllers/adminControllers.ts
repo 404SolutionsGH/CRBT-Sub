@@ -12,6 +12,28 @@ import { addPackageCat } from "../../useCases/admin/addPackageCat";
 import { PackageCategory } from "../../domain/entities/PackageCategory";
 import { updatePackageCategory } from "../../useCases/admin/updatePackageCat";
 import { deletePackageCategory } from "../../useCases/admin/deletePackageCat";
+import { getAccountInfo } from "../../useCases/user/getAccountInfo";
+import { getAdminAccountInfo } from "../../useCases/admin/getAccountInfo";
+import { updateAdminAccountInfo } from "../../useCases/admin/updateAccountInfo";
+import { Admin } from "../../domain/entities/Admin";
+import { changePassword } from "../../useCases/admin/changePassword";
+
+export const getAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.body;
+  res.status(200).json(await getAdminAccountInfo(id));
+});
+export const updateAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
+  const { id, firstName, lastName, email } = req.body;
+
+  res.status(200).json({ message: "Account Info Updated", updatedData: await updateAdminAccountInfo(Admin.build({ id, firstName, lastName, email })) });
+});
+
+export const changePasswordController = asyncHandler(async (req: Request, res: Response) => {
+  const { newPassword, oldPassword, id } = req.body;
+  if (!newPassword || !oldPassword) throw new AppError(!newPassword ? "No data passed for newPassword in body" : "No data passed for oldPassword in body", 400);
+  await changePassword(newPassword, oldPassword, id);
+  res.status(200).json({ messge: "Password changed sucessfully" });
+});
 
 export const getUsersController = asyncHandler(async (req: Request, res: Response) => {
   const { type } = req.params;
@@ -37,7 +59,7 @@ export const getMerchantsController = asyncHandler(async (req: Request, res: Res
 });
 
 export const createPackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price} = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = req.body;
   if (!packageName || !packageType || !packageValidity || !packageCatId)
     throw new AppError(
       !packageName
@@ -49,15 +71,15 @@ export const createPackagesController = asyncHandler(async (req: Request, res: R
         : "No value passed for packageValidity",
       400
     );
-  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price}));
+  await addPackage(Package.build({ packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price }));
   res.status(201).json({ message: `The package ${packageName} has been created sucessfully` });
 });
 
 export const updatePackagesController = asyncHandler(async (req: Request, res: Response) => {
-  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId,price } = req.body;
+  const { packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price } = req.body;
   isStringContentNumber(req.params.id, "id");
   const id = Number(req.params.id);
-  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId ,price}));
+  await updatePackage(Package.build({ id, packageName, packageDescription, packageImg, packageType, ussdCode, packageValidity, packageCatId, price }));
   res.status(200).json({ message: `The package ${packageName} has been updated sucessfully` });
 });
 

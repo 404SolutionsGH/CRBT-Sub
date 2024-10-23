@@ -8,6 +8,156 @@ const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
 exports.adminRouter = (0, express_1.Router)();
 /**
  * @swagger
+ * /api/v1/admin/account-info:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Get SuperAdmin and Merchant Account Info
+ *     description: This endpoint retrieves the account information for SuperAdmins and Merchants.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Account information retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 adminType:
+ *                   type: string
+ *                   example: "SuperAdmin"
+ *                 firstName:
+ *                   type: string
+ *                   example: "John"
+ *                 lastName:
+ *                   type: string
+ *                   example: "Doe"
+ *                 email:
+ *                   type: string
+ *                   example: "admin@example.com"
+ *                 nextSubPayment:
+ *                   type: string
+ *                   example: "2024-12-01"
+ *                 subPlanDetails:
+ *                   type: object
+ *                   properties:
+ *                     planId:
+ *                       type: number
+ *                       example: 123
+ *                     planType:
+ *                       type: string
+ *                       example: "Premium"
+ *                     price:
+ *                       type: string
+ *                       example: "100.00"
+ *                     subType:
+ *                       type: string
+ *                       enum: ["monthly", "yearly"]
+ *                       example: "monthly"
+ *                     planName:
+ *                       type: string
+ *                       example: "Gold Plan"
+ *                     benefits:
+ *                       type: object
+ *                       description: "An object listing the benefits of the plan"
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       404:
+ *         description: Account not found. The account does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Account not found."
+ */
+exports.adminRouter.get("/account-info", verifyJwt_1.verifyJwt, adminControllers_1.getAdminAccountInfoController);
+/**
+ * @swagger
+ * /api/v1/admin/account-info:
+ *   put:
+ *     tags:
+ *       - Auth
+ *     summary: Update SuperAdmin and Merchant Account Info
+ *     description: This endpoint allows SuperAdmins and Merchants to update their account information.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               email:
+ *                 type: string
+ *                 example: "admin@example.com"
+ *     responses:
+ *       200:
+ *         description: Account information updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Account information updated successfully."
+ *                 updatedData:
+ *                   type: object
+ *                   properties:
+ *                     firstName:
+ *                       type: string
+ *                       example: "John"
+ *                     lastName:
+ *                       type: string
+ *                       example: "Doe"
+ *                     email:
+ *                       type: string
+ *                       example: "admin@example.com"
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       404:
+ *         description: Account not found. The account does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Account not found."
+ */
+exports.adminRouter.put("/account-info", verifyJwt_1.verifyJwt, adminControllers_1.updateAdminAccountInfoController);
+exports.adminRouter.put("/password-change", verifyJwt_1.verifyJwt, adminControllers_1.changePasswordController);
+// adminRouter.put("/account-reset",verifyJwt,)
+/**
+ * @swagger
  * /api/v1/admin/users/{type}:
  *   get:
  *     tags:

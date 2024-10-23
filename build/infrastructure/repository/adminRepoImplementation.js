@@ -53,5 +53,14 @@ class AdminRepoImp {
             return yield Admin_1.Admin.findAll({ where: { adminType: "merchant" } });
         });
     }
+    updateAdminAccount(updatedInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { firstName, lastName, email, id, password } = updatedInfo;
+            const updatedData = password ? yield Admin_1.Admin.update({ password }, { where: { id }, returning: true }) : yield Admin_1.Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
+            if (updatedData[0] === 1)
+                return updatedData[1][0];
+            return null;
+        });
+    }
 }
 exports.AdminRepoImp = AdminRepoImp;

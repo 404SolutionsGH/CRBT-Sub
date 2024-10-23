@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = void 0;
+exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
@@ -26,6 +26,25 @@ const addPackageCat_1 = require("../../useCases/admin/addPackageCat");
 const PackageCategory_1 = require("../../domain/entities/PackageCategory");
 const updatePackageCat_1 = require("../../useCases/admin/updatePackageCat");
 const deletePackageCat_1 = require("../../useCases/admin/deletePackageCat");
+const getAccountInfo_1 = require("../../useCases/admin/getAccountInfo");
+const updateAccountInfo_1 = require("../../useCases/admin/updateAccountInfo");
+const Admin_1 = require("../../domain/entities/Admin");
+const changePassword_1 = require("../../useCases/admin/changePassword");
+exports.getAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.body;
+    res.status(200).json(yield (0, getAccountInfo_1.getAdminAccountInfo)(id));
+}));
+exports.updateAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, firstName, lastName, email } = req.body;
+    res.status(200).json({ message: "Account Info Updated", updatedData: yield (0, updateAccountInfo_1.updateAdminAccountInfo)(Admin_1.Admin.build({ id, firstName, lastName, email })) });
+}));
+exports.changePasswordController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { newPassword, oldPassword, id } = req.body;
+    if (!newPassword || !oldPassword)
+        throw new AppError_1.AppError(!newPassword ? "No data passed for newPassword in body" : "No data passed for oldPassword in body", 400);
+    yield (0, changePassword_1.changePassword)(newPassword, oldPassword, id);
+    res.status(200).json({ messge: "Password changed sucessfully" });
+}));
 exports.getUsersController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { type } = req.params;
     const { id } = req.body;
