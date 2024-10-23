@@ -52,20 +52,20 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
 exports.loginController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User logging in ...");
     const { langPref, phone, email, password, accountType } = req.body;
-    let jwtToken;
+    let data;
     if (accountType === "user") {
         nullAndStringTypeChecker(langPref, phone, "langPref", "phone");
         //use case for user login
-        jwtToken = yield (0, userLogin_1.userLogin)(User_1.User.build({ phone, langPref }));
+        data = yield (0, userLogin_1.userLogin)(User_1.User.build({ phone, langPref }));
     }
     else if (accountType == "admin") {
         nullAndStringTypeChecker(email, password, "email", "password");
         // use case for admin log in
-        jwtToken = yield (0, adminLogin_1.adminLogin)(email, password);
+        data = yield (0, adminLogin_1.adminLogin)(email, password);
     }
     else {
         throw new AppError_1.AppError(!accountType ? "No data passed for accontType in body" : `Value for accountType must be either admin or user not ${accountType}`, 400);
     }
     console.log("Login sucessfull");
-    res.status(200).json({ message: "Login successfull", token: jwtToken });
+    res.status(200).json({ message: "Login successfull", account: data.account, token: data.token });
 }));

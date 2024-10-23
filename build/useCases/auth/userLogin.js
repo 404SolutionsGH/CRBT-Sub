@@ -17,6 +17,6 @@ const userLogin = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     let account = yield findUserByPhone(userData.phone);
     if (!account)
         account = yield createUser(userData);
-    return (0, jwt_1.jwtForLogIn)(String(account.id));
+    return { account, token: (0, jwt_1.jwtForLogIn)(String(account.id)) };
 });
 exports.userLogin = userLogin;

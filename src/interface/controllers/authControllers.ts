@@ -40,18 +40,18 @@ export const signUpController = asyncHandler(async (req: Request, res: Response)
 export const loginController = asyncHandler(async (req: Request, res: Response) => {
   console.log("User logging in ...");
   const { langPref, phone, email, password, accountType } = req.body;
-  let jwtToken: string;
+  let data: any;
   if (accountType === "user") {
     nullAndStringTypeChecker(langPref, phone, "langPref", "phone");
     //use case for user login
-    jwtToken = await userLogin(User.build({ phone, langPref }));
+    data = await userLogin(User.build({ phone, langPref }));
   } else if (accountType == "admin") {
     nullAndStringTypeChecker(email, password, "email", "password");
     // use case for admin log in
-    jwtToken = await adminLogin(email, password);
+    data = await adminLogin(email, password);
   } else {
     throw new AppError(!accountType ? "No data passed for accontType in body" : `Value for accountType must be either admin or user not ${accountType}`, 400);
   }
   console.log("Login sucessfull");
-  res.status(200).json({ message: "Login successfull", token: jwtToken });
+  res.status(200).json({ message: "Login successfull", account: data.account,token:data.token });
 });

@@ -8,5 +8,5 @@ export const userLogin = async (userData: User) => {
   const { createUser, findUserByPhone } = new UserRepoImp();
   let account = await findUserByPhone(userData.phone);
   if (!account) account = await createUser(userData);
-  return jwtForLogIn(String(account!.id));
+  return {account,token:jwtForLogIn(String(account!.id))}
 };
