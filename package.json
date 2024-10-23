@@ -2,7 +2,7 @@
   "name": "work-crbt-sub",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon ./build/server.js"
+    "start": "tsc&&nodemon ./build/server.js"
   },
   "keywords": [],
   "author": "",

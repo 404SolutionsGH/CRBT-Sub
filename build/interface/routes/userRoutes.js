@@ -21,23 +21,23 @@ exports.userRouter = (0, express_1.Router)();
  *       content:
  *         application/json:
  *           schema:
-*               type: object
- *               properties:
- *                 firstName:
- *                   type: string
- *                   example: "John"
- *                 lastName:
- *                   type: string
- *                   example: "Doe"
- *                 accountBalance:
- *                   type: string
- *                   example: "1000.00"
- *                 phone:
- *                   type: string
- *                   example: "+1234567890"
- *                 langPref:
- *                   type: string
- *                   example: "eng"
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               accountBalance:
+ *                 type: string
+ *                 example: "1000.00"
+ *               phone:
+ *                 type: string
+ *                 example: "+1234567890"
+ *               langPref:
+ *                 type: string
+ *                 example: "eng"
  *     responses:
  *       200:
  *         description: Account information updated successfully.
@@ -49,6 +49,24 @@ exports.userRouter = (0, express_1.Router)();
  *                 message:
  *                   type: string
  *                   example: "Account information updated successfully."
+ *                 updatedAccount:
+ *                   type: object
+ *                   properties:
+ *                     firstName:
+ *                       type: string
+ *                       example: "John"
+ *                     lastName:
+ *                       type: string
+ *                       example: "Doe"
+ *                     accountBalance:
+ *                       type: string
+ *                       example: "1000.00"
+ *                     phone:
+ *                       type: string
+ *                       example: "+1234567890"
+ *                     langPref:
+ *                       type: string
+ *                       example: "eng"
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:
@@ -104,9 +122,24 @@ exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userContro
  *                 langPref:
  *                   type: string
  *                   example: "eng"
- *                 subSongId:
- *                   type: number
- *                   example: 4
+ *                 subSongDetails:
+ *                   type: object
+ *                   properties:
+ *                     artisteName:
+ *                       type: string
+ *                       example: "Artist Name"
+ *                     songTitle:
+ *                       type: string
+ *                       example: "Song Title"
+ *                     subscriptionType:
+ *                       type: string
+ *                       example: "Premium"
+ *                     price:
+ *                       type: string
+ *                       example: "10.00"
+ *                     profile:
+ *                       type: string
+ *                       example: "Song Profile URL or Details"
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:

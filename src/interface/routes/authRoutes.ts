@@ -5,7 +5,7 @@ import { verifyJwt } from "../middlewares/verifyJwt";
 
 export const authRouter = Router();
 
-// endpoint for creating account for users and mercahnts
+// endpoint for creating account  mercahnts
 
 /**
  * @swagger
@@ -104,7 +104,6 @@ export const authRouter = Router();
  */
 authRouter.post("/signup",verifyJwt,isSuperAdminAccount ,signUpController);
 
-
 /**
  * @swagger
  * /api/v1/auth/login:
@@ -135,7 +134,7 @@ authRouter.post("/signup",verifyJwt,isSuperAdminAccount ,signUpController);
  *                     description: Must be a valid phone number in international format.
  *                   langPref:
  *                     type: string
- *                     description: The prefered language of the user.
+ *                     description: The preferred language of the user.
  *               - type: object
  *                 required:
  *                   - accountType
@@ -163,10 +162,36 @@ authRouter.post("/signup",verifyJwt,isSuperAdminAccount ,signUpController);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "<Message indicating login was successful>"
+ *                   example: "Login successful"
+ *                 account:
+ *                   type: object
+ *                   properties:
+ *                     accountBalance:
+ *                       type: string
+ *                       example: "0.00"
+ *                     subSongId:
+ *                       type: integer
+ *                       example: 0
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     phone:
+ *                       type: string
+ *                       example: "+2335033887"
+ *                     langPref:
+ *                       type: string
+ *                       example: "English"
+ *                     firstName:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
+ *                     lastName:
+ *                       type: string
+ *                       nullable: true
+ *                       example: null
  *                 token:
  *                   type: string
- *                   example: "JwtTokenGeneratedByBackend"
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzI5NzA5MjM5LCJleHAiOjE3MzE0MzcyMzl9.cpE-BOqp32bT3Is6_mQ-SYfg5kIeN_KGJrtDN-mII8g"
  *       400:
  *         description: Bad request. Invalid or missing fields.
  *         content:
