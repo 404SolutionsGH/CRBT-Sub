@@ -11,16 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateAccountInfo = void 0;
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
-const updateAccountInfo = (newDate) => __awaiter(void 0, void 0, void 0, function* () {
+const updateAccountInfo = (updatedInfo) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepo = new userRepoImplemtation_1.UserRepoImp();
-    const { firstName, lastName, id } = newDate;
-    let wasDataUpdated = false;
-    if (firstName) {
-        wasDataUpdated = yield userRepo.updateFirstName({ firstName, id });
-    }
-    if (lastName) {
-        wasDataUpdated = yield userRepo.updateLastName({ lastName, id });
-    }
-    return wasDataUpdated;
+    return yield userRepo.updateAccountInfo(updatedInfo);
 });
 exports.updateAccountInfo = updateAccountInfo;

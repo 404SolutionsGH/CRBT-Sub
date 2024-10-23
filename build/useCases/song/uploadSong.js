@@ -88,7 +88,7 @@ const checkTempSongLimit = (numberOfSongsToUpload, planId) => __awaiter(void 0, 
     const { benefits } = (yield findPlanById(planId));
     const numOfSongsAllowedPerUpload = benefits.numberOfSongsPerUpload;
     if (numberOfSongsToUpload > numOfSongsAllowedPerUpload)
-        throw new AppError_1.AppError(`Your current plan only allows you to upload ${numOfSongsAllowedPerUpload} per every single upload`, 401);
+        throw new AppError_1.AppError(`Your current plan only allows you to upload ${numOfSongsAllowedPerUpload} per upload`, 401);
 });
 const uploadSong = (songInfo, song, proFile) => __awaiter(void 0, void 0, void 0, function* () {
     //   check if the account is an admin

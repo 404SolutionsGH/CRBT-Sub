@@ -8,17 +8,17 @@ import { getAccountInfo } from "../../useCases/user/getAccountInfo";
 
 export const accountUpdateController = asyncHandler(async (req: Request, res: Response) => {
   console.log("User updating account info....");
-  const { firstName, lastName, id } = req.body;
+  const { firstName, lastName, id, langPref, phone, accountBalance } = req.body;
 
   if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
     throw new AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
 
-  const wasDataUpdated = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id) }));
+  const updatedData = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance }));
 
-  if (!wasDataUpdated) {
-    throw new AppError("No data passed in the request to be used for the update", 400);
+  if (!updatedData) {
+    throw new AppError("Update failed, account does not exist", 404);
   }
-  res.status(200).json({ message: "Account updated" });
+  res.status(200).json({ message: "Account updated", updatedAccount: updatedData });
 });
 
 export const accountInfoController = asyncHandler(async (req: Request, res: Response) => {

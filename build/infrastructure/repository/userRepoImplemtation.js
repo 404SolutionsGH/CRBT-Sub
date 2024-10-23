@@ -45,22 +45,13 @@ class UserRepoImp {
             return yield User_1.User.findOne({ where: { phone } });
         });
     }
-    updateFirstName(data) {
+    updateAccountInfo(account) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { firstName, id } = data;
-            const updatedData = yield User_1.User.update({ firstName }, { where: { id } });
+            const { firstName, lastName, id, accountBalance, phone, langPref } = account;
+            const updatedData = yield User_1.User.update({ firstName, accountBalance, phone, langPref, lastName }, { where: { id }, returning: true });
             if (updatedData[0] == 1)
-                return true;
-            return false;
-        });
-    }
-    updateLastName(data) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { lastName, id } = data;
-            const updatedData = yield User_1.User.update({ lastName }, { where: { id } });
-            if (updatedData[0] == 1)
-                return true;
-            return false;
+                return updatedData[1][0];
+            return null;
         });
     }
     updateSubSongId(subSongId, id) {

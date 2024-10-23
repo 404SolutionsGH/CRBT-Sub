@@ -1,3 +1,4 @@
+import { AppError } from "../../domain/entities/AppError";
 import { ServiceRepoImp } from "../../infrastructure/repository/serviceRepoImplementation";
 import { SongRepoImpl } from "../../infrastructure/repository/songRepoImplementaion";
 import { UserRepoImp } from "../../infrastructure/repository/userRepoImplemtation";
@@ -5,8 +6,8 @@ import { UserRepoImp } from "../../infrastructure/repository/userRepoImplemtatio
 export const getAccountInfo = async (id: number) => {
   const userRepo = new UserRepoImp();
   const { findSongById } = new SongRepoImpl();
-  const serviceRepo = new ServiceRepoImp();
   const accountInfo = await userRepo.findUserById(id);
+  if (!accountInfo) throw new AppError("Acount Info not retrieved,Account does not exist", 404);
   const { firstName, lastName, accountBalance, phone, langPref, subSongId } = accountInfo!;
   let subSongDetails: null | {} = null;
   if (subSongId !== 0) {

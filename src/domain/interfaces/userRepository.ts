@@ -7,7 +7,6 @@ export interface UserRepository {
   findUserById(id: number): Promise<User | null>;
   findUserByPhone(phone: string): Promise<User | null>;
   getUsers():Promise<Array<User>>
-  updateFirstName(data: { firstName: string; id: number }): Promise<boolean>;
-  updateLastName(data: { lastName: string; id: number }): Promise<boolean>;
+  updateAccountInfo(account:User): Promise<User|null>;
   updateSubSongId(subSongId: number,id:number): Promise<boolean>;
 }

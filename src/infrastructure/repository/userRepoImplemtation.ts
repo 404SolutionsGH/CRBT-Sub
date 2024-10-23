@@ -31,17 +31,11 @@ export class UserRepoImp implements UserRepository {
     return await User.findOne({ where: { phone } });
   }
 
-  async updateFirstName(data: { firstName: string; id: number }): Promise<boolean> {
-    const { firstName, id } = data;
-    const updatedData = await User.update({ firstName }, { where: { id } });
-    if (updatedData[0] == 1) return true;
-    return false;
-  }
-  async updateLastName(data: { lastName: string; id: number }): Promise<boolean> {
-    const { lastName, id } = data;
-    const updatedData = await User.update({ lastName }, { where: { id } });
-    if (updatedData[0] == 1) return true;
-    return false;
+  async updateAccountInfo(account: User): Promise<User | null> {
+    const { firstName, lastName,id, accountBalance, phone, langPref } = account;
+    const updatedData = await User.update({ firstName, accountBalance, phone, langPref ,lastName}, { where: { id } ,returning:true});
+    if (updatedData[0] == 1) return updatedData[1][0];
+    return null;
   }
 
   async updateSubSongId(subSongId: number, id: number): Promise<boolean> {

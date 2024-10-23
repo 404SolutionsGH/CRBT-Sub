@@ -20,14 +20,14 @@ const AppError_1 = require("../../domain/entities/AppError");
 const getAccountInfo_1 = require("../../useCases/user/getAccountInfo");
 exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User updating account info....");
-    const { firstName, lastName, id } = req.body;
+    const { firstName, lastName, id, langPref, phone, accountBalance } = req.body;
     if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
         throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
-    const wasDataUpdated = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id) }));
-    if (!wasDataUpdated) {
-        throw new AppError_1.AppError("No data passed in the request to be used for the update", 400);
+    const updatedData = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance }));
+    if (!updatedData) {
+        throw new AppError_1.AppError("Update failed, account does not exist", 404);
     }
-    res.status(200).json({ message: "Account updated" });
+    res.status(200).json({ message: "Account updated", updatedAccount: updatedData });
 }));
 exports.accountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
