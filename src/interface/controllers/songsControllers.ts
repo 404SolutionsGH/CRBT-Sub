@@ -17,6 +17,7 @@ import { listen } from "../../useCases/song/listen";
 import { updateSavedSong } from "../../useCases/song/updateSavedSong";
 import { isStringContentNumber } from "../../@common/helperMethods/isStringNumber";
 import { getASong } from "../../useCases/song/getSong";
+import { deleteSavedSong, deleteTempSong } from "../../useCases/song/deleteSong";
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
@@ -111,6 +112,20 @@ export const songController = asyncHandler(async (req: Request, res: Response) =
   const { id } = req.params;
   isStringContentNumber(id, "id");
   res.status(200).json({ song: await getASong(Number(id)) });
+});
+
+export const deleteSongController = asyncHandler(async (req: Request, res: Response) => {
+  const { state, songId } = req.params;
+  const {id}=req.body
+  isStringContentNumber(songId, "songId");
+  if (state === "saved") {
+    await deleteSavedSong(Number(songId),id);
+  } else if (state === "temp") {
+    await deleteTempSong(Number(songId),id);
+  } else {
+    throw new AppError(`the value passed for state should either be saved or temp not ${state}`, 400);
+  }
+  res.status(200).json({ messge: "Song Deletion sucessfull" });
 });
 
 export const searchController = asyncHandler(async (req: Request, res: Response) => {});

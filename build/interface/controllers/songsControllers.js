@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchController = exports.songController = exports.unsubcribeController = exports.subcribeController = exports.listenController = exports.profileController = exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.updateSavedSongController = exports.uploadController = void 0;
+exports.searchController = exports.deleteSongController = exports.songController = exports.unsubcribeController = exports.subcribeController = exports.listenController = exports.profileController = exports.getAllSongsController = exports.getUploadedSongsController = exports.tempUploadController = exports.updateSavedSongController = exports.uploadController = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -26,6 +26,7 @@ const listen_1 = require("../../useCases/song/listen");
 const updateSavedSong_1 = require("../../useCases/song/updateSavedSong");
 const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
 const getSong_1 = require("../../useCases/song/getSong");
+const deleteSong_1 = require("../../useCases/song/deleteSong");
 exports.uploadController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
     const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
@@ -111,5 +112,20 @@ exports.songController = (0, express_async_handler_1.default)((req, res) => __aw
     const { id } = req.params;
     (0, isStringNumber_1.isStringContentNumber)(id, "id");
     res.status(200).json({ song: yield (0, getSong_1.getASong)(Number(id)) });
+}));
+exports.deleteSongController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { state, songId } = req.params;
+    const { id } = req.body;
+    (0, isStringNumber_1.isStringContentNumber)(songId, "songId");
+    if (state === "saved") {
+        yield (0, deleteSong_1.deleteSavedSong)(Number(songId), id);
+    }
+    else if (state === "temp") {
+        yield (0, deleteSong_1.deleteTempSong)(Number(songId), id);
+    }
+    else {
+        throw new AppError_1.AppError(`the value passed for state should either be saved or temp not ${state}`, 400);
+    }
+    res.status(200).json({ messge: "Song Deletion sucessfull" });
 }));
 exports.searchController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () { }));

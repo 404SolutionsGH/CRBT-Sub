@@ -621,6 +621,73 @@ exports.songsRouter.put("/", (0, multer_1.getFilesFromReq)("newProfile", "newSon
  *                   example: "No song with the provided ID exists."
  */
 exports.songsRouter.get("/one/:id", verifyJwt_1.verifyJwt, songsControllers_1.songController);
+/**
+ * @swagger
+ * /api/v1/songs/{state}/{songId}:
+ *   delete:
+ *     tags:
+ *       - Songs
+ *     summary: Delete a Song (Saved or Temporary)
+ *     description: This endpoint allows deleting songs that are either saved or temporary based on the state and song ID.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: state
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [saved, temp]
+ *         description: The state of the song (either 'saved' or 'temporary').
+ *       - name: songId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: A valid song ID.
+ *     responses:
+ *       200:
+ *         description: Song deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Song deleted successfully."
+ *       400:
+ *         description: Bad request. Invalid or missing parameters.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       401:
+ *         description: Unauthorized. The user does not have the required authority to delete the song.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "You do not have permission to delete this song."
+ *       404:
+ *         description: Song not found. The song with the provided ID does not exist, or it is flagged for deletion and cannot be deleted immediately.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Song not found or flagged for deletion."
+ */
+exports.songsRouter.delete("/:state/:songId", verifyJwt_1.verifyJwt, songsControllers_1.deleteSongController);
 exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.searchController);
 exports.songsRouter.get("/profile/:fileName", getFile_1.getFileFromSys, songsControllers_1.profileController);
 exports.songsRouter.get("/listen/:fileName", getFile_1.getFileFromSys, songsControllers_1.listenController);
