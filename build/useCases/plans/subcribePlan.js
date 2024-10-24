@@ -25,6 +25,8 @@ const subscibeToPlan = (adminId, planId) => __awaiter(void 0, void 0, void 0, fu
     const planDetails = yield findPlanById(planId);
     if (!planDetails)
         throw new AppError_1.AppError(`No plan with this id ${planId} exist`, 404);
+    if (planDetails.deleteFlag)
+        throw new AppError_1.AppError("Cannot subscribe to plan which is flaged for deletion", 401);
     const nextPaymentDay = (0, date_1.getNextDate)((0, date_1.getCurrentDateYYMMDD)(), planDetails.subType);
     // console.log(nextPaymentDay);
     const isPaymentInfoSetup = yield setUpPaymentData(planId, nextPaymentDay, adminId);

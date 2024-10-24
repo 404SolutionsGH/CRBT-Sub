@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.planSubcriptionController = exports.getAllPlansController = exports.createPlanController = void 0;
+exports.getAdminPlanController = exports.updateAdminPlanController = exports.deleteAdminPlanController = exports.planSubcriptionController = exports.getAllPlansController = exports.createPlanController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const createAdminPlan_1 = require("../../useCases/plans/createAdminPlan");
@@ -20,6 +20,9 @@ const AdminPlan_1 = require("../../domain/entities/AdminPlan");
 const getAllPlans_1 = require("../../useCases/plans/getAllPlans");
 const subcribePlan_1 = require("../../useCases/plans/subcribePlan");
 const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
+const deletePlan_1 = require("../../useCases/plans/deletePlan");
+const updatePlan_1 = require("../../useCases/plans/updatePlan");
+const getAPlan_1 = require("../../useCases/plans/getAPlan");
 const validateBenefitsObj = (beneFitsObj) => {
     const { songLimit, subscriberLimit, numberOfSongsPerUpload } = beneFitsObj;
     if (!songLimit && typeof songLimit !== "number")
@@ -48,4 +51,24 @@ exports.planSubcriptionController = (0, express_async_handler_1.default)((req, r
     (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
     yield (0, subcribePlan_1.subscibeToPlan)(id, Number(planId));
     res.status(201).json({ message: "Subscribtion sucessfull" });
+}));
+exports.deleteAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { planId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
+    yield (0, deletePlan_1.deletePlan)(Number(planId));
+    res.status(200).json({ message: "Plan deleted sucessfully" });
+}));
+exports.updateAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { planType, price, subType, benefits } = req.body;
+    const { planId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
+    if (!planType || !subType || !benefits)
+        throw new AppError_1.AppError(!planType ? "No data passed for planType" : !benefits ? "No data passed for benefits" : "No data passed for subType", 400);
+    validateBenefitsObj(benefits);
+    res.status(200).json({ message: "Plan updated sucessfully", updatedPlan: yield (0, updatePlan_1.updateAdminPlan)(AdminPlan_1.AdminPlan.build({ planType, price, subType, benefits, planId })) });
+}));
+exports.getAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { planId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
+    res.status(200).json({ plan: yield (0, getAPlan_1.getAdminPlan)(Number(planId)) });
 }));
