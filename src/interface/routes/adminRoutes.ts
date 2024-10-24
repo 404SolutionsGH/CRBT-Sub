@@ -24,7 +24,7 @@ export const adminRouter = Router();
  * /api/v1/admin/account-info:
  *   get:
  *     tags:
- *       - Auth
+ *       - Account
  *     summary: Get SuperAdmin and Merchant Account Info
  *     description: This endpoint retrieves the account information for SuperAdmins and Merchants.
  *     security:
@@ -103,7 +103,7 @@ adminRouter.get("/account-info",verifyJwt,getAdminAccountInfoController)
  * /api/v1/admin/account-info:
  *   put:
  *     tags:
- *       - Auth
+ *       - Account
  *     summary: Update SuperAdmin and Merchant Account Info
  *     description: This endpoint allows SuperAdmins and Merchants to update their account information.
  *     security:
@@ -171,6 +171,71 @@ adminRouter.get("/account-info",verifyJwt,getAdminAccountInfoController)
 adminRouter.put("/account-info",verifyJwt,updateAdminAccountInfoController)
 
 
+/**
+ * @swagger
+ * /api/v1/admin/password-change:
+ *   put:
+ *     tags:
+ *       - Account
+ *     summary: Change Account Password for SuperAdmin and Merchants
+ *     description: This endpoint allows SuperAdmins and Merchants to change their account password.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 example: "NewStrongPassword123!"
+ *               oldPassword:
+ *                 type: string
+ *                 example: "CurrentPassword"
+ *     responses:
+ *       200:
+ *         description: Password changed successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password updated successfully."
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       401:
+ *         description: Unauthorized. Old password does not match.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Old password does not match."
+ *       404:
+ *         description: Account not found. The account does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Account not found."
+ */
 adminRouter.put("/password-change", verifyJwt, changePasswordController);
 // adminRouter.put("/account-reset",verifyJwt,)
 
