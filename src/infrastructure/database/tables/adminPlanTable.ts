@@ -42,7 +42,8 @@ export const defineAdminPlanTable= ()=>{
             notEmpty: { msg: "planName cannot be an empty string" },
           },
         },
-        benefits:DataTypes.JSON()
+        benefits:DataTypes.JSON(),
+        deleteFlag:{type:DataTypes.BOOLEAN,defaultValue:false}
       },
       { sequelize: sequelize, tableName: "AdminPlans", timestamps: false }
     );

@@ -13,10 +13,11 @@ export class Song extends Model {
   declare category: string;
   declare tune: string;
   declare lang: string;
-  declare profile:string;
+  declare profile: string;
   declare subscriptionType: "weekly" | "monthly" | "by_weekly";
   declare numberOfListeners: number;
-  declare numberOfSubscribers:number;
+  declare numberOfSubscribers: number;
+  declare deleteFlag:boolean;
 }
 
 

@@ -62,5 +62,10 @@ class AdminRepoImp {
             return null;
         });
     }
+    getAllMerchnatsByPlanId(planId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Admin_1.Admin.findAll({ where: { adminType: "merchant", planId } });
+        });
+    }
 }
 exports.AdminRepoImp = AdminRepoImp;

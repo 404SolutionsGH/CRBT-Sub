@@ -44,7 +44,7 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async getAllSongs(): Promise<Array<Song>> {
-    return await Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
+    return await Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] }, where: { deleteFlag: false } });
   }
 
   async increaseNumberOfSubscribers(ammount: number, id: number, flag: "dec" | null = null): Promise<void> {
@@ -55,5 +55,17 @@ export class SongRepoImpl implements SongRepository {
     // console.log(`Song url=${url}`);
     if (id === 0 && url) await Song.increment("numberOfListeners", { by: amount, where: { tune: { [Op.like]: `%${url}` } } });
     else await Song.increment("numberOfListeners", { by: amount, where: { id } });
+  }
+
+  async deleteSongById(songId: number): Promise<boolean> {
+    const numDeleted = await Song.destroy({ where: { id: songId } });
+    if (numDeleted === 1) return true;
+    return false;
+  }
+
+  async flagSongForDeletion(songId: number): Promise<boolean> {
+    const [numOfFlaged] = await Song.update({ deleteFlag: true }, { where: { id: songId } });
+    if (numOfFlaged === 1) return true;
+    return false;
   }
 }

@@ -17,7 +17,12 @@ export class TempSongRepoImpl implements TempSongRepository {
     return await TempSong.findByPk(songId);
   }
 
-  async findByTuneAndDelete(tune: string): Promise<void>{
-    await TempSong.destroy({where:{tune:{[Op.like]:`%${tune}%`}}})
+  async findByTuneAndDelete(tune: string): Promise<void> {
+    await TempSong.destroy({ where: { tune: { [Op.like]: `%${tune}%` } } });
+  }
+  async deleteSong(songId: number): Promise<boolean> {
+    const numOfSongsDeleted = await TempSong.destroy({ where: { id: songId } });
+    if (numOfSongsDeleted === 1) return true;
+    return false;
   }
 }

@@ -23,7 +23,7 @@ class AdminPlanRepoImp {
     }
     getAllPlans() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield AdminPlan_1.AdminPlan.findAll();
+            return yield AdminPlan_1.AdminPlan.findAll({ where: { deleteFlag: false } });
         });
     }
     findPlanById(id) {
@@ -39,13 +39,21 @@ class AdminPlanRepoImp {
             return false;
         });
     }
-    updatePlanById(id, updatedPlan) {
+    flagPlanForDeletion(planId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { planType, planName, subType, price, benefits } = updatedPlan;
-            const [numRows] = yield AdminPlan_1.AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id } });
+            const [numRows] = yield AdminPlan_1.AdminPlan.update({ deleteFlag: true }, { where: { planId } });
             if (numRows === 1)
                 return true;
             return false;
+        });
+    }
+    updatePlanById(id, updatedPlan) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { planType, planName, subType, price, benefits } = updatedPlan;
+            const [numRows, affectedRows] = yield AdminPlan_1.AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id }, returning: true });
+            if (numRows === 1)
+                return affectedRows[0];
+            return null;
         });
     }
 }

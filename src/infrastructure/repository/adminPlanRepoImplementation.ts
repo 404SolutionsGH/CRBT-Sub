@@ -11,7 +11,7 @@ export class AdminPlanRepoImp implements AdminPlanRepository {
     return null;
   }
   async getAllPlans(): Promise<Array<AdminPlan>> {
-    return await AdminPlan.findAll();
+    return await AdminPlan.findAll({ where: { deleteFlag:false } });
   }
   async findPlanById(id: number): Promise<AdminPlan | null> {
     return await AdminPlan.findByPk(id);
@@ -21,10 +21,16 @@ export class AdminPlanRepoImp implements AdminPlanRepository {
     if (numDeleted === 1) return true;
     return false;
   }
-  async updatePlanById(id: number, updatedPlan: AdminPlan): Promise<boolean> {
-    const { planType, planName, subType, price, benefits } = updatedPlan;
-    const [numRows] = await AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id } });
-    if(numRows===1)return true;
+
+  async flagPlanForDeletion(planId: number): Promise<boolean> {
+    const [numRows] = await AdminPlan.update({ deleteFlag: true }, { where: { planId } });
+    if (numRows === 1) return true;
     return false;
+  }
+  async updatePlanById(id: number, updatedPlan: AdminPlan): Promise<AdminPlan|null> {
+    const { planType, planName, subType, price, benefits } = updatedPlan;
+    const [numRows,affectedRows] = await AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id },returning:true });
+    if (numRows === 1) return affectedRows[0];
+    return null;
   }
 }

@@ -39,9 +39,13 @@ export class AdminRepoImp implements AdminRepository {
   }
 
   async updateAdminAccount(updatedInfo: Admin): Promise<Admin | null> {
-    const { firstName, lastName, email, id ,password} = updatedInfo;
-    const updatedData = password?await Admin.update({password},{where:{id},returning:true}):await Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
+    const { firstName, lastName, email, id, password } = updatedInfo;
+    const updatedData = password ? await Admin.update({ password }, { where: { id }, returning: true }) : await Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
     if (updatedData[0] === 1) return updatedData[1][0];
-    return null
+    return null;
+  }
+
+  async getAllMerchnatsByPlanId(planId: number): Promise<Admin[]> {
+    return await Admin.findAll({ where: { adminType: "merchant", planId } });
   }
 }

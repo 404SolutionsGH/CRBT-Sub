@@ -108,6 +108,7 @@ export const defineSongTable = () => {
         type: DataTypes.INTEGER(),
         defaultValue: 0,
       },
+      deleteFlag: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     { sequelize: sequelize, tableName: "Songs", timestamps: true }
   );

@@ -37,5 +37,13 @@ class TempSongRepoImpl {
             yield TempSong_1.TempSong.destroy({ where: { tune: { [sequelize_1.Op.like]: `%${tune}%` } } });
         });
     }
+    deleteSong(songId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const numOfSongsDeleted = yield TempSong_1.TempSong.destroy({ where: { id: songId } });
+            if (numOfSongsDeleted === 1)
+                return true;
+            return false;
+        });
+    }
 }
 exports.TempSongRepoImpl = TempSongRepoImpl;

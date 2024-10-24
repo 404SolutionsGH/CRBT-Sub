@@ -6,5 +6,6 @@ export interface AdminRepository {
   findAdminById(id: number): Promise<Admin | null>;
   setUpPaymentData(planId: number, nextSubPayment: string, id: number): Promise<boolean>;
   getAllMerchants(): Promise<Admin[]>;
-  updateAdminAccount(updatedInfo:Admin): Promise<Admin | null>;
+  getAllMerchnatsByPlanId(planId: number): Promise<Admin[]>;
+  updateAdminAccount(updatedInfo: Admin): Promise<Admin | null>;
 }

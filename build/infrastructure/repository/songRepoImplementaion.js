@@ -59,7 +59,7 @@ class SongRepoImpl {
     }
     getAllSongs() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Song_1.Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] } });
+            return yield Song_1.Song.findAll({ attributes: { exclude: ["ownerId", "updatedAt"] }, where: { deleteFlag: false } });
         });
     }
     increaseNumberOfSubscribers(ammount_1, id_1) {
@@ -77,6 +77,22 @@ class SongRepoImpl {
                 yield Song_1.Song.increment("numberOfListeners", { by: amount, where: { tune: { [sequelize_1.Op.like]: `%${url}` } } });
             else
                 yield Song_1.Song.increment("numberOfListeners", { by: amount, where: { id } });
+        });
+    }
+    deleteSongById(songId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const numDeleted = yield Song_1.Song.destroy({ where: { id: songId } });
+            if (numDeleted === 1)
+                return true;
+            return false;
+        });
+    }
+    flagSongForDeletion(songId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const [numOfFlaged] = yield Song_1.Song.update({ deleteFlag: true }, { where: { id: songId } });
+            if (numOfFlaged === 1)
+                return true;
+            return false;
         });
     }
 }

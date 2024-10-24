@@ -4,5 +4,6 @@ export interface TempSongRepository {
   createTempSongs(songsData: Array<TempSong>): Promise<void>;
   findTempSongsById(ownerId: number): Promise<Array<TempSong>>;
   findTempSongById(songId: number): Promise<TempSong | null>;
-  findByTuneAndDelete(tune:string):Promise<void>
+  findByTuneAndDelete(tune: string): Promise<void>;
+  deleteSong(songId: number): Promise<boolean>;
 }

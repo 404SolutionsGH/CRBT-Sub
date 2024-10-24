@@ -62,5 +62,10 @@ class UserRepoImp {
             return false;
         });
     }
+    getAllUserBySubSongId(songId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return User_1.User.findAll({ where: { subSongId: songId } });
+        });
+    }
 }
 exports.UserRepoImp = UserRepoImp;

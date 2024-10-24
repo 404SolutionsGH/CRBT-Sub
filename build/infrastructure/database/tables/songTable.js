@@ -107,6 +107,7 @@ const defineSongTable = () => {
             type: sequelize_1.DataTypes.INTEGER(),
             defaultValue: 0,
         },
+        deleteFlag: { type: sequelize_1.DataTypes.BOOLEAN, defaultValue: false },
     }, { sequelize: connectDb_1.sequelize, tableName: "Songs", timestamps: true });
 };
 exports.defineSongTable = defineSongTable;

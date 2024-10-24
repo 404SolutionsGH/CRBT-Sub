@@ -43,4 +43,9 @@ export class UserRepoImp implements UserRepository {
     if (updatedData[0] == 1) return true;
     return false;
   }
+
+  async getAllUserBySubSongId(songId:number):Promise<User[]>{
+    return User.findAll({ where: { subSongId:songId } });
+  }
+
 }
