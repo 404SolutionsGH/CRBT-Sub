@@ -19,13 +19,15 @@ const { deleteSong, findTempSongById } = new tempSongRepoImplementation_1.TempSo
 const canAdminDeleteSong = (songId_1, adminId_1, ...args_1) => __awaiter(void 0, [songId_1, adminId_1, ...args_1], void 0, function* (songId, adminId, flag = "saved") {
     let songDetail;
     if (flag === "saved")
-        songDetail = yield findSongById(songId);
+        songDetail = yield findSongById(songId, true);
     else
         songDetail = yield findTempSongById(songId);
     if (!songDetail)
         throw new AppError_1.AppError("Song Deletion failed,no such song exists", 404);
-    else if (songDetail.ownerId !== adminId)
-        throw new AppError_1.AppError("Song Deletion Failed,You can only delete songs you have uploaded", 401);
+    // if (songDetail!.ownerId !== adminId) {
+    //   console.log(`adminId=${adminId} ownerId=${songDetail!.ownerId}`);
+    //   throw new AppError("Song Deletion Failed,You can only delete songs you have uploaded", 401);
+    // }
 });
 const deleteSavedSong = (songId, adminId) => __awaiter(void 0, void 0, void 0, function* () {
     const { getAllUserBySubSongId } = new userRepoImplemtation_1.UserRepoImp();

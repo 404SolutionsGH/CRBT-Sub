@@ -35,7 +35,8 @@ export class SongRepoImpl implements SongRepository {
     return null;
   }
 
-  async findSongById(id: number): Promise<Song | null> {
+  async findSongById(id: number, ownerIdFlag: boolean = false): Promise<Song | null> {
+    if (ownerIdFlag) return Song.findByPk(id, { attributes: { exclude: ["updatedAt"] } });
     return await Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
   }
 

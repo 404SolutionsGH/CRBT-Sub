@@ -47,8 +47,10 @@ class SongRepoImpl {
             return null;
         });
     }
-    findSongById(id) {
-        return __awaiter(this, void 0, void 0, function* () {
+    findSongById(id_1) {
+        return __awaiter(this, arguments, void 0, function* (id, ownerIdFlag = false) {
+            if (ownerIdFlag)
+                return Song_1.Song.findByPk(id, { attributes: { exclude: ["updatedAt"] } });
             return yield Song_1.Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
         });
     }
