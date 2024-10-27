@@ -13,7 +13,7 @@ export const definePackageTable = () => {
       packageCatId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references:{model:"Packages",key:"id"},
+        references: { model: "PackageCategories", key: "id" },
         validate: {
           notNull: { msg: "No value passed for packageCatId" },
           isInt: { msg: "Value for packageCatId must be an integer" },

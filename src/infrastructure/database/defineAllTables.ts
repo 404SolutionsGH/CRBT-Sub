@@ -25,8 +25,8 @@ export const defineAllTables = async () => {
   defineTempSongTable();
   defineSubSongsTable();
   defineSubAdminPlansTable();
-  definePackageTable();
   definePackageCategoryTable();
+  definePackageTable();
   console.log("Setting Up Associations btw Tables...");
   settingUpTableAssociations();
   console.log("Set up done");

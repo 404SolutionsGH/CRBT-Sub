@@ -11,9 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addPackage = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
+const packageCatRepoImplementaion_1 = require("../../infrastructure/repository/packageCatRepoImplementaion");
 const packageRepoImplementation_1 = require("../../infrastructure/repository/packageRepoImplementation");
 const addPackage = (packageData) => __awaiter(void 0, void 0, void 0, function* () {
+    const { getPackageCategoryById } = new packageCatRepoImplementaion_1.PackageCategoryRepoImp();
     const { createPackage } = new packageRepoImplementation_1.PackageRepoImpl();
+    if (!(yield getPackageCategoryById(packageData.packageCatId)))
+        throw new AppError_1.AppError(`No package category with packageCatId ${packageData.packageCatId} exist in the system`, 404);
     if (!(yield createPackage(packageData)))
         throw new AppError_1.AppError(`The package with name ${packageData.packageName} already exist`, 409);
 });

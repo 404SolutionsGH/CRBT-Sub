@@ -36,8 +36,8 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, tempSongTable_1.defineTempSongTable)();
     (0, subSongsTable_1.defineSubSongsTable)();
     (0, subAdminPlansTable_1.defineSubAdminPlansTable)();
-    (0, packageTables_1.definePackageTable)();
     (0, packageCatTable_1.definePackageCategoryTable)();
+    (0, packageTables_1.definePackageTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");

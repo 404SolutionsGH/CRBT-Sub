@@ -15,7 +15,7 @@ export class PackageCategoryRepoImp implements PackageCategoryRespository {
     return await PackageCategory.findByPk(id, { include: [{ model: Package }] });
   }
   async getAllPackageCategories(): Promise<PackageCategory[]> {
-    return await PackageCategory.findAll({ include: [{ model: Package }] });
+    return await PackageCategory.findAll({ include: [{ model: Package, attributes: { exclude: ["packageCatId"] } }] });
   }
   async updatePackageCategoryById(id: number, updatedPackageCategory: PackageCategory): Promise<boolean> {
     const { title, description } = updatedPackageCategory;
