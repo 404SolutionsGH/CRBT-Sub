@@ -1,5 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import { PaymentInfo } from "../domain/entities/Transactions";
+import { ChapaPaymentLink } from "../@common/constants/string";
 dotenv.config();
 
 export const sendAccountConfirmationSms = async (verfCode: number, phone: string) => {
@@ -9,3 +11,22 @@ export const sendAccountConfirmationSms = async (verfCode: number, phone: string
   );
   console.log(`Sms Send Status:${response.data.code}, message:${response.data.message}`);
 };
+
+// this method return the url to the checkout page if sucessfull or null if not.
+export const paymentRequest=async (paymentInfo:PaymentInfo)=>{
+const {amount,callBackUrl,currency,phoneNumber,returnUrl,txRef}=paymentInfo  
+
+const response = await axios.post(
+  ChapaPaymentLink,
+  { amount, currency, callback_url: callBackUrl, return_url: returnUrl, phone_number: phoneNumber, tx_ref: txRef },
+  { headers: { Authorization: `Bearer ${process.env.ChapaSecretKey}`} }
+);  
+
+console.log(`Payment request status code=${response.status}`)
+const {data}=response.data
+
+if(data){
+  return data.checkout_url as string;
+}
+return null;
+}
