@@ -13,6 +13,7 @@ import { defineSongTable } from "./tables/songTable";
 import { defineSubAdminPlansTable } from "./tables/subAdminPlansTable";
 import { defineSubSongsTable } from "./tables/subSongsTable";
 import { defineTempSongTable } from "./tables/tempSongTable";
+import { defineTransactionTable } from "./tables/transactionTable";
 import { defineUserTable } from "./tables/userTable";
 
 // method for defining all table structures using the models
@@ -27,6 +28,7 @@ export const defineAllTables = async () => {
   defineSubAdminPlansTable();
   definePackageCategoryTable();
   definePackageTable();
+  defineTransactionTable();
   console.log("Setting Up Associations btw Tables...");
   settingUpTableAssociations();
   console.log("Set up done");

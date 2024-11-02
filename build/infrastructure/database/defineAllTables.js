@@ -25,6 +25,7 @@ const songTable_1 = require("./tables/songTable");
 const subAdminPlansTable_1 = require("./tables/subAdminPlansTable");
 const subSongsTable_1 = require("./tables/subSongsTable");
 const tempSongTable_1 = require("./tables/tempSongTable");
+const transactionTable_1 = require("./tables/transactionTable");
 const userTable_1 = require("./tables/userTable");
 // method for defining all table structures using the models
 const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,6 +39,7 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, subAdminPlansTable_1.defineSubAdminPlansTable)();
     (0, packageCatTable_1.definePackageCategoryTable)();
     (0, packageTables_1.definePackageTable)();
+    (0, transactionTable_1.defineTransactionTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");
