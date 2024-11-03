@@ -12,6 +12,15 @@ export const jwtForLogIn = (id: string): string  => {
   }
 };
 
+export const jwtForPayment = (id: string): string => {
+  if (process.env.JwtSecretKey !== undefined) {
+    return jwt.sign({ transcId: id }, process.env.JwtSecretKey, { expiresIn: "90d" });
+  } else {
+    console.log("env variable JwtSecretKey not defined on server");
+    throw new AppError("Server errror", 500);
+  }
+};
+
 export const jwtForSignUp = (id: string, verfCode: number): string => {
   if (process.env.JwtSecretKey !== undefined) {
     return jwt.sign({ userId: id, code: verfCode }, process.env.JwtSecretKey, { expiresIn: "1hr" });

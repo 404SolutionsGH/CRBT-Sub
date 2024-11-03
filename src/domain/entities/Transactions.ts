@@ -13,5 +13,5 @@ export interface PaymentInfo {
   returnUrl: string;
   txRef: string;
   currency: "ETB" | " USD";
-  amount: number;
+  amount: string;
 }

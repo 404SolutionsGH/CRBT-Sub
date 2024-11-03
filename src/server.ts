@@ -18,6 +18,7 @@ import { encryptPassword } from "./libs/bcrypt";
 import { Admin } from "./domain/entities/Admin";
 import { adminRouter } from "./interface/routes/adminRoutes";
 import { packageRouter } from "./interface/routes/packageRoutes";
+import { paymentsRouter } from "./interface/routes/paymentsRoutes";
 
 const server = express();
 
@@ -36,6 +37,7 @@ server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
 server.use("/api/v1/admin-plan",adminPlanRouter)
 server.use("/api/v1/package",packageRouter)
+server.use("/api/v1/payments",paymentsRouter)
 // error handling middlware
 server.use(errorHandler);
 

@@ -38,6 +38,7 @@ exports.setImgAndMp3Files = (0, express_async_handler_1.default)((req, res, next
     console.log("Setting up image and song data in request body....");
     if (!Array.isArray(req.files) && req.files !== undefined) {
         const profile = req.files.profile; // the profile and song are arrays but we are experting them to have only one element
+        console.log(`profile=${profile}`);
         const song = req.files.song;
         const { tune } = req.body;
         if (song && allowedAudioMimeTypes.includes(song[0].mimetype)) {
