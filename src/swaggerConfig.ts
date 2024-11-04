@@ -34,6 +34,10 @@ const option: swaggerJsdoc.Options = {
         name: "Packages",
         description: "All operations relating to getting packages and their category",
       },
+      {
+        name: "Payment GateWays",
+        description: "All operations relating to payent of plans",
+      },
     ],
     components: {
       securitySchemes: {
