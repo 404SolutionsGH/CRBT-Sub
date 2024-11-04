@@ -26,8 +26,6 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerConfig_1 = require("./swaggerConfig");
 const setUpAllListners_1 = require("./@common/events/setUpAllListners");
 const adminPlanRoute_1 = require("./interface/routes/adminPlanRoute");
-const bcrypt_1 = require("./libs/bcrypt");
-const Admin_1 = require("./domain/entities/Admin");
 const adminRoutes_1 = require("./interface/routes/adminRoutes");
 const packageRoutes_1 = require("./interface/routes/packageRoutes");
 const paymentsRoutes_1 = require("./interface/routes/paymentsRoutes");
@@ -53,14 +51,14 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
-        const password = yield (0, bcrypt_1.encryptPassword)("Admin1234");
-        yield Admin_1.Admin.create({
-            email: "admin@gmail.com",
-            firstName: "adminFirstName",
-            lastName: "adminLastName",
-            password: password,
-            adminType: "system",
-        });
+        // const password= await encryptPassword("Admin1234");
+        // await Admin.create({
+        //   email: "admin@gmail.com",
+        //   firstName: "adminFirstName",
+        //   lastName: "adminLastName",
+        //   password:password,
+        //   adminType: "system",
+        // });
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
         });

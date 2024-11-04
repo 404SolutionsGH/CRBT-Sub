@@ -46,14 +46,14 @@ const startServer = async () => {
   try {
     setUpAllEventListners()
     await connectToDatabase()
-      const password= await encryptPassword("Admin1234");
-      await Admin.create({
-        email: "admin@gmail.com",
-        firstName: "adminFirstName",
-        lastName: "adminLastName",
-        password:password,
-        adminType: "system",
-      });
+      // const password= await encryptPassword("Admin1234");
+      // await Admin.create({
+      //   email: "admin@gmail.com",
+      //   firstName: "adminFirstName",
+      //   lastName: "adminLastName",
+      //   password:password,
+      //   adminType: "system",
+      // });
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

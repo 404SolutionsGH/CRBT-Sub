@@ -23,7 +23,7 @@ exports.startPaymentController = (0, express_async_handler_1.default)((req, res)
     if (!planId || !phoneNumber || typeof phoneNumber !== "string")
         throw new AppError_1.AppError(!planId ? "No data passed for planId or phoneNumber" : "phoneNumber must be a string", 400);
     const checkOutPageUrl = yield (0, startPayment_1.startPayment)(Transactions_1.Transaction.build({ email, planId }), phoneNumber);
-    res.redirect(checkOutPageUrl);
+    res.status(200).json({ checkoutUrl: checkOutPageUrl });
 }));
 exports.sucessfullPaymentController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // redirect to front end url saying congratulations

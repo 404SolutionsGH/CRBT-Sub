@@ -9,7 +9,7 @@ export const startPaymentController = asyncHandler(async (req: Request, res: Res
   const { email, planId, phoneNumber } = req.body;
   if (!planId || !phoneNumber || typeof phoneNumber !== "string") throw new AppError(!planId ? "No data passed for planId or phoneNumber" : "phoneNumber must be a string", 400);
   const checkOutPageUrl = await startPayment(Transaction.build({ email, planId }), phoneNumber);
-  res.redirect(checkOutPageUrl as string);
+  res.status(200).json({checkoutUrl:checkOutPageUrl})
 });
 
 export const sucessfullPaymentController = asyncHandler(async (req: Request, res: Response) => {
