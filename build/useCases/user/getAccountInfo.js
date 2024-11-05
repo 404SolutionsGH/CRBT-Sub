@@ -19,12 +19,12 @@ const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const accountInfo = yield userRepo.findUserById(id);
     if (!accountInfo)
         throw new AppError_1.AppError("Acount Info not retrieved,Account does not exist", 404);
-    const { firstName, lastName, accountBalance, phone, langPref, subSongId } = accountInfo;
+    const { firstName, lastName, accountBalance, phone, langPref, subSongId, createdAt } = accountInfo;
     let subSongDetails = null;
     if (subSongId !== 0) {
         const { artisteName, songTitle, subscriptionType, price, profile } = (yield findSongById(subSongId));
         subSongDetails = { artisteName, songTitle, subscriptionType, price, profile };
     }
-    return { firstName, lastName, accountBalance, phone, langPref, subSongDetails };
+    return { firstName, lastName, accountBalance, phone, langPref, subSongDetails, createdAt };
 });
 exports.getAccountInfo = getAccountInfo;

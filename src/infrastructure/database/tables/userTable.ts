@@ -39,9 +39,9 @@ export const defineUserTable = () => {
         type: DataTypes.STRING(),
         allowNull: true,
       },
-      accountBalance:{
+      accountBalance: {
         type: DataTypes.STRING(),
-        defaultValue:"0.00"
+        defaultValue: "0.00",
       },
       subSongId: {
         type: DataTypes.INTEGER(),
@@ -51,7 +51,9 @@ export const defineUserTable = () => {
     {
       sequelize: sequelize,
       tableName: "Users",
-      timestamps: false,
+      timestamps: true,
+      createdAt: true,
+      updatedAt: false,
     }
   );
 };

@@ -6,8 +6,9 @@ export class Admin extends Model {
   declare firstName: string;
   declare lastName: string;
   declare email: string;
-  declare password:string;
-  declare adminType:"merchant"|"system";
-  declare planId:number;
-  declare nextSubPayment:string;
+  declare password: string;
+  declare adminType: "merchant" | "system";
+  declare planId: number;
+  declare nextSubPayment: string;
+  declare createdAt:string;
 }

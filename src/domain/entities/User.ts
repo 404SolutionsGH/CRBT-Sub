@@ -10,4 +10,5 @@ export class User extends Model {
   declare langPref: string;
   declare accountBalance: string;
   declare subSongId: number;
+  declare createdAt: string;
 }

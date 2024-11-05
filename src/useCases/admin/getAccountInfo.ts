@@ -7,7 +7,7 @@ export const getAdminAccountInfo = async (adminId: number) => {
   const { findPlanById } = new AdminPlanRepoImp();
   const account = await findAdminById(adminId);
   if (!account) throw new AppError("Account info could not be retrived, such account does not exist", 404);
-  const { adminType, lastName, firstName, email, nextSubPayment, planId } = account;
+  const { adminType, lastName, firstName, email, nextSubPayment, planId, createdAt } = account;
 
-  return { adminType, lastName, firstName, email, nextSubPayment, subPlanDetails: await findPlanById(planId) };
+  return { adminType, lastName, firstName, email, nextSubPayment, createdAt, subPlanDetails: await findPlanById(planId) };
 };

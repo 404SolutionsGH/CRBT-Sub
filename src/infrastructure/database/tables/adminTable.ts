@@ -67,7 +67,7 @@ export const defineAdminTable = () => {
         },
       },
     },
-    { sequelize: sequelize, tableName: "Admins", timestamps: false }
+    { sequelize: sequelize, tableName: "Admins", timestamps: true, createdAt:true,updatedAt:false }
   );
 
   //  setting up associations

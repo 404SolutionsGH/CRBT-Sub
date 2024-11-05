@@ -20,8 +20,8 @@ const adminLogin = (email, pasword) => __awaiter(void 0, void 0, void 0, functio
     if (account) {
         if (!(yield (0, bcrypt_1.verifyPassword)(pasword, account.password)))
             throw new AppError_1.AppError("Invalid email and password", 401);
-        const { firstName, lastName, email, adminType, planId, nextSubPayment } = account;
-        return { account: { firstName, lastName, email, adminType, planId, nextSubPayment }, token: (0, jwt_1.jwtForLogIn)(String(account.id)) };
+        const { firstName, lastName, email, adminType, planId, nextSubPayment, createdAt } = account;
+        return { account: { firstName, lastName, email, adminType, planId, nextSubPayment, createdAt }, token: (0, jwt_1.jwtForLogIn)(String(account.id)) };
     }
     throw new AppError_1.AppError(`No admin account with ${email} exist`, 404);
 });

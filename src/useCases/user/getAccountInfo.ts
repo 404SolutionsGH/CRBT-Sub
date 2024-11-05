@@ -8,11 +8,11 @@ export const getAccountInfo = async (id: number) => {
   const { findSongById } = new SongRepoImpl();
   const accountInfo = await userRepo.findUserById(id);
   if (!accountInfo) throw new AppError("Acount Info not retrieved,Account does not exist", 404);
-  const { firstName, lastName, accountBalance, phone, langPref, subSongId } = accountInfo!;
+  const { firstName, lastName, accountBalance, phone, langPref, subSongId,createdAt } = accountInfo!;
   let subSongDetails: null | {} = null;
   if (subSongId !== 0) {
     const { artisteName, songTitle, subscriptionType, price, profile } = (await findSongById(subSongId))!;
     subSongDetails = { artisteName, songTitle, subscriptionType, price, profile };
   }
-  return { firstName, lastName, accountBalance, phone, langPref, subSongDetails };
+  return { firstName, lastName, accountBalance, phone, langPref, subSongDetails,createdAt };
 };

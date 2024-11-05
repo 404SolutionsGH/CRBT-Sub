@@ -41,7 +41,7 @@ const defineUserTable = () => {
         },
         accountBalance: {
             type: sequelize_1.DataTypes.STRING(),
-            defaultValue: "0.00"
+            defaultValue: "0.00",
         },
         subSongId: {
             type: sequelize_1.DataTypes.INTEGER(),
@@ -50,7 +50,9 @@ const defineUserTable = () => {
     }, {
         sequelize: connectDb_1.sequelize,
         tableName: "Users",
-        timestamps: false,
+        timestamps: true,
+        createdAt: true,
+        updatedAt: false,
     });
 };
 exports.defineUserTable = defineUserTable;
