@@ -50,6 +50,14 @@ const defineSongTable = () => {
                 notEmpty: { msg: "ussdCode cannot contain an empty string" },
             },
         },
+        registrationUssdCode: {
+            type: sequelize_1.DataTypes.STRING(),
+            allowNull: false,
+            validate: {
+                notNull: { msg: "No value passed for registrationUssdCode" },
+                notEmpty: { msg: "registrationUssdCode cannot contain an empty string" },
+            },
+        },
         price: {
             type: sequelize_1.DataTypes.STRING(),
             allowNull: false,

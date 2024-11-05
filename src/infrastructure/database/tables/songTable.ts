@@ -49,6 +49,14 @@ export const defineSongTable = () => {
           notEmpty: { msg: "ussdCode cannot contain an empty string" },
         },
       },
+      registrationUssdCode: {
+        type: DataTypes.STRING(),
+        allowNull: false,
+        validate: {
+          notNull: { msg: "No value passed for registrationUssdCode" },
+          notEmpty: { msg: "registrationUssdCode cannot contain an empty string" },
+        },
+      },
       price: {
         type: DataTypes.STRING(),
         allowNull: false,

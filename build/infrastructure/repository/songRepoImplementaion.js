@@ -16,7 +16,7 @@ const Song_1 = require("../../domain/entities/Song");
 class SongRepoImpl {
     saveSong(songData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+            const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType, registrationUssdCode } = songData;
             const [itemCreated, isCreated] = yield Song_1.Song.findOrCreate({
                 where: { ownerId, songTitle, lang, subscriptionType },
                 defaults: {
@@ -31,6 +31,7 @@ class SongRepoImpl {
                     tune,
                     profile,
                     subscriptionType,
+                    registrationUssdCode,
                 },
             });
             if (isCreated)
@@ -40,8 +41,8 @@ class SongRepoImpl {
     }
     updateSongInfo(songData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType } = songData;
-            const updatedSongInfo = yield Song_1.Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType }, { where: { id, ownerId }, returning: true });
+            const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode, tune, profile } = songData;
+            const updatedSongInfo = yield Song_1.Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode, profile, tune }, { where: { id, ownerId }, returning: true });
             if (updatedSongInfo[0] === 1)
                 return updatedSongInfo[1][0];
             return null;

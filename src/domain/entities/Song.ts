@@ -9,6 +9,7 @@ export class Song extends Model {
   declare artisteName: string;
   declare albumName: string;
   declare ussdCode: string;
+  declare registrationUssdCode:string;
   declare price: string;
   declare category: string;
   declare tune: string;

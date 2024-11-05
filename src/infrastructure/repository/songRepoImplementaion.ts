@@ -5,7 +5,7 @@ import { SongRepository } from "../../domain/interfaces/songRepository";
 
 export class SongRepoImpl implements SongRepository {
   async saveSong(songData: Song): Promise<Song | null> {
-    const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType } = songData;
+    const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType,registrationUssdCode } = songData;
     const [itemCreated, isCreated] = await Song.findOrCreate({
       where: { ownerId, songTitle, lang, subscriptionType },
       defaults: {
@@ -20,6 +20,7 @@ export class SongRepoImpl implements SongRepository {
         tune,
         profile,
         subscriptionType,
+        registrationUssdCode,
       },
     });
     if (isCreated) return itemCreated;
@@ -28,9 +29,12 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async updateSongInfo(songData: Song): Promise<Song | null> {
-    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType } = songData;
+    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode,tune,profile } = songData;
 
-    const updatedSongInfo = await Song.update({ songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType }, { where: { id, ownerId }, returning: true });
+    const updatedSongInfo = await Song.update(
+      { songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode,profile,tune },
+      { where: { id, ownerId }, returning: true }
+    );
     if (updatedSongInfo[0] === 1) return updatedSongInfo[1][0];
     return null;
   }
