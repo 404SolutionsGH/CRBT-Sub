@@ -765,3 +765,107 @@ exports.adminRouter.put("/package-category/:id", verifyJwt_1.verifyJwt, checkFor
  *                   example: No package category found with the provided ID.
  */
 exports.adminRouter.delete("/package-category/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.delePackageCategoriesController);
+/**
+ * @swagger
+ * /api/v1/admin/user/{id}:
+ *   delete:
+ *     tags:
+ *       - Admins
+ *     summary: Delete a user account
+ *     description: This is the endpoint for deleting a user account. A valid authorization header with a JWT token is required.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Account ID of the user account to delete.
+ *     responses:
+ *       204:
+ *         description: User account deleted successfully.
+ *       400:
+ *         description: Bad request. The provided account ID is not a number.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "The provided ID must be a number."
+ *       401:
+ *         description: Unauthorized. The client does not have permission to delete the account.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Client is not authorized to delete this account."
+ *       404:
+ *         description: Not found. The account to be deleted does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "The account with the provided ID does not exist."
+ */
+exports.adminRouter.delete("/user/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.deleteUsersController);
+/**
+ * @swagger
+ * /api/v1/admin/merchant/{id}:
+ *   delete:
+ *     tags:
+ *       - Admins
+ *     summary: Delete a merchant account
+ *     description: This endpoint allows an admin to delete a merchant account. A valid authorization header with a JWT token is required.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Account ID of the merchant account to delete.
+ *     responses:
+ *       204:
+ *         description: Merchant account deleted successfully.
+ *       400:
+ *         description: Bad request. The provided account ID is not a number.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "The provided ID must be a number."
+ *       401:
+ *         description: Unauthorized. The client does not have permission to delete the account.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Client is not authorized to delete this account."
+ *       404:
+ *         description: Not found. The merchant account to be deleted does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "The merchant account with the provided ID does not exist."
+ */
+exports.adminRouter.delete("/merchant/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.deleteMerchnatsController);

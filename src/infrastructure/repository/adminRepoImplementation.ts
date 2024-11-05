@@ -48,4 +48,10 @@ export class AdminRepoImp implements AdminRepository {
   async getAllMerchnatsByPlanId(planId: number): Promise<Admin[]> {
     return await Admin.findAll({ where: { adminType: "merchant", planId } });
   }
+
+  async deleteAccount(accountId: number): Promise<boolean> {
+    const numOfDeleted = await Admin.destroy({ where: { id: accountId } });
+    if(numOfDeleted!==0)return true
+    return false;
+  }
 }

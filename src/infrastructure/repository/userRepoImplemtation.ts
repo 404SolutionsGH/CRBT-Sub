@@ -32,8 +32,8 @@ export class UserRepoImp implements UserRepository {
   }
 
   async updateAccountInfo(account: User): Promise<User | null> {
-    const { firstName, lastName,id, accountBalance, phone, langPref } = account;
-    const updatedData = await User.update({ firstName, accountBalance, phone, langPref ,lastName}, { where: { id } ,returning:true});
+    const { firstName, lastName, id, accountBalance, phone, langPref } = account;
+    const updatedData = await User.update({ firstName, accountBalance, phone, langPref, lastName }, { where: { id }, returning: true });
     if (updatedData[0] == 1) return updatedData[1][0];
     return null;
   }
@@ -44,8 +44,15 @@ export class UserRepoImp implements UserRepository {
     return false;
   }
 
-  async getAllUserBySubSongId(songId:number):Promise<User[]>{
-    return User.findAll({ where: { subSongId:songId } });
+  async getAllUserBySubSongId(songId: number): Promise<User[]> {
+    return User.findAll({ where: { subSongId: songId } });
   }
 
+  async deleteAccount(accountId: number): Promise<boolean> {
+    const numOfDeleted = await User.destroy({ where: { id: accountId } });
+
+    if (numOfDeleted !== 0) return true;
+
+    return false;
+  }
 }

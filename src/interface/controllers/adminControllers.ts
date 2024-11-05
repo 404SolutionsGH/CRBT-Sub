@@ -17,6 +17,7 @@ import { getAdminAccountInfo } from "../../useCases/admin/getAccountInfo";
 import { updateAdminAccountInfo } from "../../useCases/admin/updateAccountInfo";
 import { Admin } from "../../domain/entities/Admin";
 import { changePassword } from "../../useCases/admin/changePassword";
+import { deleteMerchantAccount, deleteUserAccount } from "../../useCases/admin/deleteAccounts";
 
 export const getAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
@@ -109,4 +110,18 @@ export const delePackageCategoriesController = asyncHandler(async (req: Request,
   isStringContentNumber(id, "id");
   await deletePackageCategory(Number(id));
   res.status(200).json({ messge: "Package Category and it related package items has been deleted sucessfull" });
+});
+
+export const deleteUsersController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  isStringContentNumber(id, "id");
+  await deleteUserAccount(Number(id));
+  res.status(204).end();
+});
+
+export const deleteMerchnatsController = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  isStringContentNumber(id, "id");
+  await deleteMerchantAccount(Number(id));
+  res.status(204).end();
 });

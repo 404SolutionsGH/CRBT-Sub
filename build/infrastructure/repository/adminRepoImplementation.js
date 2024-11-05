@@ -67,5 +67,13 @@ class AdminRepoImp {
             return yield Admin_1.Admin.findAll({ where: { adminType: "merchant", planId } });
         });
     }
+    deleteAccount(accountId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const numOfDeleted = yield Admin_1.Admin.destroy({ where: { id: accountId } });
+            if (numOfDeleted !== 0)
+                return true;
+            return false;
+        });
+    }
 }
 exports.AdminRepoImp = AdminRepoImp;

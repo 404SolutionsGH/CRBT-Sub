@@ -67,5 +67,13 @@ class UserRepoImp {
             return User_1.User.findAll({ where: { subSongId: songId } });
         });
     }
+    deleteAccount(accountId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const numOfDeleted = yield User_1.User.destroy({ where: { id: accountId } });
+            if (numOfDeleted !== 0)
+                return true;
+            return false;
+        });
+    }
 }
 exports.UserRepoImp = UserRepoImp;

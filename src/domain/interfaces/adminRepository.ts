@@ -8,4 +8,5 @@ export interface AdminRepository {
   getAllMerchants(): Promise<Admin[]>;
   getAllMerchnatsByPlanId(planId: number): Promise<Admin[]>;
   updateAdminAccount(updatedInfo: Admin): Promise<Admin | null>;
+  deleteAccount(accountId: number): Promise<boolean>;
 }

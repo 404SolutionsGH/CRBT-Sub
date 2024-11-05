@@ -10,4 +10,5 @@ export interface UserRepository {
   updateAccountInfo(account: User): Promise<User | null>;
   updateSubSongId(subSongId: number, id: number): Promise<boolean>;
   getAllUserBySubSongId(songId: number): Promise<User[]>;
+  deleteAccount(accountId: number): Promise<boolean>;
 }
