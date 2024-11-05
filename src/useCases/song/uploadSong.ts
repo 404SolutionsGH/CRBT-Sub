@@ -15,39 +15,13 @@ import { TempSongRepoImpl } from "../../infrastructure/repository/tempSongRepoIm
 import { isUserAdmin } from "./helpers";
 import { AdminPlanRepoImp } from "../../infrastructure/repository/adminPlanRepoImplementation";
 import { Benefits } from "../../@common/customDataTypes/Benefits";
+import { createFileNameAndSave } from "../../@common/helperMethods/file";
 
 const { saveSong, findSongsByOwnersId } = new SongRepoImpl();
 const { findPlanById } = new AdminPlanRepoImp();
 const { createTempSongs, findByTuneAndDelete } = new TempSongRepoImpl();
 
-const checkPathExists = async (path: string): Promise<boolean> => {
-  try {
-    await access(path, fs.constants.F_OK);
-    console.log("Path exists.");
-    return true;
-  } catch (err) {
-    console.log("Path does not exist.");
-    return false;
-  }
-};
 
-const createFileNameAndSave = async (file: File) => {
-  const { getRandomString } = new RandomData();
-  const isNameUnique = false;
-  let fileName: string;
-  while (!isNameUnique) {
-    fileName = `${getRandomString(20)}${file.exetension}`;
-    const path = join(__dirname, "..", "..", "..", "/songsData", fileName);
-    // const path = `${__dirname.replace("\\build\\useCases\\song", `\\songsData\\${fileName}`)}`;
-
-    // check if the file exist
-    if (!(await checkPathExists(path))) {
-      // emit the File path and buffer for storage
-      event.emit("saveFile", file.data, path);
-      return fileName;
-    }
-  }
-};
 
 const checkSongNumberLimitation = async (ownerId: number, planId: number) => {
   const allSongsUploadedByOwner = await findSongsByOwnersId(ownerId);
@@ -72,12 +46,12 @@ export const uploadSong = async (songInfo: Song, song: File, proFile: File) => {
   if (accountInfo.planId !== 0) await checkSongNumberLimitation(songInfo.ownerId, accountInfo.planId);
 
   if (!songInfo.tune) {
-    songInfo.tune = `${process.env.BaseUrl}/api/v1/songs/listen/${(await createFileNameAndSave(song))!}`;
+    songInfo.tune = `${process.env.BaseUrl}/api/v1/songs/listen/${(await createFileNameAndSave(song))}`;
   } else {
     // delete temp upload data from database
     await findByTuneAndDelete(songInfo.tune);
   }
-  songInfo.profile = `${process.env.BaseUrl}/api/v1/songs/profile/${(await createFileNameAndSave(proFile))!}`;
+  songInfo.profile = `${process.env.BaseUrl}/api/v1/songs/profile/${(await createFileNameAndSave(proFile))}`;
 
   // console.log(songInfo.tune)
   //   save the data in the data base

@@ -21,35 +21,36 @@ import { deleteSavedSong, deleteTempSong } from "../../useCases/song/deleteSong"
 
 export const uploadController = asyncHandler(async (req: Request, res: Response) => {
   //   // profile(img file) and song(mp3 file) are set up by a middleware called setImgAndMp3Files
-  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
+  const { id, albumName, songTitle, artisteName, profile, song, lang, ussdCode, tune, subscriptionType, price, category, registrationUssdCode } = req.body;
 
   if (!songTitle || !lang || !subscriptionType) throw new AppError(`No data passed for ${!songTitle ? "songTitle" : !lang ? "lang" : "subscriptionType"}`, 400);
-  await uploadSong(Song.build({ ownerId: id, albumName, songTitle, artisteName, ussdCode, subscriptionType, price, category, lang, tune }), song as File, profile as File);
+  await uploadSong(Song.build({ ownerId: id, albumName, songTitle, artisteName, ussdCode, subscriptionType, price, category, lang, tune, registrationUssdCode }), song as File, profile as File);
 
   res.status(201).json({ message: "Song uploaded sucessfully" });
 });
 
 export const updateSavedSongController = asyncHandler(async (req: Request, res: Response) => {
   console.log("Updating Saved Song");
-  const { id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category } = req.body;
-  let newSong: Buffer | undefined;
-  let newProfile: Buffer | undefined;
+  const { albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, registrationUssdCode } = req.body;
+  const { id } = req.params;
+  if (!id) throw new AppError("No data passed for id in  in request body", 400);
+  isStringContentNumber(id, "id");
+  let newTune: File | undefined;
+  let newProfile: File | undefined;
 
   if (!Array.isArray(req.files) && req.files !== undefined) {
-    if (req.files.newSong) {
-      console.log("New Song File present");
-      newSong = req.files.newSong[0].buffer;
-    }
-    if (req.files.newProfile) {
-      console.log("New Profile File present");
-      newProfile = req.files.newProfile[0].buffer;
-    } else {
-      throw new AppError("The field names for uploading files should either be profile(for images) or song(for tunes)", 400);
-    }
+    if (req.files.newTune || req.files.newProfile) {
+      newTune = req.files.newTune
+        ? { data: req.files.newTune[0].buffer, exetension: req.files.newTune[0].mimetype === "audio/mpeg" ? ".mp3" : req.files.newTune[0].mimetype === "audio/wav" ? ".wav" : ".aac" }
+        : undefined;
+      newProfile = req.files.newProfile ? { data: req.files.newProfile[0].buffer, exetension: req.files.newProfile[0].mimetype === "image/png" ? ".png" : ".jpeg" } : undefined;
+    } else throw new AppError("Fieldnames for files been uploaded should either be newTune(for new song files) and newProfile(for new profile image)", 404);
   }
-
-  if (!id) throw new AppError("No data passed for id in the updatedSongData object in request body", 400);
-  await updateSavedSong(Song.build({ id, albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id }), newSong, newProfile);
+  await updateSavedSong(
+    Song.build({ id: Number(id), albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id, registrationUssdCode }),
+    newTune,
+    newProfile
+  );
 
   res.status(201).json({ message: "Song updated sucessfully" });
 });
@@ -116,12 +117,12 @@ export const songController = asyncHandler(async (req: Request, res: Response) =
 
 export const deleteSongController = asyncHandler(async (req: Request, res: Response) => {
   const { state, songId } = req.params;
-  const {id}=req.body
+  const { id } = req.body;
   isStringContentNumber(songId, "songId");
   if (state === "saved") {
-    await deleteSavedSong(Number(songId),id);
+    await deleteSavedSong(Number(songId), id);
   } else if (state === "temp") {
-    await deleteTempSong(Number(songId),id);
+    await deleteTempSong(Number(songId), id);
   } else {
     throw new AppError(`the value passed for state should either be saved or temp not ${state}`, 400);
   }

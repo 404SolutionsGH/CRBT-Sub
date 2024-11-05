@@ -15,7 +15,7 @@ export const songsRouter = Router();
  *   post:
  *     tags:
  *       - Songs
- *     summary: Upload a new song and save its meta data
+ *     summary: Upload a new song and save its metadata
  *     description: This endpoint allows merchants to upload songs and save the song metadata. A valid authorization header with a JWT token is required.
  *     security:
  *       - bearerAuth: []
@@ -37,7 +37,7 @@ export const songsRouter = Router();
  *               song:
  *                 type: string
  *                 format: binary
- *                 description: The song file (optional if tune is provided).
+ *                 description: The song file (optional if uploading metadata only).
  *               profile:
  *                 type: string
  *                 format: binary
@@ -69,8 +69,9 @@ export const songsRouter = Router();
  *                 example: "English"
  *               tune:
  *                 type: string
- *                 description: The tune ID, used only if no song file is provided.
- *                 example: "123456"
+ *                 format: uri
+ *                 description: URL to the tune, used only if saving metadata for a temporary song without an uploaded song file.
+ *                 example: "https://example.com/tune.mp3"
  *     responses:
  *       201:
  *         description: Song uploaded successfully.
@@ -488,7 +489,7 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
 // endpoint for updating a song
 /**
  * @swagger
- * /api/v1/songs/:
+ * /api/v1/songs/{songId}:
  *   put:
  *     tags:
  *       - Songs
@@ -496,6 +497,13 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *     description: This is the endpoint for merchants and the superAdmin to update saved songs.
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: songId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the song to update.
  *     requestBody:
  *       required: true
  *       content:
@@ -503,9 +511,6 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *           schema:
  *             type: object
  *             properties:
- *               id:
- *                 type: number
- *                 description: The ID of the song to update.
  *               albumName:
  *                 type: string
  *                 description: The album name.
@@ -517,7 +522,8 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *                 description: The name of the artiste.
  *               profile:
  *                 type: string
- *                 description: Profile picture or image URL.
+ *                 format: uri
+ *                 description: URL to the profile picture or image.
  *               lang:
  *                 type: string
  *                 description: The language of the song.
@@ -526,7 +532,8 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *                 description: The USSD code associated with the song.
  *               tune:
  *                 type: string
- *                 description: The song tune (optional if no song file is provided).
+ *                 format: uri
+ *                 description: URL to the existing song tune.
  *               subscriptionType:
  *                 type: string
  *                 description: Subscription type (e.g., weekly, monthly).
@@ -536,14 +543,14 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *               category:
  *                 type: string
  *                 description: The category of the song.
- *               newSong:
+ *               newTune:
  *                 type: string
  *                 format: binary
- *                 description: The song file (optional).
+ *                 description: New song file to replace the existing tune (optional).
  *               newProfile:
  *                 type: string
  *                 format: binary
- *                 description: The profile image file (optional).
+ *                 description: New profile image file to replace the existing profile picture (optional).
  *     responses:
  *       201:
  *         description: Song updated successfully.
@@ -564,7 +571,7 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "No Data pass for id in request body."
+ *                   example: "No Data passed for id in request body."
  *       404:
  *         description: Song or file content not found.
  *         content:
@@ -574,9 +581,9 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "No song with the provided ID exists or the file content does not exist"
+ *                   example: "No song with the provided ID exists or the file content does not exist."
  */
-songsRouter.put("/", getFilesFromReq("newProfile","newSong"), verifyJwt, updateSavedSongController);
+songsRouter.put("/:id", getFilesFromReq("newProfile","newTune"), verifyJwt, updateSavedSongController);
 
 
 // endpoint for getting a song
