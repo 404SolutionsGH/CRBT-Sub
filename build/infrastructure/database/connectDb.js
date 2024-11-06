@@ -17,6 +17,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const sequelize_1 = require("sequelize");
 const defineAllTables_1 = require("./defineAllTables");
+const setupAllSeeds_1 = require("./seeders/setupAllSeeds");
 exports.sequelize = new sequelize_1.Sequelize(process.env.DatabaseUri, { dialectOptions: { ssl: { require: true } }, logging: false });
 const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Establishing Database connection...");
@@ -29,7 +30,10 @@ const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Table Structures defined");
     //models syncronization
     console.log("Database syncronising..");
-    yield exports.sequelize.sync({ alter: true });
+    yield exports.sequelize.sync({ force: true });
     console.log("Syncronization sucessfull");
+    console.log("Setting Up seeders");
+    yield (0, setupAllSeeds_1.setUpAllSeeders)();
+    console.log("Seeders setup sucessfully");
 });
 exports.connectToDatabase = connectToDatabase;
