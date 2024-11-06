@@ -29,14 +29,20 @@ const adminPlanRoute_1 = require("./interface/routes/adminPlanRoute");
 const adminRoutes_1 = require("./interface/routes/adminRoutes");
 const packageRoutes_1 = require("./interface/routes/packageRoutes");
 const paymentsRoutes_1 = require("./interface/routes/paymentsRoutes");
+const systemRoutes_1 = require("./interface/routes/systemRoutes");
+const checkSystemStatus_1 = require("./interface/middlewares/checkSystemStatus");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
 // middlewares
 server.use(express_1.default.json());
 server.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
-// routes
+// route
+server.use("/api/v1/system", systemRoutes_1.systemRouter);
 server.use("/api/v1/auth", authRoutes_1.authRouter);
+// middleware  
+server.use(checkSystemStatus_1.checkSystemStatus);
+// routes
 server.use("/api/v1/user", userRoutes_1.userRouter);
 server.use("/api/v1/admin", adminRoutes_1.adminRouter);
 server.use("/api/v1/songs", songsRoutes_1.songsRouter);
@@ -51,14 +57,6 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, setUpAllListners_1.setUpAllEventListners)();
         yield (0, connectDb_1.connectToDatabase)();
-        // const password= await encryptPassword("Admin1234");
-        // await Admin.create({
-        //   email: "admin@gmail.com",
-        //   firstName: "adminFirstName",
-        //   lastName: "adminLastName",
-        //   password:password,
-        //   adminType: "system",
-        // });
         server.listen(port, () => {
             console.log(`Server  is listening on ${port} `);
         });

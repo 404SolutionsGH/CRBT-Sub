@@ -1,8 +1,9 @@
-import axios from "axios";
 import dotenv from "dotenv";
+dotenv.config();
+import axios from "axios";
 import { PaymentInfo } from "../domain/entities/Transactions";
 import { ChapaPaymentLink } from "../@common/constants/string";
-dotenv.config();
+import { SystemRepoImpl } from "../infrastructure/repository/systemRepoImplementation";
 
 export const sendAccountConfirmationSms = async (verfCode: number, phone: string) => {
   console.log("Sending Sms.....");
@@ -13,20 +14,20 @@ export const sendAccountConfirmationSms = async (verfCode: number, phone: string
 };
 
 // this method return the url to the checkout page if sucessfull or null if not.
-export const paymentRequest=async (paymentInfo:PaymentInfo)=>{
-const {amount,callBackUrl,currency,phoneNumber,returnUrl,txRef}=paymentInfo  
+export const paymentRequest = async (paymentInfo: PaymentInfo) => {
+  const { amount, callBackUrl, currency, phoneNumber, returnUrl, txRef } = paymentInfo;
+  const { getChapaSecretkey } = new SystemRepoImpl();
+  const response = await axios.post(
+    ChapaPaymentLink,
+    { amount, currency, callback_url: callBackUrl, return_url: returnUrl, phone_number: phoneNumber, tx_ref: txRef },
+    { headers: { Authorization: `Bearer ${await getChapaSecretkey(undefined)}` } }
+  );
 
-const response = await axios.post(
-  ChapaPaymentLink,
-  { amount, currency, callback_url: callBackUrl, return_url: returnUrl, phone_number: phoneNumber, tx_ref: txRef },
-  { headers: { Authorization: `Bearer ${process.env.ChapaSecretKey}`} }
-);  
+  console.log(`Payment request status code=${response.status}`);
+  const { data } = response.data;
 
-console.log(`Payment request status code=${response.status}`)
-const {data}=response.data
-
-if(data){
-  return data.checkout_url as string;
-}
-return null;
-}
+  if (data) {
+    return data.checkout_url as string;
+  }
+  return null;
+};

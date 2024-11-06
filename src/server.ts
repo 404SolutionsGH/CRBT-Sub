@@ -19,6 +19,8 @@ import { Admin } from "./domain/entities/Admin";
 import { adminRouter } from "./interface/routes/adminRoutes";
 import { packageRouter } from "./interface/routes/packageRoutes";
 import { paymentsRouter } from "./interface/routes/paymentsRoutes";
+import { systemRouter } from "./interface/routes/systemRoutes";
+import { checkSystemStatus } from "./interface/middlewares/checkSystemStatus";
 
 const server = express();
 
@@ -29,8 +31,14 @@ server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 server.use(express.json());
 server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
-// routes
+// route
+server.use("/api/v1/system", systemRouter);
 server.use("/api/v1/auth", authRouter);
+
+// middleware  
+server.use(checkSystemStatus);
+
+// routes
 server.use("/api/v1/user", userRouter);
 server.use("/api/v1/admin",adminRouter)
 server.use("/api/v1/songs", songsRouter);
@@ -38,6 +46,7 @@ server.use("/api/v1/service", serviceRouter);
 server.use("/api/v1/admin-plan",adminPlanRouter)
 server.use("/api/v1/package",packageRouter)
 server.use("/api/v1/payments",paymentsRouter)
+
 // error handling middlware
 server.use(errorHandler);
 
@@ -46,14 +55,6 @@ const startServer = async () => {
   try {
     setUpAllEventListners()
     await connectToDatabase()
-      // const password= await encryptPassword("Admin1234");
-      // await Admin.create({
-      //   email: "admin@gmail.com",
-      //   firstName: "adminFirstName",
-      //   lastName: "adminLastName",
-      //   password:password,
-      //   adminType: "system",
-      // });
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

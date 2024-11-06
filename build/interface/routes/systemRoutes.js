@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.systemRouter = void 0;
+const express_1 = require("express");
+const verifyJwt_1 = require("../middlewares/verifyJwt");
+const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
+const systemController_1 = require("../controllers/systemController");
+exports.systemRouter = (0, express_1.Router)();
+exports.systemRouter.put("/status", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.systemStatusController);
+exports.systemRouter.put("/chapa-secret-key", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.chapaSecretController);

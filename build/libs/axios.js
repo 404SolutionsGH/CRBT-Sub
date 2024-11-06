@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentRequest = exports.sendAccountConfirmationSms = void 0;
-const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const string_1 = require("../@common/constants/string");
 dotenv_1.default.config();
+const axios_1 = __importDefault(require("axios"));
+const string_1 = require("../@common/constants/string");
+const systemRepoImplementation_1 = require("../infrastructure/repository/systemRepoImplementation");
 const sendAccountConfirmationSms = (verfCode, phone) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Sending Sms.....");
     const response = yield axios_1.default.get(`https://sms.smsnotifygh.com/smsapi?key=${process.env.SmsApiKey}&to=${phone}&msg=Welcome to ${process.env.AppName}\n\n Your verification code is: ${verfCode}\n\n Please enter this code on the verification page to activate your account.&sender_id=CRBT`);
@@ -26,7 +27,8 @@ exports.sendAccountConfirmationSms = sendAccountConfirmationSms;
 // this method return the url to the checkout page if sucessfull or null if not.
 const paymentRequest = (paymentInfo) => __awaiter(void 0, void 0, void 0, function* () {
     const { amount, callBackUrl, currency, phoneNumber, returnUrl, txRef } = paymentInfo;
-    const response = yield axios_1.default.post(string_1.ChapaPaymentLink, { amount, currency, callback_url: callBackUrl, return_url: returnUrl, phone_number: phoneNumber, tx_ref: txRef }, { headers: { Authorization: `Bearer ${process.env.ChapaSecretKey}` } });
+    const { getChapaSecretkey } = new systemRepoImplementation_1.SystemRepoImpl();
+    const response = yield axios_1.default.post(string_1.ChapaPaymentLink, { amount, currency, callback_url: callBackUrl, return_url: returnUrl, phone_number: phoneNumber, tx_ref: txRef }, { headers: { Authorization: `Bearer ${yield getChapaSecretkey(undefined)}` } });
     console.log(`Payment request status code=${response.status}`);
     const { data } = response.data;
     if (data) {
