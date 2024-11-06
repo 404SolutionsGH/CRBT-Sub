@@ -20,7 +20,7 @@ const defineSystemTable = () => {
             type: sequelize_1.DataTypes.STRING,
             defaultValue: "Active",
             validate: {
-                isIn: { msg: "Values passed for status is either Active or Maintaince", args: [["Active", "Maintaince"]] },
+                isIn: { msg: "Values passed for status is either Active or Maintaince", args: [["Active", "Maintainance"]] },
             },
         },
         chapaSecretKey: {

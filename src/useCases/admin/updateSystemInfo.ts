@@ -1,7 +1,7 @@
 import { SystemRepoImpl } from "../../infrastructure/repository/systemRepoImplementation";
 
 const { setSystemStatus, setChapaSecretKey, } = new SystemRepoImpl();
-export const updateSystemStatus = async (adminId: number, status: "Maintaince" | "Active") => {
+export const updateSystemStatus = async (adminId: number, status: "Maintainance" | "Active") => {
   await setSystemStatus(status, adminId);
 };
 
