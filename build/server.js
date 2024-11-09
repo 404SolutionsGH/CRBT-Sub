@@ -31,6 +31,7 @@ const packageRoutes_1 = require("./interface/routes/packageRoutes");
 const paymentsRoutes_1 = require("./interface/routes/paymentsRoutes");
 const systemRoutes_1 = require("./interface/routes/systemRoutes");
 const checkSystemStatus_1 = require("./interface/middlewares/checkSystemStatus");
+const adsRoutes_1 = require("./interface/routes/adsRoutes");
 const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
@@ -50,6 +51,7 @@ server.use("/api/v1/service", serviceRoutes_1.serviceRouter);
 server.use("/api/v1/admin-plan", adminPlanRoute_1.adminPlanRouter);
 server.use("/api/v1/package", packageRoutes_1.packageRouter);
 server.use("/api/v1/payments", paymentsRoutes_1.paymentsRouter);
+server.use("/api/v1/ads", adsRoutes_1.adsRouter);
 // error handling middlware
 server.use(errorHandler_1.errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;

@@ -42,6 +42,10 @@ const option = {
                 name: "Payment GateWays",
                 description: "All operations relating to payent of plans",
             },
+            {
+                name: "Ads",
+                description: "All operations relating to ads.",
+            },
         ],
         components: {
             securitySchemes: {
