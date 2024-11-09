@@ -44,7 +44,7 @@ export const updateSavedSongController = asyncHandler(async (req: Request, res: 
         ? { data: req.files.newTune[0].buffer, exetension: req.files.newTune[0].mimetype === "audio/mpeg" ? ".mp3" : req.files.newTune[0].mimetype === "audio/wav" ? ".wav" : ".aac" }
         : undefined;
       newProfile = req.files.newProfile ? { data: req.files.newProfile[0].buffer, exetension: req.files.newProfile[0].mimetype === "image/png" ? ".png" : ".jpeg" } : undefined;
-    } else throw new AppError("Fieldnames for files been uploaded should either be newTune(for new song files) and newProfile(for new profile image)", 404);
+    } 
   }
   await updateSavedSong(
     Song.build({ id: Number(id), albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id, registrationUssdCode }),

@@ -51,6 +51,11 @@ exports.songsRouter = (0, express_1.Router)();
  *                 type: string
  *                 description: USSD code associated with the song.
  *                 example: "*123#"
+ *               registrationUssdCode:
+ *                 type: string
+ *                 description: USSD code for registering the song.
+ *                 example: "*456#"
+ *                 required: true
  *               price:
  *                 type: string
  *                 description: Price of the song.

@@ -51,8 +51,6 @@ exports.updateSavedSongController = (0, express_async_handler_1.default)((req, r
                 : undefined;
             newProfile = req.files.newProfile ? { data: req.files.newProfile[0].buffer, exetension: req.files.newProfile[0].mimetype === "image/png" ? ".png" : ".jpeg" } : undefined;
         }
-        else
-            throw new AppError_1.AppError("Fieldnames for files been uploaded should either be newTune(for new song files) and newProfile(for new profile image)", 404);
     }
     yield (0, updateSavedSong_1.updateSavedSong)(Song_1.Song.build({ id: Number(id), albumName, songTitle, artisteName, profile, lang, ussdCode, tune, subscriptionType, price, category, ownerId: req.body.id, registrationUssdCode }), newTune, newProfile);
     res.status(201).json({ message: "Song updated sucessfully" });
