@@ -18,6 +18,7 @@ const SubSongs_1 = require("../../domain/entities/SubSongs");
 const User_1 = require("../../domain/entities/User");
 const adminPlanTable_1 = require("./tables/adminPlanTable");
 const adminTable_1 = require("./tables/adminTable");
+const adsTable_1 = require("./tables/adsTable");
 const packageCatTable_1 = require("./tables/packageCatTable");
 const packageTables_1 = require("./tables/packageTables");
 const serviceTable_1 = require("./tables/serviceTable");
@@ -42,6 +43,7 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, packageTables_1.definePackageTable)();
     (0, transactionTable_1.defineTransactionTable)();
     (0, systemTable_1.defineSystemTable)();
+    (0, adsTable_1.defineAdsTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");
