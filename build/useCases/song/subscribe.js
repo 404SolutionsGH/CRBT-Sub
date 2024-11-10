@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.subscribeToSong = void 0;
+const objects_1 = require("../../@common/constants/objects");
 const AppError_1 = require("../../domain/entities/AppError");
+const Reward_1 = require("../../domain/entities/Reward");
 const SubSongs_1 = require("../../domain/entities/SubSongs");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const subSongsRepoImplementation_1 = require("../../infrastructure/repository/subSongsRepoImplementation");
@@ -34,5 +36,6 @@ const subscribeToSong = (subscriberId, songId) => __awaiter(void 0, void 0, void
     const { price } = songDetails;
     yield updateSubSongId(songId, subscriberId);
     yield createSubscription(SubSongs_1.SubSongs.build({ subscriberId, price, songId }));
+    objects_1.event.emit("updateRewardPoints", Reward_1.Reward.build({ accountId: subscriberId, accountType: "user" }));
 });
 exports.subscribeToSong = subscribeToSong;

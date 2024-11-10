@@ -10,8 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.subscibeToPlan = void 0;
+const objects_1 = require("../../@common/constants/objects");
 const date_1 = require("../../@common/helperMethods/date");
 const AppError_1 = require("../../domain/entities/AppError");
+const Reward_1 = require("../../domain/entities/Reward");
 const SubAdminplans_1 = require("../../domain/entities/SubAdminplans");
 const adminPlanRepoImplementation_1 = require("../../infrastructure/repository/adminPlanRepoImplementation");
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
@@ -34,5 +36,6 @@ const subscibeToPlan = (adminId, planId) => __awaiter(void 0, void 0, void 0, fu
         throw new AppError_1.AppError("Admin account does not exist", 404);
     // saving subscrition data
     yield createSubscription(SubAdminplans_1.SubAdminPlans.build({ price: planDetails.price, planId, subscriberId: adminId }));
+    objects_1.event.emit("updateRewardPoints", Reward_1.Reward.build({ accountId: adminId, accountType: "admin" }));
 });
 exports.subscibeToPlan = subscibeToPlan;

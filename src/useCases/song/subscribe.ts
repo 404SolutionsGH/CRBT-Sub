@@ -1,4 +1,6 @@
+import { event } from "../../@common/constants/objects";
 import { AppError } from "../../domain/entities/AppError";
+import { Reward } from "../../domain/entities/Reward";
 import { SubSongs } from "../../domain/entities/SubSongs";
 import { SongRepoImpl } from "../../infrastructure/repository/songRepoImplementaion";
 import { SubSongsRepoImp } from "../../infrastructure/repository/subSongsRepoImplementation";
@@ -22,4 +24,5 @@ export const subscribeToSong = async (subscriberId: number, songId: number) => {
   const { price } = songDetails;
   await updateSubSongId(songId, subscriberId);
   await createSubscription(SubSongs.build({ subscriberId, price, songId }));
+  event.emit("updateRewardPoints", Reward.build({ accountId: subscriberId, accountType: "user" }));
 };

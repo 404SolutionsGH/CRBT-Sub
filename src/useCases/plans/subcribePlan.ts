@@ -1,5 +1,7 @@
+import { event } from "../../@common/constants/objects";
 import { getCurrentDateYYMMDD, getNextDate } from "../../@common/helperMethods/date";
 import { AppError } from "../../domain/entities/AppError";
+import { Reward } from "../../domain/entities/Reward";
 import { SubAdminPlans } from "../../domain/entities/SubAdminplans";
 import { AdminPlanRepoImp } from "../../infrastructure/repository/adminPlanRepoImplementation";
 import { AdminRepoImp } from "../../infrastructure/repository/adminRepoImplementation";
@@ -21,5 +23,6 @@ export const subscibeToPlan = async (adminId: number, planId: number) => {
   if (!isPaymentInfoSetup) throw new AppError("Admin account does not exist", 404);
   // saving subscrition data
   await createSubscription(SubAdminPlans.build({ price: planDetails.price, planId, subscriberId: adminId }));
+  event.emit("updateRewardPoints",Reward.build({accountId:adminId,accountType:"admin"}));
 };
 
