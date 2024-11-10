@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTempSong = exports.deleteSavedSong = void 0;
+const objects_1 = require("../../@common/constants/objects");
+const file_1 = require("../../@common/helperMethods/file");
 const AppError_1 = require("../../domain/entities/AppError");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const tempSongRepoImplementation_1 = require("../../infrastructure/repository/tempSongRepoImplementation");
@@ -24,10 +26,10 @@ const canAdminDeleteSong = (songId_1, adminId_1, ...args_1) => __awaiter(void 0,
         songDetail = yield findTempSongById(songId);
     if (!songDetail)
         throw new AppError_1.AppError("Song Deletion failed,no such song exists", 404);
-    // if (songDetail!.ownerId !== adminId) {
-    //   console.log(`adminId=${adminId} ownerId=${songDetail!.ownerId}`);
-    //   throw new AppError("Song Deletion Failed,You can only delete songs you have uploaded", 401);
-    // }
+    //Delete the actual song files and profile 
+    objects_1.event.emit("deleteFile", (0, file_1.extractFileName)(songDetail.tune));
+    if (flag === "saved")
+        objects_1.event.emit("deleteFile", (0, file_1.extractFileName)(songDetail.profile));
 });
 const deleteSavedSong = (songId, adminId) => __awaiter(void 0, void 0, void 0, function* () {
     const { getAllUserBySubSongId } = new userRepoImplemtation_1.UserRepoImp();
@@ -38,13 +40,11 @@ const deleteSavedSong = (songId, adminId) => __awaiter(void 0, void 0, void 0, f
         throw new AppError_1.AppError("Song deletion failed,but has been flag for automatic deletion later when no one is on it", 409);
     }
     yield canAdminDeleteSong(songId, adminId);
-    //Delete the actual song files (Not yet implemented)s
     yield deleteSongById(songId);
 });
 exports.deleteSavedSong = deleteSavedSong;
 const deleteTempSong = (songId, adminId) => __awaiter(void 0, void 0, void 0, function* () {
     yield canAdminDeleteSong(songId, adminId, "temp");
-    //Delete the actual song files (Not yet implemented)
     yield deleteSong(songId);
 });
 exports.deleteTempSong = deleteTempSong;

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createFileNameAndSave = void 0;
+exports.extractFileName = exports.createFileNameAndSave = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const randomData_1 = require("./randomData");
@@ -37,3 +37,12 @@ const createFileNameAndSave = (file) => __awaiter(void 0, void 0, void 0, functi
     return fileName;
 });
 exports.createFileNameAndSave = createFileNameAndSave;
+const extractFileName = (url) => {
+    // const pattern = /^https?:\/\/[^\/]+\/api\/v1\/songs\/(listen|profile)\/([^\/]+)$/;
+    const urlComponents = url.split("/");
+    if (urlComponents.length !== 0) {
+        return urlComponents[urlComponents.length - 1];
+    }
+    return null;
+};
+exports.extractFileName = extractFileName;

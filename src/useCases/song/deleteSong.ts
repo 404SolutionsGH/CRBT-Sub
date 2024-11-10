@@ -1,3 +1,5 @@
+import { event } from "../../@common/constants/objects";
+import { extractFileName } from "../../@common/helperMethods/file";
 import { AppError } from "../../domain/entities/AppError";
 import { Song } from "../../domain/entities/Song";
 import { TempSong } from "../../domain/entities/TempSong";
@@ -12,10 +14,9 @@ const canAdminDeleteSong = async (songId: number, adminId: number, flag: "saved"
   if (flag === "saved") songDetail = await findSongById(songId, true);
   else songDetail = await findTempSongById(songId);
   if (!songDetail) throw new AppError("Song Deletion failed,no such song exists", 404);
-  // if (songDetail!.ownerId !== adminId) {
-  //   console.log(`adminId=${adminId} ownerId=${songDetail!.ownerId}`);
-  //   throw new AppError("Song Deletion Failed,You can only delete songs you have uploaded", 401);
-  // }
+  //Delete the actual song files and profile 
+  event.emit("deleteFile", extractFileName(songDetail.tune));
+  if(flag==="saved") event.emit("deleteFile", extractFileName((songDetail as Song).profile));
 };
 
 export const deleteSavedSong = async (songId: number, adminId: number) => {
@@ -27,12 +28,10 @@ export const deleteSavedSong = async (songId: number, adminId: number) => {
     throw new AppError("Song deletion failed,but has been flag for automatic deletion later when no one is on it", 409);
   }
   await canAdminDeleteSong(songId, adminId);
-  //Delete the actual song files (Not yet implemented)s
   await deleteSongById(songId);
 };
 
 export const deleteTempSong = async (songId: number, adminId: number) => {
   await canAdminDeleteSong(songId, adminId, "temp");
-  //Delete the actual song files (Not yet implemented)
   await deleteSong(songId);
 };

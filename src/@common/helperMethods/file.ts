@@ -28,3 +28,13 @@ export const createFileNameAndSave = async (file: File) => {
   }
   return fileName;
 };
+
+
+export const extractFileName = (url: string): string | null => {
+  // const pattern = /^https?:\/\/[^\/]+\/api\/v1\/songs\/(listen|profile)\/([^\/]+)$/;
+  const urlComponents = url.split("/");
+  if (urlComponents.length !== 0) {
+    return urlComponents[urlComponents.length - 1];
+  }
+  return null;
+};
