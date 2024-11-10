@@ -9,7 +9,7 @@ export class RewardRepoImpl implements RewardRepository {
     const { accountId, accountType, points, email, phone } = rewardData;
     await Reward.upsert({ accountId, accountType, points, email, phone });
   }
-  async getAll(): Promise<Reward[]> {
-    return await Reward.findAll();
+  async getAll(accountType: "user" | "admin"): Promise<Reward[]> {
+    return await Reward.findAll({where:{accountType}});
   }
 }

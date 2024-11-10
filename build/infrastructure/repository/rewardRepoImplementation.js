@@ -23,9 +23,9 @@ class RewardRepoImpl {
             yield Reward_1.Reward.upsert({ accountId, accountType, points, email, phone });
         });
     }
-    getAll() {
+    getAll(accountType) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Reward_1.Reward.findAll();
+            return yield Reward_1.Reward.findAll({ where: { accountType } });
         });
     }
 }

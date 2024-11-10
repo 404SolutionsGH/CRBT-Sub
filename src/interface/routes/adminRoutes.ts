@@ -9,6 +9,7 @@ import {
   deleteUsersController,
   getAdminAccountInfoController,
   getMerchantsController,
+  getPointsInfoController,
   getUsersController,
   updateAdminAccountInfoController,
   updatePackageCategoriesController,
@@ -906,5 +907,8 @@ adminRouter.delete("/user/:id",verifyJwt,isSuperAdminAccount,deleteUsersControll
  */
 adminRouter.delete("/merchant/:id", verifyJwt, isSuperAdminAccount,deleteMerchnatsController)
 
+
+
+adminRouter.get("/rewards/:accountType", verifyJwt, isSuperAdminAccount, getPointsInfoController);
 
 

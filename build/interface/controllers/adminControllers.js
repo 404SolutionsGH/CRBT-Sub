@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
+exports.getPointsInfoController = exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
@@ -31,6 +31,7 @@ const updateAccountInfo_1 = require("../../useCases/admin/updateAccountInfo");
 const Admin_1 = require("../../domain/entities/Admin");
 const changePassword_1 = require("../../useCases/admin/changePassword");
 const deleteAccounts_1 = require("../../useCases/admin/deleteAccounts");
+const getRewardInfo_1 = require("../../useCases/admin/getRewardInfo");
 exports.getAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     res.status(200).json(yield (0, getAccountInfo_1.getAdminAccountInfo)(id));
@@ -128,4 +129,10 @@ exports.deleteMerchnatsController = (0, express_async_handler_1.default)((req, r
     (0, isStringNumber_1.isStringContentNumber)(id, "id");
     yield (0, deleteAccounts_1.deleteMerchantAccount)(Number(id));
     res.status(204).end();
+}));
+exports.getPointsInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { accountType } = req.params;
+    if (!["user", "admin"].includes(accountType))
+        throw new AppError_1.AppError("Value for accountType Should either be user or admin", 400);
+    res.status(200).json(yield getRewardInfo_1.getRewardInfoOfAccounts);
 }));

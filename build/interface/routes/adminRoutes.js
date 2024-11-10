@@ -869,3 +869,4 @@ exports.adminRouter.delete("/user/:id", verifyJwt_1.verifyJwt, checkForSuperAdmi
  *                   example: "The merchant account with the provided ID does not exist."
  */
 exports.adminRouter.delete("/merchant/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.deleteMerchnatsController);
+exports.adminRouter.get("/rewards/:accountType", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.getPointsInfoController);

@@ -18,6 +18,7 @@ import { updateAdminAccountInfo } from "../../useCases/admin/updateAccountInfo";
 import { Admin } from "../../domain/entities/Admin";
 import { changePassword } from "../../useCases/admin/changePassword";
 import { deleteMerchantAccount, deleteUserAccount } from "../../useCases/admin/deleteAccounts";
+import { getRewardInfoOfAccounts } from "../../useCases/admin/getRewardInfo";
 
 export const getAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
@@ -124,4 +125,10 @@ export const deleteMerchnatsController = asyncHandler(async (req: Request, res: 
   isStringContentNumber(id, "id");
   await deleteMerchantAccount(Number(id));
   res.status(204).end();
+});
+
+export const getPointsInfoController = asyncHandler(async (req: Request, res: Response) => {
+  const { accountType } = req.params;
+  if (!["user", "admin"].includes(accountType)) throw new AppError("Value for accountType Should either be user or admin", 400);
+  res.status(200).json(await getRewardInfoOfAccounts);
 });
