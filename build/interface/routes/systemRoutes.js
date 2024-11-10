@@ -103,3 +103,4 @@ exports.systemRouter.put("/status", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.
  *                   example: "Unauthorized to update system information."
  */
 exports.systemRouter.put("/chapa-secret-key", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.chapaSecretController);
+exports.systemRouter.put("/reward", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.rewardDataController);

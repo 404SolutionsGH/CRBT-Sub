@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
-import { chapaSecretController, systemStatusController } from "../controllers/systemController";
+import { chapaSecretController, rewardDataController, systemStatusController } from "../controllers/systemController";
 
 
 
@@ -109,4 +109,6 @@ systemRouter.put("/status",verifyJwt,isSuperAdminAccount,systemStatusController)
  *                   example: "Unauthorized to update system information."
  */
 systemRouter.put("/chapa-secret-key",verifyJwt,isSuperAdminAccount,chapaSecretController)
+
+systemRouter.put("/reward", verifyJwt, isSuperAdminAccount, rewardDataController);
 
