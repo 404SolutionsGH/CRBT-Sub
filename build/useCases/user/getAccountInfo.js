@@ -11,11 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccountInfo = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
+const rewardRepoImplementation_1 = require("../../infrastructure/repository/rewardRepoImplementation");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepo = new userRepoImplemtation_1.UserRepoImp();
     const { findSongById } = new songRepoImplementaion_1.SongRepoImpl();
+    const { get } = new rewardRepoImplementation_1.RewardRepoImpl();
     const accountInfo = yield userRepo.findUserById(id);
     if (!accountInfo)
         throw new AppError_1.AppError("Acount Info not retrieved,Account does not exist", 404);
@@ -25,6 +27,7 @@ const getAccountInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
         const { artisteName, songTitle, subscriptionType, price, profile } = (yield findSongById(subSongId));
         subSongDetails = { artisteName, songTitle, subscriptionType, price, profile };
     }
-    return { firstName, lastName, accountBalance, phone, langPref, subSongDetails, createdAt };
+    const rewardInfo = yield get(id);
+    return { firstName, lastName, accountBalance, phone, langPref, subSongDetails, createdAt, rewardPoints: rewardInfo ? rewardInfo.points : 0 };
 });
 exports.getAccountInfo = getAccountInfo;

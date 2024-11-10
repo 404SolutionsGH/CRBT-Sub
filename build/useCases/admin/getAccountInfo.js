@@ -13,13 +13,16 @@ exports.getAdminAccountInfo = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
 const adminPlanRepoImplementation_1 = require("../../infrastructure/repository/adminPlanRepoImplementation");
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
+const rewardRepoImplementation_1 = require("../../infrastructure/repository/rewardRepoImplementation");
 const getAdminAccountInfo = (adminId) => __awaiter(void 0, void 0, void 0, function* () {
     const { findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
     const { findPlanById } = new adminPlanRepoImplementation_1.AdminPlanRepoImp();
+    const { get } = new rewardRepoImplementation_1.RewardRepoImpl();
     const account = yield findAdminById(adminId);
     if (!account)
         throw new AppError_1.AppError("Account info could not be retrived, such account does not exist", 404);
+    const rewardInfo = yield get(adminId);
     const { adminType, lastName, firstName, email, nextSubPayment, planId, createdAt } = account;
-    return { adminType, lastName, firstName, email, nextSubPayment, createdAt, subPlanDetails: yield findPlanById(planId) };
+    return { adminType, lastName, firstName, email, nextSubPayment, createdAt, subPlanDetails: yield findPlanById(planId), rewardPoints: rewardInfo ? rewardInfo.points : 0 };
 });
 exports.getAdminAccountInfo = getAdminAccountInfo;
