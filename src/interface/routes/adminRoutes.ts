@@ -908,7 +908,70 @@ adminRouter.delete("/user/:id",verifyJwt,isSuperAdminAccount,deleteUsersControll
 adminRouter.delete("/merchant/:id", verifyJwt, isSuperAdminAccount,deleteMerchnatsController)
 
 
-
+/**
+ * @swagger
+ * /api/v1/admin/rewards/{accountType}:
+ *   get:
+ *     tags:
+ *       - Admins
+ *     summary: Retrieve points information for accounts
+ *     description: This endpoint allows admins to retrieve the points information for each account based on their type (either "user" or "admin").
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: accountType
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: ["user", "admin"]
+ *         description: Type of account to retrieve points for, either "user" or "admin".
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved points information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   accountId:
+ *                     type: number
+ *                     description: Unique identifier of the account.
+ *                   accountType:
+ *                     type: string
+ *                     description: Type of the account (user or admin).
+ *                   points:
+ *                     type: number
+ *                     description: Number of points accumulated by the account.
+ *                   email:
+ *                     type: string
+ *                     description: Email associated with the account.
+ *                   phone:
+ *                     type: string
+ *                     description: Phone number associated with the account.
+ *       400:
+ *         description: Bad request. The provided accountType value is invalid.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid accountType provided."
+ *       401:
+ *         description: Unauthorized. Client is not authorized to access reward information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized to view rewards information."
+ */
 adminRouter.get("/rewards/:accountType", verifyJwt, isSuperAdminAccount, getPointsInfoController);
 
 
