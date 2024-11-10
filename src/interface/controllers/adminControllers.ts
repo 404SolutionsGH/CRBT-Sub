@@ -130,5 +130,5 @@ export const deleteMerchnatsController = asyncHandler(async (req: Request, res: 
 export const getPointsInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { accountType } = req.params;
   if (!["user", "admin"].includes(accountType)) throw new AppError("Value for accountType Should either be user or admin", 400);
-  res.status(200).json(await getRewardInfoOfAccounts);
+  res.status(200).json(await getRewardInfoOfAccounts(accountType as "user" | "admin"));
 });

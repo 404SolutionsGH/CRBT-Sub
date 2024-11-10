@@ -98,7 +98,7 @@ exports.subcribeController = (0, express_async_handler_1.default)((req, res) => 
     if (!songId)
         throw new AppError_1.AppError("No value passed for songId", 400);
     yield (0, subscribe_1.subscribeToSong)(id, Number(songId));
-    res.status(201).json({ message: "Song subscription sucessfull" });
+    res.status(201).json({ message: "Song subscription successfull" });
 }));
 exports.unsubcribeController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;

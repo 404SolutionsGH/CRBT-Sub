@@ -100,7 +100,7 @@ export const subcribeController = asyncHandler(async (req: Request, res: Respons
   isStringContentNumber(songId, "songId");
   if (!songId) throw new AppError("No value passed for songId", 400);
   await subscribeToSong(id, Number(songId));
-  res.status(201).json({ message: "Song subscription sucessfull" });
+  res.status(201).json({ message: "Song subscription successfull" });
 });
 
 export const unsubcribeController = asyncHandler(async (req: Request, res: Response) => {

@@ -134,5 +134,5 @@ exports.getPointsInfoController = (0, express_async_handler_1.default)((req, res
     const { accountType } = req.params;
     if (!["user", "admin"].includes(accountType))
         throw new AppError_1.AppError("Value for accountType Should either be user or admin", 400);
-    res.status(200).json(yield getRewardInfo_1.getRewardInfoOfAccounts);
+    res.status(200).json(yield (0, getRewardInfo_1.getRewardInfoOfAccounts)(accountType));
 }));
