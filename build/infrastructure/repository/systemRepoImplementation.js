@@ -12,6 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SystemRepoImpl = void 0;
 const System_1 = require("../../domain/entities/System");
 class SystemRepoImpl {
+    updateRewardData(rewardData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { minimumPointsToWithdraw, pointsToReward, adminId } = rewardData;
+            yield System_1.System.update({ minimumPointsToWithdraw, pointsToReward }, { where: { adminId } });
+        });
+    }
     getSystemStatus(adminId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!adminId) {

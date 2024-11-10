@@ -2,6 +2,11 @@ import { System } from "../../domain/entities/System";
 import { SystemRepository } from "../../domain/interfaces/systemRepository";
 
 export class SystemRepoImpl implements SystemRepository {
+ async updateRewardData(rewardData: System): Promise<void> {
+  const {minimumPointsToWithdraw,pointsToReward,adminId}= rewardData  
+  await System.update({ minimumPointsToWithdraw, pointsToReward }, { where: { adminId } });
+
+  }
   async getSystemStatus(adminId: number|undefined): Promise<"Active" | "Maintainance"> {
      if (!adminId) {
        return (await System.findAll())[0].status;

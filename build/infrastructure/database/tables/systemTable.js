@@ -20,12 +20,20 @@ const defineSystemTable = () => {
             type: sequelize_1.DataTypes.STRING,
             defaultValue: "Active",
             validate: {
-                isIn: { msg: "Values passed for status is either Active or Maintaince", args: [["Active", "Maintainance"]] },
+                isIn: { msg: "Values passed for status is either Active or Maintainance", args: [["Active", "Maintainance"]] },
             },
         },
         chapaSecretKey: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: true,
+        },
+        pointsToReward: {
+            type: sequelize_1.DataTypes.INTEGER,
+            defaultValue: 2,
+        },
+        minimumPointsToWithdraw: {
+            type: sequelize_1.DataTypes.INTEGER,
+            defaultValue: 100,
         },
     }, { sequelize: connectDb_1.sequelize, tableName: "System", timestamps: false });
 };
