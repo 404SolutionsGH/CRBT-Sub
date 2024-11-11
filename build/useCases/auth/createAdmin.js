@@ -14,7 +14,7 @@ const AppError_1 = require("../../domain/entities/AppError");
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
 const bcrypt_1 = require("../../libs/bcrypt");
 const subcribePlan_1 = require("../plans/subcribePlan");
-const createAdminAccount = (adminData, planId) => __awaiter(void 0, void 0, void 0, function* () {
+const createAdminAccount = (adminData_1, planId_1, ...args_1) => __awaiter(void 0, [adminData_1, planId_1, ...args_1], void 0, function* (adminData, planId, isSuperAdmin = false) {
     const { email, password } = adminData;
     const adminRepo = new adminRepoImplementation_1.AdminRepoImp();
     if (password) {
@@ -26,6 +26,8 @@ const createAdminAccount = (adminData, planId) => __awaiter(void 0, void 0, void
     if (!account)
         throw new AppError_1.AppError(`Admin account with email ${email} already exist`, 409);
     console.log("Subscribing merchants to a plan..");
-    yield (0, subcribePlan_1.subscibeToPlan)(account.id, planId);
+    if (isSuperAdmin) {
+        yield (0, subcribePlan_1.subscibeToPlan)(account.id, planId, "", true);
+    }
 });
 exports.createAdminAccount = createAdminAccount;

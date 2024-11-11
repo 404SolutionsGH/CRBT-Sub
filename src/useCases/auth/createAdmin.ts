@@ -4,16 +4,18 @@ import { AdminRepoImp } from "../../infrastructure/repository/adminRepoImplement
 import { encryptPassword } from "../../libs/bcrypt";
 import { subscibeToPlan } from "../plans/subcribePlan";
 
-export const createAdminAccount = async (adminData: Admin,planId:number) => {
-  const {email,password}=adminData  
+export const createAdminAccount = async (adminData: Admin, planId: number, isSuperAdmin: boolean = false) => {
+  const { email, password } = adminData;
   const adminRepo = new AdminRepoImp();
   if (password) {
     console.log("Encrypting password..");
     adminData.password = await encryptPassword(password);
     console.log("Encryption Done");
   }
-  const account=await adminRepo.createAdmin(adminData)
+  const account = await adminRepo.createAdmin(adminData);
   if (!account) throw new AppError(`Admin account with email ${email} already exist`, 409);
-  console.log("Subscribing merchants to a plan..")
- await subscibeToPlan(account.id,planId)
+  console.log("Subscribing merchants to a plan..");
+  if (isSuperAdmin) {
+    await subscibeToPlan(account.id, planId, "", true);
+  }
 };

@@ -19,6 +19,7 @@ import { Admin } from "../../domain/entities/Admin";
 import { changePassword } from "../../useCases/admin/changePassword";
 import { deleteMerchantAccount, deleteUserAccount } from "../../useCases/admin/deleteAccounts";
 import { getRewardInfoOfAccounts } from "../../useCases/admin/getRewardInfo";
+import { createAdminAccount } from "../../useCases/auth/createAdmin";
 
 export const getAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
@@ -132,3 +133,18 @@ export const getPointsInfoController = asyncHandler(async (req: Request, res: Re
   if (!["user", "admin"].includes(accountType)) throw new AppError("Value for accountType Should either be user or admin", 400);
   res.status(200).json(await getRewardInfoOfAccounts(accountType as "user" | "admin"));
 });
+
+export const  createMerchantController=asyncHandler(async (req: Request, res: Response) => {
+   console.log("Account creation began ...");
+   const { email, accountType, password, firstName, lastName, planId } = req.body;
+
+   if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
+     throw new AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
+   }
+   if (accountType === "admin") {
+     if (!email) throw new AppError("No data passed for email", 400);
+     isStringContentNumber(planId, "planId");
+     await createAdminAccount(Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId,true);
+     res.status(201).json({ message: "Admin account created successfully" });
+   } else throw new AppError("Value passed for accountType in request body must be admin or user", 400);
+})

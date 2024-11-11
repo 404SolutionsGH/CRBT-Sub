@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   changePasswordController,
+  createMerchantController,
   createPackageCategoriesController,
   createPackagesController,
   delePackageCategoriesController,
@@ -21,6 +22,103 @@ import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
 export const adminRouter = Router();
 
 
+
+/**
+ * @swagger
+ * /api/v1/admin/create/merchant-account:
+ *   post:
+ *     tags:
+ *       - Admins
+ *     summary: Create a merchant account
+ *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - accountType
+ *               - password
+ *               - firstName
+ *               - lastName
+ *               - planId
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "merchant@example.com"
+ *               accountType:
+ *                 type: string
+ *                 enum: [admin]
+ *                 example: "admin"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               planId:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Admin account created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Admin account created successfully"
+ *       400:
+ *         description: Bad request. The request is malformed.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
+ *       401:
+ *         description: Unauthorized. The client is not authorized to create an admin account.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
+ *       404:
+ *         description: Plan or account not found. Either the plan ID does not exist or the client account doesn't exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Message indicating why the request failed>"
+ *       409:
+ *         description: Conflict. Merchant account already exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Merchant account already exists"
+ */
+adminRouter.post("/create/merchant-account", verifyJwt, isSuperAdminAccount, createMerchantController);
 
 /**
  * @swagger
