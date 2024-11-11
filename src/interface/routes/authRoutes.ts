@@ -15,9 +15,7 @@ export const authRouter = Router();
  *     tags:
  *       - Account
  *     summary: Create a merchant account
- *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
- *     security:
- *       - bearerAuth: []
+ *     description: This is the endpoint for creating merchant accounts
  *     requestBody:
  *       required: true
  *       content:
@@ -103,7 +101,8 @@ export const authRouter = Router();
  *                   type: string
  *                   example: "Merchant account already exists"
  */
-authRouter.post("/signup", checkSystemStatus, verifyJwt, isSuperAdminAccount, signUpController);
+authRouter.post("/signup", checkSystemStatus,signUpController);
+
 
 /**
  * @swagger

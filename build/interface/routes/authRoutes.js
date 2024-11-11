@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authRouter = void 0;
 const express_1 = require("express");
 const authControllers_1 = require("../controllers/authControllers");
-const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
-const verifyJwt_1 = require("../middlewares/verifyJwt");
 const checkSystemStatus_1 = require("../middlewares/checkSystemStatus");
 exports.authRouter = (0, express_1.Router)();
 // endpoint for creating account  mercahnts
@@ -15,9 +13,7 @@ exports.authRouter = (0, express_1.Router)();
  *     tags:
  *       - Account
  *     summary: Create a merchant account
- *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
- *     security:
- *       - bearerAuth: []
+ *     description: This is the endpoint for creating merchant accounts
  *     requestBody:
  *       required: true
  *       content:
@@ -103,7 +99,7 @@ exports.authRouter = (0, express_1.Router)();
  *                   type: string
  *                   example: "Merchant account already exists"
  */
-exports.authRouter.post("/signup", checkSystemStatus_1.checkSystemStatus, verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, authControllers_1.signUpController);
+exports.authRouter.post("/signup", checkSystemStatus_1.checkSystemStatus, authControllers_1.signUpController);
 /**
  * @swagger
  * /api/v1/auth/login:

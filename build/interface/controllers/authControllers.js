@@ -35,10 +35,6 @@ exports.signUpController = (0, express_async_handler_1.default)((req, res) => __
     if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
         throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
     }
-    // if (accountType === "user") {
-    //   if (!phone) throw new AppError("No data passed for phone in request body", 400);
-    //   res.status(201).json({ message: "User account created sucessfully", token: await createUserAccount(User.build({ phone, langPref })) });
-    // }
     if (accountType === "admin") {
         if (!email)
             throw new AppError_1.AppError("No data passed for email", 400);
