@@ -46,11 +46,13 @@ exports.getAllPlansController = (0, express_async_handler_1.default)((req, res) 
 }));
 exports.planSubcriptionController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
-    const { planId } = req.params;
+    const { planId, phone } = req.params;
     const numRegExp = RegExp("^d+$");
     (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
-    yield (0, subcribePlan_1.subscibeToPlan)(id, Number(planId));
-    res.status(201).json({ message: "Subscribtion sucessfull" });
+    if (!phone)
+        throw new AppError_1.AppError("No Value passed for phone", 400);
+    const checkOutPageLink = yield (0, subcribePlan_1.subscibeToPlan)(id, Number(planId), phone);
+    res.status(201).json({ checkoutUrl: checkOutPageLink });
 }));
 exports.deleteAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { planId } = req.params;

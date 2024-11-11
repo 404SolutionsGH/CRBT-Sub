@@ -34,13 +34,12 @@ export const getAllPlansController = asyncHandler(async (req: Request, res: Resp
 
 export const planSubcriptionController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
-  const { planId } = req.params;
+  const { planId, phone } = req.params;
   const numRegExp = RegExp("^d+$");
-
   isStringContentNumber(planId, "planId");
-  await subscibeToPlan(id, Number(planId));
-
-  res.status(201).json({ message: "Subscribtion sucessfull" });
+  if(!phone) throw new AppError("No Value passed for phone",400)
+  const checkOutPageLink = await subscibeToPlan(id, Number(planId), phone);
+  res.status(201).json({ checkoutUrl: checkOutPageLink });
 });
 
 export const deleteAdminPlanController = asyncHandler(async (req: Request, res: Response) => {
