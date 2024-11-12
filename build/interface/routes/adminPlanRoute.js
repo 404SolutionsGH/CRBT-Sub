@@ -375,9 +375,7 @@ exports.adminPlanRouter.delete("/:planId", verifyJwt_1.verifyJwt, checkForSuperA
  *     tags:
  *       - MerchantPlans
  *     summary: Get all available merchant plans
- *     description: This is the endpoint for retrieving all merchant plans available. Requires an Auth header.
- *     security:
- *       - bearerAuth: []
+ *     description: This is the endpoint for retrieving all merchant plans available
  *     responses:
  *       200:
  *         description: A list of all available merchant plans.
@@ -433,7 +431,7 @@ exports.adminPlanRouter.delete("/:planId", verifyJwt_1.verifyJwt, checkForSuperA
  *                   type: string
  *                   example: "<Message indicating why the request failed>"
  */
-exports.adminPlanRouter.get("/all", verifyJwt_1.verifyJwt, adminPlanControllers_1.getAllPlansController);
+exports.adminPlanRouter.get("/all", adminPlanControllers_1.getAllPlansController);
 /**
  * @swagger
  * /api/v1/admin-plan/subscribe/{planId}:
