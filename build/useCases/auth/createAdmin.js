@@ -13,6 +13,7 @@ exports.createAdminAccount = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
 const bcrypt_1 = require("../../libs/bcrypt");
+const nodeMailer_1 = require("../../libs/nodeMailer");
 const subcribePlan_1 = require("../plans/subcribePlan");
 const createAdminAccount = (adminData_1, planId_1, ...args_1) => __awaiter(void 0, [adminData_1, planId_1, ...args_1], void 0, function* (adminData, planId, isSuperAdmin = false) {
     const { email, password } = adminData;
@@ -28,6 +29,7 @@ const createAdminAccount = (adminData_1, planId_1, ...args_1) => __awaiter(void 
     console.log("Subscribing merchants to a plan..");
     if (isSuperAdmin) {
         yield (0, subcribePlan_1.subscibeToPlan)(account.id, planId, "", true);
+        yield (0, nodeMailer_1.sendAccountPassword)(password, email);
     }
 });
 exports.createAdminAccount = createAdminAccount;

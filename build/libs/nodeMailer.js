@@ -12,13 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendAccountResetEmail = exports.sendAccountConfirmationEmail = void 0;
+exports.sendAccountResetEmail = exports.sendAccountPassword = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const transporter = nodemailer_1.default.createTransport({
-    service: "Gmail",
-    host: "smtp.gmail.com",
+    host: "mail.crbtmusicpro.com",
     port: 465,
     secure: true,
     auth: {
@@ -26,17 +25,23 @@ const transporter = nodemailer_1.default.createTransport({
         pass: process.env.SmtpSecret,
     },
 });
-const sendAccountConfirmationEmail = (verfCode, username, email) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Sending Account confirmation email....");
-    const messageObject = {
-        subject: ` Welcome to ${process.env.AppName} Verify Your Email`,
-        text: `Dear ${username},\nWelcome to ${process.env.AppName}\nWe are excited to have you on board. To complete your registration, please verify your email address using the four-digit code below:\n\nYour Verification Code: ${verfCode}\n\nPlease enter this code on the verification page to activate your account.\nIf you did not create an account with us, please ignore this email or contact our support team for assistance.\n\nThank you for joining  ${process.env.AppName}!\n`,
-        to: email,
-    };
-    yield transporter.sendMail(messageObject);
-    console.log("Email sent");
+const sendAccountPassword = (password, email) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Sending Account Password to user....");
+        const messageObject = {
+            from: process.env.SmtpUserName,
+            subject: ` Welcome to ${process.env.AppName}. Account creation successfull.`,
+            text: `\n\nWelcome to ${process.env.AppName}\nWe are excited to have you on board.The password to your account you requested is: ${password}.\nIf you did not request for this account to be created , please ignore this email or contact our support team for assistance @ admin@crbtmusicpro.com.\n\nThank you for joining  ${process.env.AppName}!\n`,
+            to: email,
+        };
+        yield transporter.sendMail(messageObject);
+        console.log("Email sent");
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
-exports.sendAccountConfirmationEmail = sendAccountConfirmationEmail;
+exports.sendAccountPassword = sendAccountPassword;
 const sendAccountResetEmail = (username, newPassword, email) => __awaiter(void 0, void 0, void 0, function* () {
     const messageObject = {
         subject: `${process.env.AppName} Password Reset Successful`,

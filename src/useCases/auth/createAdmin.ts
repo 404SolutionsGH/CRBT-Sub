@@ -2,6 +2,7 @@ import { Admin } from "../../domain/entities/Admin";
 import { AppError } from "../../domain/entities/AppError";
 import { AdminRepoImp } from "../../infrastructure/repository/adminRepoImplementation";
 import { encryptPassword } from "../../libs/bcrypt";
+import { sendAccountPassword } from "../../libs/nodeMailer";
 import { subscibeToPlan } from "../plans/subcribePlan";
 
 export const createAdminAccount = async (adminData: Admin, planId: number, isSuperAdmin: boolean = false) => {
@@ -17,5 +18,6 @@ export const createAdminAccount = async (adminData: Admin, planId: number, isSup
   console.log("Subscribing merchants to a plan..");
   if (isSuperAdmin) {
     await subscibeToPlan(account.id, planId, "", true);
+    await sendAccountPassword(password, email);
   }
 };
