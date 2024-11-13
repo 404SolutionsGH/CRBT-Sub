@@ -3,7 +3,7 @@ import { SystemRepository } from "../../domain/interfaces/systemRepository";
 
 export class SystemRepoImpl implements SystemRepository {
   async getSysInfo() {
-    return (await System.findAll())[0];
+    return (await System.findAll({attributes:{exclude:["id","adminId"]}}))[0];
   }
   async updPointSettings(settings: System): Promise<void> {
     const { pointSettings, adminId } = settings;

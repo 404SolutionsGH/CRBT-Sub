@@ -104,4 +104,4 @@ exports.systemRouter.put("/status", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.
  */
 exports.systemRouter.put("/chapa-secret-key", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.chapaSecretController);
 exports.systemRouter.put("/points/settings", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.pointSettingsController);
-// creat endpoint for points settings
+exports.systemRouter.get("/", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, systemController_1.systemInfoController);

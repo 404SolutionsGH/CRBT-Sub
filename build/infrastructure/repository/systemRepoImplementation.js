@@ -14,7 +14,7 @@ const System_1 = require("../../domain/entities/System");
 class SystemRepoImpl {
     getSysInfo() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield System_1.System.findAll())[0];
+            return (yield System_1.System.findAll({ attributes: { exclude: ["id", "adminId"] } }))[0];
         });
     }
     updPointSettings(settings) {
