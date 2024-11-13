@@ -27,13 +27,9 @@ const defineSystemTable = () => {
             type: sequelize_1.DataTypes.STRING,
             allowNull: true,
         },
-        pointsToReward: {
-            type: sequelize_1.DataTypes.INTEGER,
-            defaultValue: 2,
-        },
-        minimumPointsToWithdraw: {
-            type: sequelize_1.DataTypes.INTEGER,
-            defaultValue: 100,
+        pointSettings: {
+            type: sequelize_1.DataTypes.JSON,
+            allowNull: false,
         },
     }, { sequelize: connectDb_1.sequelize, tableName: "System", timestamps: false });
 };

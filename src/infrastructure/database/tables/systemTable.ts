@@ -28,13 +28,9 @@ export const defineSystemTable = () => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      pointsToReward: {
-        type: DataTypes.INTEGER,
-        defaultValue: 2,
-      },
-      minimumPointsToWithdraw: {
-        type: DataTypes.INTEGER,
-        defaultValue: 100,
+      pointSettings: {
+        type: DataTypes.JSON,
+        allowNull: false,
       },
     },
     { sequelize: sequelize, tableName: "System", timestamps: false }

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
-import { chapaSecretController, rewardDataController, systemStatusController } from "../controllers/systemController";
+import { chapaSecretController, pointSettingsController, systemStatusController } from "../controllers/systemController";
 
 
 
@@ -110,5 +110,9 @@ systemRouter.put("/status",verifyJwt,isSuperAdminAccount,systemStatusController)
  */
 systemRouter.put("/chapa-secret-key",verifyJwt,isSuperAdminAccount,chapaSecretController)
 
-systemRouter.put("/reward", verifyJwt, isSuperAdminAccount, rewardDataController);
+
+
+systemRouter.put("/points/settings", verifyJwt, isSuperAdminAccount, pointSettingsController);
+
+// creat endpoint for points settings
 

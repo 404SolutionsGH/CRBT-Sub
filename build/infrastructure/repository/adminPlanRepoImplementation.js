@@ -14,8 +14,10 @@ const AdminPlan_1 = require("../../domain/entities/AdminPlan");
 class AdminPlanRepoImp {
     createPlan(plan) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { planType, subType, price, benefits } = plan;
-            const [itemCreated, isCreated] = yield AdminPlan_1.AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
+            const { planType, subType, price, benefits, planPoints } = plan;
+            const [itemCreated, isCreated] = planPoints
+                ? yield AdminPlan_1.AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits, planPoints } })
+                : yield AdminPlan_1.AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
             if (isCreated)
                 return itemCreated;
             return null;
@@ -49,8 +51,8 @@ class AdminPlanRepoImp {
     }
     updatePlanById(id, updatedPlan) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { planType, planName, subType, price, benefits } = updatedPlan;
-            const [numRows, affectedRows] = yield AdminPlan_1.AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id }, returning: true });
+            const { planType, planName, subType, price, benefits, planPoints } = updatedPlan;
+            const [numRows, affectedRows] = yield AdminPlan_1.AdminPlan.update({ planType, planName, subType, price, benefits, planPoints }, { where: { planId: id }, returning: true });
             if (numRows === 1)
                 return affectedRows[0];
             return null;

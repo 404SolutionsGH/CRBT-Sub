@@ -7,5 +7,6 @@ export class AdminPlan extends Model {
   declare subType: "monthly" | "yearly" | "weekly";
   declare planName: string;
   declare benefits: object;
+  declare planPoints:number
   declare deleteFlag: boolean;
 }

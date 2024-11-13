@@ -5,6 +5,5 @@ export class System extends Model {
   declare adminId: number;
   declare status: "Active" | "Maintainance";
   declare chapaSecretKey: string;
-  declare pointsToReward:number;
-  declare minimumPointsToWithdraw:number;
+  declare pointSettings:object;
 }

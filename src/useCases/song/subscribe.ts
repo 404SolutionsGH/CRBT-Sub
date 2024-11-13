@@ -4,6 +4,7 @@ import { Reward } from "../../domain/entities/Reward";
 import { SubSongs } from "../../domain/entities/SubSongs";
 import { SongRepoImpl } from "../../infrastructure/repository/songRepoImplementaion";
 import { SubSongsRepoImp } from "../../infrastructure/repository/subSongsRepoImplementation";
+import { SystemRepoImpl } from "../../infrastructure/repository/systemRepoImplementation";
 import { UserRepoImp } from "../../infrastructure/repository/userRepoImplemtation";
 
 const { createSubscription, findSubscriptionsBySubscriberId } = new SubSongsRepoImp();
@@ -17,6 +18,8 @@ const isOnSubscription = async (subscriberId: number) => {
 export const subscribeToSong = async (subscriberId: number, songId: number) => {
   const { updateSubSongId } = new UserRepoImp();
   const { findSongById, increaseNumberOfSubscribers } = new SongRepoImpl();
+  const { getSysInfo } = new SystemRepoImpl();
+  const { pointSettings } = await getSysInfo();
   if (await isOnSubscription(subscriberId)) throw new AppError("User Already on a subscription", 409);
   await increaseNumberOfSubscribers(1, songId);
   const songDetails = await findSongById(songId);
@@ -24,5 +27,5 @@ export const subscribeToSong = async (subscriberId: number, songId: number) => {
   const { price } = songDetails;
   await updateSubSongId(songId, subscriberId);
   await createSubscription(SubSongs.build({ subscriberId, price, songId }));
-  event.emit("updateRewardPoints", Reward.build({ accountId: subscriberId, accountType: "user" }));
+  event.emit("updateRewardPoints", Reward.build({ accountId: subscriberId, accountType: "user" }), (pointSettings as { songPoints: number; minimumWithdraw: number }).songPoints);
 };

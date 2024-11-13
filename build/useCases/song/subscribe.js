@@ -16,6 +16,7 @@ const Reward_1 = require("../../domain/entities/Reward");
 const SubSongs_1 = require("../../domain/entities/SubSongs");
 const songRepoImplementaion_1 = require("../../infrastructure/repository/songRepoImplementaion");
 const subSongsRepoImplementation_1 = require("../../infrastructure/repository/subSongsRepoImplementation");
+const systemRepoImplementation_1 = require("../../infrastructure/repository/systemRepoImplementation");
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const { createSubscription, findSubscriptionsBySubscriberId } = new subSongsRepoImplementation_1.SubSongsRepoImp();
 const isOnSubscription = (subscriberId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -27,6 +28,8 @@ const isOnSubscription = (subscriberId) => __awaiter(void 0, void 0, void 0, fun
 const subscribeToSong = (subscriberId, songId) => __awaiter(void 0, void 0, void 0, function* () {
     const { updateSubSongId } = new userRepoImplemtation_1.UserRepoImp();
     const { findSongById, increaseNumberOfSubscribers } = new songRepoImplementaion_1.SongRepoImpl();
+    const { getSysInfo } = new systemRepoImplementation_1.SystemRepoImpl();
+    const { pointSettings } = yield getSysInfo();
     if (yield isOnSubscription(subscriberId))
         throw new AppError_1.AppError("User Already on a subscription", 409);
     yield increaseNumberOfSubscribers(1, songId);
@@ -36,6 +39,6 @@ const subscribeToSong = (subscriberId, songId) => __awaiter(void 0, void 0, void
     const { price } = songDetails;
     yield updateSubSongId(songId, subscriberId);
     yield createSubscription(SubSongs_1.SubSongs.build({ subscriberId, price, songId }));
-    objects_1.event.emit("updateRewardPoints", Reward_1.Reward.build({ accountId: subscriberId, accountType: "user" }));
+    objects_1.event.emit("updateRewardPoints", Reward_1.Reward.build({ accountId: subscriberId, accountType: "user" }), pointSettings.songPoints);
 });
 exports.subscribeToSong = subscribeToSong;

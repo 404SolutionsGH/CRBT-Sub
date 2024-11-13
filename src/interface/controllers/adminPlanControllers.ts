@@ -21,10 +21,10 @@ const validateBenefitsObj = (beneFitsObj: Benefits) => {
 };
 
 export const createPlanController = asyncHandler(async (req: Request, res: Response) => {
-  const { planType, price, subType, benefits } = req.body;
+  const { planType, price, subType, benefits, planPoints } = req.body;
   if (!planType || !subType || !benefits) throw new AppError(!planType ? "No data passed for planType" : !benefits ? "No data passed for benefits" : "No data passed for subType", 400);
   validateBenefitsObj(benefits);
-  await createAdminPlan(AdminPlan.build({ planType, price, subType, benefits }));
+  await createAdminPlan(AdminPlan.build({ planType, price, subType, benefits, planPoints }));
   res.status(200).json({ message: "Plan has been created sucessfully" });
 });
 
@@ -50,12 +50,12 @@ export const deleteAdminPlanController = asyncHandler(async (req: Request, res: 
 });
 
 export const updateAdminPlanController = asyncHandler(async (req: Request, res: Response) => {
-  const { planType, price, subType, benefits } = req.body;
+  const { planType, price, subType, benefits, planPoints } = req.body;
   const { planId } = req.params;
   isStringContentNumber(planId, "planId");
   if (!planType || !subType || !benefits) throw new AppError(!planType ? "No data passed for planType" : !benefits ? "No data passed for benefits" : "No data passed for subType", 400);
   validateBenefitsObj(benefits);
-  res.status(200).json({ message: "Plan updated sucessfully", updatedPlan: await updateAdminPlan(AdminPlan.build({ planType, price, subType, benefits, planId })) });
+  res.status(200).json({ message: "Plan updated sucessfully", updatedPlan: await updateAdminPlan(AdminPlan.build({ planType, price, subType, benefits, planId, planPoints })) });
 });
 
 export const getAdminPlanController = asyncHandler(async (req: Request, res: Response) => {

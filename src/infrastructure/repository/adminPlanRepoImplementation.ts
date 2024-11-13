@@ -3,15 +3,17 @@ import { AdminPlanRepository } from "../../domain/interfaces/adminPlanRepository
 
 export class AdminPlanRepoImp implements AdminPlanRepository {
   async createPlan(plan: AdminPlan): Promise<AdminPlan | null> {
-    const { planType, subType, price, benefits } = plan;
+    const { planType, subType, price, benefits, planPoints } = plan;
 
-    const [itemCreated, isCreated] = await AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
+    const [itemCreated, isCreated] = planPoints
+      ? await AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits, planPoints } })
+      : await AdminPlan.findOrCreate({ where: { subType, planType }, defaults: { planType, subType, price, benefits } });
 
     if (isCreated) return itemCreated;
     return null;
   }
   async getAllPlans(): Promise<Array<AdminPlan>> {
-    return await AdminPlan.findAll({ where: { deleteFlag:false } });
+    return await AdminPlan.findAll({ where: { deleteFlag: false } });
   }
   async findPlanById(id: number): Promise<AdminPlan | null> {
     return await AdminPlan.findByPk(id);
@@ -27,9 +29,9 @@ export class AdminPlanRepoImp implements AdminPlanRepository {
     if (numRows === 1) return true;
     return false;
   }
-  async updatePlanById(id: number, updatedPlan: AdminPlan): Promise<AdminPlan|null> {
-    const { planType, planName, subType, price, benefits } = updatedPlan;
-    const [numRows,affectedRows] = await AdminPlan.update({ planType, planName, subType, price, benefits }, { where: { planId: id },returning:true });
+  async updatePlanById(id: number, updatedPlan: AdminPlan): Promise<AdminPlan | null> {
+    const { planType, planName, subType, price, benefits, planPoints } = updatedPlan;
+    const [numRows, affectedRows] = await AdminPlan.update({ planType, planName, subType, price, benefits, planPoints }, { where: { planId: id }, returning: true });
     if (numRows === 1) return affectedRows[0];
     return null;
   }

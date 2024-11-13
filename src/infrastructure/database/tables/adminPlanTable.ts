@@ -42,6 +42,10 @@ export const defineAdminPlanTable= ()=>{
             notEmpty: { msg: "planName cannot be an empty string" },
           },
         },
+        planPoints:{type:DataTypes.INTEGER,
+          allowNull:false,
+          defaultValue:2
+        },
         benefits:DataTypes.JSON(),
         deleteFlag:{type:DataTypes.BOOLEAN,defaultValue:false}
       },

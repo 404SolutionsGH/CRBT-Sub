@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateReward = exports.updateChapaSecreteKey = exports.updateSystemStatus = void 0;
+exports.updatePointSettings = exports.updateChapaSecreteKey = exports.updateSystemStatus = void 0;
 const systemRepoImplementation_1 = require("../../infrastructure/repository/systemRepoImplementation");
-const { setSystemStatus, setChapaSecretKey, updateRewardData } = new systemRepoImplementation_1.SystemRepoImpl();
+const { setSystemStatus, setChapaSecretKey, updPointSettings } = new systemRepoImplementation_1.SystemRepoImpl();
 const updateSystemStatus = (adminId, status) => __awaiter(void 0, void 0, void 0, function* () {
     yield setSystemStatus(status, adminId);
 });
@@ -20,7 +20,7 @@ const updateChapaSecreteKey = (adminId, secretKey) => __awaiter(void 0, void 0, 
     yield setChapaSecretKey(secretKey, adminId);
 });
 exports.updateChapaSecreteKey = updateChapaSecreteKey;
-const updateReward = (rewardData) => __awaiter(void 0, void 0, void 0, function* () {
-    yield updateRewardData(rewardData);
+const updatePointSettings = (settings) => __awaiter(void 0, void 0, void 0, function* () {
+    yield updPointSettings(settings);
 });
-exports.updateReward = updateReward;
+exports.updatePointSettings = updatePointSettings;

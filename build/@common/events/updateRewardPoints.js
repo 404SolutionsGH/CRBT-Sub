@@ -13,19 +13,16 @@ exports.updateRewardPointsListener = void 0;
 const Reward_1 = require("../../domain/entities/Reward");
 const adminRepoImplementation_1 = require("../../infrastructure/repository/adminRepoImplementation");
 const rewardRepoImplementation_1 = require("../../infrastructure/repository/rewardRepoImplementation");
-const systemRepoImplementation_1 = require("../../infrastructure/repository/systemRepoImplementation");
 const userRepoImplemtation_1 = require("../../infrastructure/repository/userRepoImplemtation");
 const objects_1 = require("../constants/objects");
 const updateRewardPointsListener = () => {
-    objects_1.event.on("updateRewardPoints", (rewardData) => __awaiter(void 0, void 0, void 0, function* () {
+    objects_1.event.on("updateRewardPoints", (rewardData, pointsToReward) => __awaiter(void 0, void 0, void 0, function* () {
         let email = "";
         let phone = "";
         const { accountId, accountType } = rewardData;
         const { get, createOrUpdate } = new rewardRepoImplementation_1.RewardRepoImpl();
-        const { getSysInfo } = new systemRepoImplementation_1.SystemRepoImpl();
         const { findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
         const { findUserById } = new userRepoImplemtation_1.UserRepoImp();
-        const { pointsToReward } = yield getSysInfo();
         console.log("Updating a users reward points..");
         const prevRewardData = yield get(rewardData.accountId);
         if (!prevRewardData) {

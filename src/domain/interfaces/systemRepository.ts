@@ -5,5 +5,5 @@ export interface SystemRepository {
   setSystemStatus(status: "Active" | "Maintainance", adminId: number): Promise<void>;
   setChapaSecretKey(key: string, adminId: number): Promise<void>;
   getChapaSecretkey(adminId: number): Promise<string>;
-  updateRewardData(rewardData:System):Promise<void>
+  updPointSettings(settings: System): Promise<void>;
 }

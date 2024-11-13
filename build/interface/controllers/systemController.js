@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rewardDataController = exports.chapaSecretController = exports.systemStatusController = void 0;
+exports.pointSettingsController = exports.chapaSecretController = exports.systemStatusController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const updateSystemInfo_1 = require("../../useCases/admin/updateSystemInfo");
 const System_1 = require("../../domain/entities/System");
+const AppError_1 = require("../../domain/entities/AppError");
 exports.systemStatusController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, status } = req.body;
     yield (0, updateSystemInfo_1.updateSystemStatus)(id, status);
@@ -26,8 +27,10 @@ exports.chapaSecretController = (0, express_async_handler_1.default)((req, res) 
     yield (0, updateSystemInfo_1.updateChapaSecreteKey)(id, secretKey);
     res.status(200).json({ message: "System updated sucessfully" });
 }));
-exports.rewardDataController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, minimumPointsToWithdraw, pointsToReward } = req.body;
-    yield (0, updateSystemInfo_1.updateReward)(System_1.System.build({ minimumPointsToWithdraw, pointsToReward, adminId: id }));
+exports.pointSettingsController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, songPoints, minimumWithdraw } = req.body;
+    if (!songPoints || !minimumWithdraw)
+        throw new AppError_1.AppError("No value was passed for either songPoints or minimumWithdraw", 400);
+    yield (0, updateSystemInfo_1.updatePointSettings)(System_1.System.build({ pointSettings: { songPoints, minimumWithdraw }, adminId: id }));
     res.status(200).json({ message: "Data updated sucessfully" });
 }));

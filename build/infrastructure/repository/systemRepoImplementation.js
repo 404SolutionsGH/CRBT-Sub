@@ -17,10 +17,10 @@ class SystemRepoImpl {
             return (yield System_1.System.findAll())[0];
         });
     }
-    updateRewardData(rewardData) {
+    updPointSettings(settings) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { minimumPointsToWithdraw, pointsToReward, adminId } = rewardData;
-            yield System_1.System.update({ minimumPointsToWithdraw, pointsToReward }, { where: { adminId } });
+            const { pointSettings, adminId } = settings;
+            yield System_1.System.update({ pointSettings }, { where: { adminId } });
         });
     }
     getSystemStatus(adminId) {

@@ -19,6 +19,6 @@ const Admin_1 = require("../../../domain/entities/Admin");
 const System_1 = require("../../../domain/entities/System");
 const SystemSeeder = () => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = (yield Admin_1.Admin.findOne({ where: { adminType: "system" } }));
-    yield System_1.System.create({ adminId: id, chapaSecretKey: process.env.ChapaSecretKey });
+    yield System_1.System.create({ adminId: id, chapaSecretKey: process.env.ChapaSecretKey, pointSettings: { songPoints: 2, minimumWithdraw: 100 } });
 });
 exports.SystemSeeder = SystemSeeder;

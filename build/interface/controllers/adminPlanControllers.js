@@ -34,11 +34,11 @@ const validateBenefitsObj = (beneFitsObj) => {
     //   future validations can come here
 };
 exports.createPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { planType, price, subType, benefits } = req.body;
+    const { planType, price, subType, benefits, planPoints } = req.body;
     if (!planType || !subType || !benefits)
         throw new AppError_1.AppError(!planType ? "No data passed for planType" : !benefits ? "No data passed for benefits" : "No data passed for subType", 400);
     validateBenefitsObj(benefits);
-    yield (0, createAdminPlan_1.createAdminPlan)(AdminPlan_1.AdminPlan.build({ planType, price, subType, benefits }));
+    yield (0, createAdminPlan_1.createAdminPlan)(AdminPlan_1.AdminPlan.build({ planType, price, subType, benefits, planPoints }));
     res.status(200).json({ message: "Plan has been created sucessfully" });
 }));
 exports.getAllPlansController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,13 +61,13 @@ exports.deleteAdminPlanController = (0, express_async_handler_1.default)((req, r
     res.status(200).json({ message: "Plan deleted sucessfully" });
 }));
 exports.updateAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { planType, price, subType, benefits } = req.body;
+    const { planType, price, subType, benefits, planPoints } = req.body;
     const { planId } = req.params;
     (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
     if (!planType || !subType || !benefits)
         throw new AppError_1.AppError(!planType ? "No data passed for planType" : !benefits ? "No data passed for benefits" : "No data passed for subType", 400);
     validateBenefitsObj(benefits);
-    res.status(200).json({ message: "Plan updated sucessfully", updatedPlan: yield (0, updatePlan_1.updateAdminPlan)(AdminPlan_1.AdminPlan.build({ planType, price, subType, benefits, planId })) });
+    res.status(200).json({ message: "Plan updated sucessfully", updatedPlan: yield (0, updatePlan_1.updateAdminPlan)(AdminPlan_1.AdminPlan.build({ planType, price, subType, benefits, planId, planPoints })) });
 }));
 exports.getAdminPlanController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { planId } = req.params;

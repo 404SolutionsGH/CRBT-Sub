@@ -6,15 +6,13 @@ import { UserRepoImp } from "../../infrastructure/repository/userRepoImplemtatio
 import { event } from "../constants/objects";
 
 export const updateRewardPointsListener = () => {
-  event.on("updateRewardPoints", async (rewardData: Reward) => {
+  event.on("updateRewardPoints", async (rewardData: Reward, pointsToReward:number) => {
     let email: string | undefined = "";
     let phone: string | undefined = "";
     const { accountId, accountType } = rewardData;
     const { get, createOrUpdate } = new RewardRepoImpl();
-    const { getSysInfo } = new SystemRepoImpl();
     const { findAdminById } = new AdminRepoImp();
     const { findUserById } = new UserRepoImp();
-    const { pointsToReward } = await getSysInfo();
     console.log("Updating a users reward points..");
     const prevRewardData = await get(rewardData.accountId);
     if (!prevRewardData) {
