@@ -29,7 +29,7 @@ const defineAdminPlanTable = () => {
             validate: {
                 notNull: { msg: "No data passed for subType" },
                 notEmpty: { msg: "subType cannot be an empty string" },
-                isIn: { msg: "{VALUE} is not a valid value for subType. valid value are monthly yearly.", args: [["monthly", "yearly"]] },
+                isIn: { msg: "Valid values for subtype are monthly yearly.", args: [["monthly", "yearly", "weekly"]] },
             },
         },
         planName: {

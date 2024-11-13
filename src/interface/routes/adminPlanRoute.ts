@@ -38,7 +38,7 @@ export const adminPlanRouter= Router()
  *                 example: "99.99"
  *               subType:
  *                 type: string
- *                 enum: ["monthly", "yearly"]
+ *                 enum: ["monthly", "yearly","weekly"]
  *                 example: "monthly"
  *               benefits:
  *                 type: object

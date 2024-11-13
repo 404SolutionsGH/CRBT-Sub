@@ -8,7 +8,7 @@ export const getCurrentDateYYMMDD=()=>{
   return `${year}-${month}-${day}`;
 }
 
-export const getNextDate = (currentDate: string, interval: "monthly" | "yearly") => {
+export const getNextDate = (currentDate: string, interval: "monthly" | "yearly" | "weekly") => {
   // Parse the input date string
   const date = new Date(currentDate);
 
