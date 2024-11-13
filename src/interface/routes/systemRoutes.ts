@@ -14,7 +14,7 @@ export const systemRouter= Router()
  *     tags:
  *       - Admins
  *     summary: Set or update the system status
- *     description: This endpoint allows an admin to set or update the system status to either "Active" or "Maintenance".
+ *     description: This endpoint allows an admin to set or update the system status to either "Active" or "Maintainance".
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -26,7 +26,7 @@ export const systemRouter= Router()
  *             properties:
  *               status:
  *                 type: string
- *                 enum: ["Active", "Maintenance"]
+ *                 enum: ["Active", "Maintainance"]
  *                 description: The system status to set.
  *     responses:
  *       200:

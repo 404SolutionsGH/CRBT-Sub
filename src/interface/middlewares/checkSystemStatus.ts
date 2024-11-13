@@ -8,6 +8,6 @@ export const checkSystemStatus = asyncHandler(async (req: Request, res: Response
   if (systemStatus === "Active") {
     next();
   } else {
-    res.status(503).json({ message: "System is currently under maintaince" });
+    res.status(503).json({ message: "System is currently under maintainance" });
   }
 });

@@ -93,5 +93,5 @@ export const AdminSeeder = async () => {
       planId: 3,
     },
   ];
-
+  await Admin.bulkCreate(data);
 };

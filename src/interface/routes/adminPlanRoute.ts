@@ -2,6 +2,7 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { createPlanController, deleteAdminPlanController, getAdminPlanController, getAllPlansController, planSubcriptionController, updateAdminPlanController } from "../controllers/adminPlanControllers";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
+import { checkSystemStatus } from "../middlewares/checkSystemStatus";
 
 
 
@@ -436,7 +437,7 @@ adminPlanRouter.delete("/:planId",verifyJwt,isSuperAdminAccount,deleteAdminPlanC
  *                   type: string
  *                   example: "<Message indicating why the request failed>"
  */
-adminPlanRouter.get("/all",getAllPlansController)
+adminPlanRouter.get("/all",checkSystemStatus,getAllPlansController)
 
 
 /**
@@ -488,4 +489,4 @@ adminPlanRouter.get("/all",getAllPlansController)
  *                   type: string
  *                   example: "<Message indicating why the request failed>"
  */
-adminPlanRouter.post("/subscribe/:planId",verifyJwt,planSubcriptionController)  // bug here (when a valid user subscribes we get 404 response saying the user does not exist) 
+adminPlanRouter.post("/subscribe/:planId",verifyJwt,planSubcriptionController)  

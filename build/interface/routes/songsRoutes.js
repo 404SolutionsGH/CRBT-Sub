@@ -8,6 +8,7 @@ const setImg_Mp3Files_1 = require("../middlewares/setImg&Mp3Files");
 const songsControllers_1 = require("../controllers/songsControllers");
 const setMp3Files_1 = require("../middlewares/setMp3Files");
 const getFile_1 = require("../middlewares/getFile");
+const checkSystemStatus_1 = require("../middlewares/checkSystemStatus");
 exports.songsRouter = (0, express_1.Router)();
 /**
  * @swagger
@@ -379,7 +380,7 @@ exports.songsRouter.get("/:state", verifyJwt_1.verifyJwt, songsControllers_1.get
  *                         example: "2024-10-02T17:07:04.045Z"
  */
 // endpoint for getting all songs to get all songs
-exports.songsRouter.get("/", songsControllers_1.getAllSongsController);
+exports.songsRouter.get("/", checkSystemStatus_1.checkSystemStatus, songsControllers_1.getAllSongsController);
 // endpoint for subscribing and unsubscribing to song
 /**
  * @swagger
@@ -701,8 +702,8 @@ exports.songsRouter.get("/one/:id", verifyJwt_1.verifyJwt, songsControllers_1.so
  */
 exports.songsRouter.delete("/:state/:songId", verifyJwt_1.verifyJwt, songsControllers_1.deleteSongController);
 exports.songsRouter.get("/search", verifyJwt_1.verifyJwt, songsControllers_1.searchController);
-exports.songsRouter.get("/profile/:fileName", getFile_1.getFileFromSys, songsControllers_1.profileController);
-exports.songsRouter.get("/listen/:fileName", getFile_1.getFileFromSys, songsControllers_1.listenController);
+exports.songsRouter.get("/profile/:fileName", checkSystemStatus_1.checkSystemStatus, getFile_1.getFileFromSys, songsControllers_1.profileController);
+exports.songsRouter.get("/listen/:fileName", checkSystemStatus_1.checkSystemStatus, getFile_1.getFileFromSys, songsControllers_1.listenController);
 // songsRouter.get("/subscription-details", verifyJwt, songSubDetailController);
 // songsRouter.get("/recommendation", verifyJwt, recommendationController);
 // songsRouter.get("/tone/:id", verifyJwt, toneController);

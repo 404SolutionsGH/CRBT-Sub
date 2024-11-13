@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { AdminRepoImp } from "../../infrastructure/repository/adminRepoImplementation";
+import { isRequestFromSuperAdmin } from "../../@common/helperMethods/checkAccountType";
 import { AppError } from "../../domain/entities/AppError";
 
 export const isSuperAdminAccount = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -9,11 +9,7 @@ export const isSuperAdminAccount = asyncHandler(async (req: Request, res: Respon
   else {
     console.log("Checking if account belongs to a superAdmin..");
     const { id } = req.body;
-    const { findAdminById } = new AdminRepoImp();
-    const accountInfo = await findAdminById(Number(id));
-
-    if (!accountInfo || accountInfo?.adminType !== "system") throw new AppError("This Account is not authorized to create a service", 401);
-    console.log("Account belongs to SuperAdmin");
+    if (!(await isRequestFromSuperAdmin(id))) throw new AppError("This Account is not authorized to create a service", 401);
     next();
   }
 });

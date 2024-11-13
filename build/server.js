@@ -41,16 +41,14 @@ server.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "D
 // route
 server.use("/api/v1/system", systemRoutes_1.systemRouter);
 server.use("/api/v1/auth", authRoutes_1.authRouter);
-// middleware  
-server.use(checkSystemStatus_1.checkSystemStatus);
 // routes
 server.use("/api/v1/user", userRoutes_1.userRouter);
 server.use("/api/v1/admin", adminRoutes_1.adminRouter);
 server.use("/api/v1/songs", songsRoutes_1.songsRouter);
 server.use("/api/v1/service", serviceRoutes_1.serviceRouter);
 server.use("/api/v1/admin-plan", adminPlanRoute_1.adminPlanRouter);
-server.use("/api/v1/package", packageRoutes_1.packageRouter);
-server.use("/api/v1/payments", paymentsRoutes_1.paymentsRouter);
+server.use("/api/v1/package", checkSystemStatus_1.checkSystemStatus, packageRoutes_1.packageRouter);
+server.use("/api/v1/payments", checkSystemStatus_1.checkSystemStatus, paymentsRoutes_1.paymentsRouter);
 server.use("/api/v1/ads", adsRoutes_1.adsRouter);
 // error handling middlware
 server.use(errorHandler_1.errorHandler);

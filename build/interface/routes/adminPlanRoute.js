@@ -5,6 +5,7 @@ const express_1 = require("express");
 const verifyJwt_1 = require("../middlewares/verifyJwt");
 const adminPlanControllers_1 = require("../controllers/adminPlanControllers");
 const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
+const checkSystemStatus_1 = require("../middlewares/checkSystemStatus");
 exports.adminPlanRouter = (0, express_1.Router)();
 /**
  * @swagger
@@ -431,7 +432,7 @@ exports.adminPlanRouter.delete("/:planId", verifyJwt_1.verifyJwt, checkForSuperA
  *                   type: string
  *                   example: "<Message indicating why the request failed>"
  */
-exports.adminPlanRouter.get("/all", adminPlanControllers_1.getAllPlansController);
+exports.adminPlanRouter.get("/all", checkSystemStatus_1.checkSystemStatus, adminPlanControllers_1.getAllPlansController);
 /**
  * @swagger
  * /api/v1/admin-plan/subscribe/{planId}:
@@ -481,4 +482,4 @@ exports.adminPlanRouter.get("/all", adminPlanControllers_1.getAllPlansController
  *                   type: string
  *                   example: "<Message indicating why the request failed>"
  */
-exports.adminPlanRouter.post("/subscribe/:planId", verifyJwt_1.verifyJwt, adminPlanControllers_1.planSubcriptionController); // bug here (when a valid user subscribes we get 404 response saying the user does not exist) 
+exports.adminPlanRouter.post("/subscribe/:planId", verifyJwt_1.verifyJwt, adminPlanControllers_1.planSubcriptionController);

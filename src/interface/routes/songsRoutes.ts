@@ -6,6 +6,7 @@ import { deleteSongController, getAllSongsController, getUploadedSongsController
 import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
 import { getFileFromSys } from "../middlewares/getFile";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
+import { checkSystemStatus } from "../middlewares/checkSystemStatus";
 
 export const songsRouter = Router();
 
@@ -391,7 +392,7 @@ songsRouter.get("/:state",verifyJwt,getUploadedSongsController)
  *                         example: "2024-10-02T17:07:04.045Z"
  */
 // endpoint for getting all songs to get all songs
-songsRouter.get("/",getAllSongsController)
+songsRouter.get("/",checkSystemStatus,getAllSongsController)
 
 
 // endpoint for subscribing and unsubscribing to song
@@ -724,8 +725,8 @@ songsRouter.delete("/:state/:songId", verifyJwt,deleteSongController);
 
 songsRouter.get("/search", verifyJwt, searchController);
 
-songsRouter.get("/profile/:fileName",getFileFromSys,profileController);
-songsRouter.get("/listen/:fileName", getFileFromSys, listenController);
+songsRouter.get("/profile/:fileName",checkSystemStatus,getFileFromSys,profileController);
+songsRouter.get("/listen/:fileName",checkSystemStatus, getFileFromSys, listenController);
 
 
 

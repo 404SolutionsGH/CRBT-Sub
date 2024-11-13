@@ -36,8 +36,7 @@ server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], creden
 server.use("/api/v1/system", systemRouter);
 server.use("/api/v1/auth", authRouter);
 
-// middleware  
-server.use(checkSystemStatus);
+
 
 // routes
 server.use("/api/v1/user", userRouter);
@@ -45,8 +44,8 @@ server.use("/api/v1/admin",adminRouter)
 server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
 server.use("/api/v1/admin-plan",adminPlanRouter)
-server.use("/api/v1/package",packageRouter)
-server.use("/api/v1/payments",paymentsRouter)
+server.use("/api/v1/package",checkSystemStatus,packageRouter)
+server.use("/api/v1/payments",checkSystemStatus,paymentsRouter)
 server.use("/api/v1/ads",adsRouter)
 
 // error handling middlware

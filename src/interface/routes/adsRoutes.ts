@@ -2,6 +2,7 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
 import { createAdsController, deleteAdsController, getAllAdsController, updateAdsController } from "../controllers/adsController";
+import { checkSystemStatus } from "../middlewares/checkSystemStatus";
 
 
 
@@ -203,7 +204,7 @@ adsRouter.put("/:id",verifyJwt,isSuperAdminAccount,updateAdsController)
  *                     description: Expiry date of the ad in ISO 8601 format.
  *                     example: "2024-12-31"
  */
-adsRouter.get("/all",getAllAdsController)
+adsRouter.get("/all",checkSystemStatus,getAllAdsController)
 
 
 /**

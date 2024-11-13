@@ -5,6 +5,7 @@ const express_1 = require("express");
 const verifyJwt_1 = require("../middlewares/verifyJwt");
 const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
 const adsController_1 = require("../controllers/adsController");
+const checkSystemStatus_1 = require("../middlewares/checkSystemStatus");
 exports.adsRouter = (0, express_1.Router)();
 /**
  * @swagger
@@ -199,7 +200,7 @@ exports.adsRouter.put("/:id", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSupe
  *                     description: Expiry date of the ad in ISO 8601 format.
  *                     example: "2024-12-31"
  */
-exports.adsRouter.get("/all", adsController_1.getAllAdsController);
+exports.adsRouter.get("/all", checkSystemStatus_1.checkSystemStatus, adsController_1.getAllAdsController);
 /**
  * @swagger
  * /api/v1/ads/{id}:

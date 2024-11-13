@@ -22,6 +22,6 @@ exports.checkSystemStatus = (0, express_async_handler_1.default)((req, res, next
         next();
     }
     else {
-        res.status(503).json({ message: "System is currently under maintaince" });
+        res.status(503).json({ message: "System is currently under maintainance" });
     }
 }));

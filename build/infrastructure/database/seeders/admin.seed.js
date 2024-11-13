@@ -103,5 +103,6 @@ const AdminSeeder = () => __awaiter(void 0, void 0, void 0, function* () {
             planId: 3,
         },
     ];
+    yield Admin_1.Admin.bulkCreate(data);
 });
 exports.AdminSeeder = AdminSeeder;
