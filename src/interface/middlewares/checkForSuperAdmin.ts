@@ -9,7 +9,7 @@ export const isSuperAdminAccount = asyncHandler(async (req: Request, res: Respon
   else {
     console.log("Checking if account belongs to a superAdmin..");
     const { id } = req.body;
-    if (!(await isRequestFromSuperAdmin(id))) throw new AppError("This Account is not authorized to create a service", 401);
+    if (!(await isRequestFromSuperAdmin(id))) throw new AppError("This Account is not authorized", 401);
     next();
   }
 });

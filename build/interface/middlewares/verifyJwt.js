@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyJwt = void 0;
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const jwt_1 = require("../../libs/jwt");
 const AppError_1 = require("../../domain/entities/AppError");
 const systemRepoImplementation_1 = require("../../infrastructure/repository/systemRepoImplementation");
 const checkAccountType_1 = require("../../@common/helperMethods/checkAccountType");
-const verifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.verifyJwt = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Jwt verification began....");
     if (req.headers !== undefined && req.headers.authorization !== undefined) {
         if (!req.headers.authorization.startsWith("Bearer ")) {
@@ -42,5 +46,4 @@ const verifyJwt = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     else {
         throw new AppError_1.AppError("Authorization Header not defined", 400);
     }
-});
-exports.verifyJwt = verifyJwt;
+}));

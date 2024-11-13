@@ -24,7 +24,7 @@ exports.isSuperAdminAccount = (0, express_async_handler_1.default)((req, res, ne
         console.log("Checking if account belongs to a superAdmin..");
         const { id } = req.body;
         if (!(yield (0, checkAccountType_1.isRequestFromSuperAdmin)(id)))
-            throw new AppError_1.AppError("This Account is not authorized to create a service", 401);
+            throw new AppError_1.AppError("This Account is not authorized", 401);
         next();
     }
 }));
