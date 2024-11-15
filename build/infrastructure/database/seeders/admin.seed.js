@@ -23,12 +23,11 @@ const AdminSeeder = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     const data = [
         {
-            email: "merchant1@example.com",
-            adminType: "merchant",
+            email: "Awad@crbtmusicpro.com",
+            adminType: "system",
             password,
             firstName: "Alice",
             lastName: "Johnson",
-            planId: 1,
         },
         {
             email: "merchant2@example.com",
