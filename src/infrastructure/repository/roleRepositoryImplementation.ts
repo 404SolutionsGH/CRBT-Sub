@@ -3,6 +3,9 @@ import { Role } from "../../domain/entities/Role";
 import { RoleRepository } from "../../domain/interfaces/roleRepository";
 
 export class RoleRepoImpl implements RoleRepository {
+  async all(): Promise<Role[]> {
+    return await Role.findAll();
+  }
   async create(roleData: Role): Promise<Role | null> {
     const { name, allowedPages } = roleData;
     const [itemCreated, isCreated] = await Role.findOrCreate({ where: { name }, defaults: { name, allowedPages } });

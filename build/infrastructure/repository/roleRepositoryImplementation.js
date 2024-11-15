@@ -13,6 +13,11 @@ exports.RoleRepoImpl = void 0;
 const AppError_1 = require("../../domain/entities/AppError");
 const Role_1 = require("../../domain/entities/Role");
 class RoleRepoImpl {
+    all() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Role_1.Role.findAll();
+        });
+    }
     create(roleData) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, allowedPages } = roleData;
