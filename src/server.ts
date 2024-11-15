@@ -22,6 +22,7 @@ import { paymentsRouter } from "./interface/routes/paymentsRoutes";
 import { systemRouter } from "./interface/routes/systemRoutes";
 import { checkSystemStatus } from "./interface/middlewares/checkSystemStatus";
 import { adsRouter } from "./interface/routes/adsRoutes";
+import { roleRouter } from "./interface/routes/roleRoutes";
 
 const server = express();
 
@@ -47,6 +48,7 @@ server.use("/api/v1/admin-plan",adminPlanRouter)
 server.use("/api/v1/package",checkSystemStatus,packageRouter)
 server.use("/api/v1/payments",checkSystemStatus,paymentsRouter)
 server.use("/api/v1/ads",adsRouter)
+server.use("/api/v1/roles",roleRouter)
 
 // error handling middlware
 server.use(errorHandler);

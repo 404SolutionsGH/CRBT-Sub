@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.roleRouter = void 0;
+const express_1 = require("express");
+const verifyJwt_1 = require("../middlewares/verifyJwt");
+const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
+exports.roleRouter = (0, express_1.Router)();
+exports.roleRouter.post("/", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount);
+exports.roleRouter.put("/", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount);
+exports.roleRouter.get("/all", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount);
+exports.roleRouter.get("/role/:name", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount);
+exports.roleRouter.delete("/:name", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount);
