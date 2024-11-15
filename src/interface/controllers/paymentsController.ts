@@ -13,10 +13,7 @@ export const startPaymentController = asyncHandler(async (req: Request, res: Res
 });
 
 export const sucessfullPaymentController = asyncHandler(async (req: Request, res: Response) => {
-  // redirect to front end url saying congratulations
-
-  // json is temporary
-  res.status(200).json({ message: "Congratulation Payment was sucessfull" });
+  res.redirect("http://crbtmusicpro.com");
 });
 
 export const confirmPaymentController = asyncHandler(async (req: Request, res: Response) => {
