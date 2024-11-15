@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRoleController = exports.getAllRolesController = exports.getRoleController = exports.updateRoleController = exports.ceateRoleController = void 0;
+exports.deleteRoleController = exports.getAllRolesController = exports.getRoleController = exports.updateRoleController = exports.createRoleController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const role_1 = require("../../useCases/admin/role");
 const Role_1 = require("../../domain/entities/Role");
 const roleUsesCaes = new role_1.RoleUseCases();
-exports.ceateRoleController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createRoleController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, allowedPages } = req.body;
     yield roleUsesCaes.createRole(Role_1.Role.build({ name, allowedPages }));
     res.status(201).json({ message: `The Role: ${name} has been created sucessfully` });

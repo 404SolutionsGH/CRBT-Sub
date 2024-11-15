@@ -5,7 +5,7 @@ import { Role } from "../../domain/entities/Role";
 
 const roleUsesCaes = new RoleUseCases();
 
-export const ceateRoleController = asyncHandler(async (req: Request, res: Response) => {
+export const createRoleController = asyncHandler(async (req: Request, res: Response) => {
   const { name, allowedPages } = req.body;
   await roleUsesCaes.createRole(Role.build({ name, allowedPages }));
   res.status(201).json({ message: `The Role: ${name} has been created sucessfully` });
