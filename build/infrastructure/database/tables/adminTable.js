@@ -64,6 +64,10 @@ const defineAdminTable = () => {
                 isDate: { msg: "nextSubPayment should be string in the data format yy-mm-dd", args: true },
             },
         },
+        role: {
+            type: sequelize_1.DataTypes.STRING,
+            allowNull: true,
+        }
     }, { sequelize: connectDb_1.sequelize, tableName: "Admins", timestamps: true, createdAt: true, updatedAt: false });
     //  setting up associations
     // Admin.belongsTo(AdminPlan, { foreignKey: "planId" });

@@ -9,6 +9,7 @@ export class Admin extends Model {
   declare password: string;
   declare adminType: "merchant" | "system";
   declare planId: number;
+  declare role?:string
   declare nextSubPayment: string;
   declare createdAt:string;
 }

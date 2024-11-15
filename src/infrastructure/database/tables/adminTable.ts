@@ -66,6 +66,11 @@ export const defineAdminTable = () => {
           isDate: { msg: "nextSubPayment should be string in the data format yy-mm-dd", args: true },
         },
       },
+
+      role:{
+        type:DataTypes.STRING,
+        allowNull:true,
+      }
     },
     { sequelize: sequelize, tableName: "Admins", timestamps: true, createdAt:true,updatedAt:false }
   );
