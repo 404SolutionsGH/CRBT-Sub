@@ -3,6 +3,7 @@ import { AdminSeeder } from "./admin.seed";
 import { AdsSeeder } from "./ads.seed";
 import { PackageSeeder } from "./package.seed";
 import { PackageCategorySeeder } from "./packageCat.seed";
+import { RoleSeeder } from "./role.seed";
 import { SongSeeder } from "./songs.seed";
 import { SystemSeeder } from "./system.seed";
 
@@ -14,4 +15,5 @@ export const setUpAllSeeders = async () => {
   await PackageCategorySeeder();
   await PackageSeeder();
   await SongSeeder();
+  await RoleSeeder();
 };

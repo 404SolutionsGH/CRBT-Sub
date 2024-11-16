@@ -10,7 +10,6 @@ import { SubAdminPlansRepoImp } from "../../infrastructure/repository/subAdminPl
 import { startPayment } from "../payment/startPayment";
 
 export const subscibeToPlan = async (adminId: number, planId: number, phone: string, isSuperAdmin: boolean = false) => {
-  // confirm payment first(Not yet implemented)
   const { setUpPaymentData, findAdminById } = new AdminRepoImp();
   const { findPlanById } = new AdminPlanRepoImp();
   const { createSubscription } = new SubAdminPlansRepoImp();

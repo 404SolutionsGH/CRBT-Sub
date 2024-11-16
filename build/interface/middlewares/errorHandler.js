@@ -17,6 +17,7 @@ const errorHandler = (err, req, res, next) => __awaiter(void 0, void 0, void 0, 
         res.status(err.statusCode).json({ error: err.message });
     }
     else if (err instanceof sequelize_1.ValidationError) {
+        console.log(err);
         res.status(400).json({ error: err.message.split(":")[1] });
     }
     else if (err instanceof SyntaxError) {

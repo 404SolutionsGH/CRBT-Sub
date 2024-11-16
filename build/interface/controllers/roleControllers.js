@@ -16,14 +16,21 @@ exports.deleteRoleController = exports.getAllRolesController = exports.getRoleCo
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const role_1 = require("../../useCases/admin/role");
 const Role_1 = require("../../domain/entities/Role");
+const AppError_1 = require("../../domain/entities/AppError");
 const roleUsesCaes = new role_1.RoleUseCases();
 exports.createRoleController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, allowedPages } = req.body;
+    if (!Array.isArray(allowedPages)) {
+        throw new AppError_1.AppError("Value for allowedPages must be an array", 400);
+    }
     yield roleUsesCaes.createRole(Role_1.Role.build({ name, allowedPages }));
     res.status(201).json({ message: `The Role: ${name} has been created sucessfully` });
 }));
 exports.updateRoleController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, allowedPages } = req.body;
+    if (!Array.isArray(allowedPages)) {
+        throw new AppError_1.AppError("Value for allowedPages must be an array", 400);
+    }
     yield roleUsesCaes.updateRole(Role_1.Role.build({ name, allowedPages }));
     res.status(200).json({ message: `The Role: ${name} has been updated sucessfully` });
 }));

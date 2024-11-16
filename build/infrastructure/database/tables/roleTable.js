@@ -15,9 +15,6 @@ const defineRoleTable = () => {
         allowedPages: {
             type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
             allowNull: false,
-            validate: {
-                isArray: { msg: "Values passed for allowedPages should be an array of string", args: true }
-            }
         },
     }, { sequelize: connectDb_1.sequelize, tableName: "Roles", timestamps: true, createdAt: true, updatedAt: false });
 };

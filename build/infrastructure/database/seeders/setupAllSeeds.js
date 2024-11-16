@@ -15,6 +15,7 @@ const admin_seed_1 = require("./admin.seed");
 const ads_seed_1 = require("./ads.seed");
 const package_seed_1 = require("./package.seed");
 const packageCat_seed_1 = require("./packageCat.seed");
+const role_seed_1 = require("./role.seed");
 const songs_seed_1 = require("./songs.seed");
 const system_seed_1 = require("./system.seed");
 const setUpAllSeeders = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -25,5 +26,6 @@ const setUpAllSeeders = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, packageCat_seed_1.PackageCategorySeeder)();
     yield (0, package_seed_1.PackageSeeder)();
     yield (0, songs_seed_1.SongSeeder)();
+    yield (0, role_seed_1.RoleSeeder)();
 });
 exports.setUpAllSeeders = setUpAllSeeders;

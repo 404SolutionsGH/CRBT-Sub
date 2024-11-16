@@ -18,9 +18,6 @@ export const defineRoleTable= ()=>{
         allowedPages: {
           type: DataTypes.ARRAY(DataTypes.STRING),
           allowNull:false,
-          validate:{
-           isArray:{msg:"Values passed for allowedPages should be an array of string",args:true}
-          }
         },
       },
       { sequelize: sequelize, tableName: "Roles", timestamps: true, createdAt: true, updatedAt: false }

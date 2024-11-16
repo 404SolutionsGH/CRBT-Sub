@@ -13,7 +13,7 @@ export const startPaymentController = asyncHandler(async (req: Request, res: Res
 });
 
 export const sucessfullPaymentController = asyncHandler(async (req: Request, res: Response) => {
-  res.redirect("http://crbtmusicpro.com");
+  res.redirect("http://crbtmusicpro.com/app/auth");
 });
 
 export const confirmPaymentController = asyncHandler(async (req: Request, res: Response) => {
