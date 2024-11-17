@@ -14,17 +14,29 @@ const Admin_1 = require("../../domain/entities/Admin");
 class AdminRepoImp {
     createAdmin(adminData) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, password, firstName, lastName, adminType } = adminData;
-            const [itemCreated, isCreated] = yield Admin_1.Admin.findOrCreate({
-                where: { email },
-                defaults: {
-                    email,
-                    password,
-                    firstName,
-                    lastName,
-                    adminType,
-                },
-            });
+            const { email, password, firstName, lastName, adminType, role } = adminData;
+            const [itemCreated, isCreated] = role
+                ? yield Admin_1.Admin.findOrCreate({
+                    where: { email },
+                    defaults: {
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                        adminType,
+                        role
+                    },
+                })
+                : yield Admin_1.Admin.findOrCreate({
+                    where: { email },
+                    defaults: {
+                        email,
+                        password,
+                        firstName,
+                        lastName,
+                        adminType,
+                    },
+                });
             if (isCreated)
                 return itemCreated;
             return null;

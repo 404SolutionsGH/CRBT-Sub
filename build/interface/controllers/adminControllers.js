@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMerchantController = exports.getPointsInfoController = exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
+exports.createAdminAccountController = exports.getPointsInfoController = exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
@@ -33,6 +33,7 @@ const changePassword_1 = require("../../useCases/admin/changePassword");
 const deleteAccounts_1 = require("../../useCases/admin/deleteAccounts");
 const getRewardInfo_1 = require("../../useCases/admin/getRewardInfo");
 const createAdmin_1 = require("../../useCases/auth/createAdmin");
+const createSystemAdmin_1 = require("../../useCases/admin/createSystemAdmin");
 exports.getAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     res.status(200).json(yield (0, getAccountInfo_1.getAdminAccountInfo)(id));
@@ -137,19 +138,24 @@ exports.getPointsInfoController = (0, express_async_handler_1.default)((req, res
         throw new AppError_1.AppError("Value for accountType Should either be user or admin", 400);
     res.status(200).json(yield (0, getRewardInfo_1.getRewardInfoOfAccounts)(accountType));
 }));
-exports.createMerchantController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createAdminAccountController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
-    const { email, accountType, password, firstName, lastName, planId } = req.body;
-    if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
-        throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
+    const { email, accountType, password, firstName, lastName, planId, role } = req.body;
+    if (!accountType || RegExp(/^\d+$/).test(accountType) || !email) {
+        throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for email" : "Value passed for account type must be a string"}`, 400);
     }
-    if (accountType === "admin") {
-        if (!email)
-            throw new AppError_1.AppError("No data passed for email", 400);
+    if (accountType === "merchant") {
+        if (!planId)
+            throw new AppError_1.AppError("No data passed for planId", 400);
         (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
         yield (0, createAdmin_1.createAdminAccount)(Admin_1.Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId, true);
-        res.status(201).json({ message: "Admin account created successfully" });
+    }
+    else if (accountType === "system") {
+        if (!role)
+            throw new AppError_1.AppError("No data passed for role", 400);
+        yield (0, createSystemAdmin_1.createSystemAdmins)(Admin_1.Admin.build({ email, password, firstName, lastName, adminType: "system", role }));
     }
     else
-        throw new AppError_1.AppError("Value passed for accountType in request body must be admin or user", 400);
+        throw new AppError_1.AppError("Value passed for accountType in request body must be merchant or system", 400);
+    res.status(201).json({ message: "Admin account created successfully" });
 }));

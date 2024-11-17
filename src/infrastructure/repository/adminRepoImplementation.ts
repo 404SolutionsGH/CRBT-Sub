@@ -5,17 +5,29 @@ import { AdminRepository } from "../../domain/interfaces/adminRepository";
 
 export class AdminRepoImp implements AdminRepository {
   async createAdmin(adminData: Admin): Promise<Admin | null> {
-    const { email, password, firstName, lastName, adminType } = adminData;
-    const [itemCreated, isCreated] = await Admin.findOrCreate({
-      where: { email },
-      defaults: {
-        email,
-        password,
-        firstName,
-        lastName,
-        adminType,
-      },
-    });
+    const { email, password, firstName, lastName, adminType ,role} = adminData;
+    const [itemCreated, isCreated] = role
+      ? await Admin.findOrCreate({
+          where: { email },
+          defaults: {
+            email,
+            password,
+            firstName,
+            lastName,
+            adminType,
+            role
+          },
+        })
+      : await Admin.findOrCreate({
+          where: { email },
+          defaults: {
+            email,
+            password,
+            firstName,
+            lastName,
+            adminType,
+          },
+        });
 
     if (isCreated) return itemCreated;
     return null;

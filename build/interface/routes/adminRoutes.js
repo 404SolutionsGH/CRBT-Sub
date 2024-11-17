@@ -8,11 +8,11 @@ const checkForSuperAdmin_1 = require("../middlewares/checkForSuperAdmin");
 exports.adminRouter = (0, express_1.Router)();
 /**
  * @swagger
- * /api/v1/admin/create/merchant-account:
+ * /api/v1/admin/create/admin-account:
  *   post:
  *     tags:
  *       - Admins
- *     summary: Create a merchant account
+ *     summary: Create a merchant and system admins account
  *     description: This is the endpoint for creating merchant accounts, which can only be accessed by the superAdmin. Requires an Auth header.
  *     security:
  *       - bearerAuth: []
@@ -21,34 +21,60 @@ exports.adminRouter = (0, express_1.Router)();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - email
- *               - accountType
- *               - password
- *               - firstName
- *               - lastName
- *               - planId
- *             properties:
- *               email:
- *                 type: string
- *                 example: "merchant@example.com"
- *               accountType:
- *                 type: string
- *                 enum: [admin]
- *                 example: "admin"
- *               password:
- *                 type: string
- *                 example: "password123"
- *               firstName:
- *                 type: string
- *                 example: "John"
- *               lastName:
- *                 type: string
- *                 example: "Doe"
- *               planId:
- *                 type: integer
- *                 example: 1
+ *             oneOf:
+ *               - type: object
+ *                 required:
+ *                   - accountType
+ *                   - email
+ *                   - password
+ *                   - firstName
+ *                   - lastName
+ *                   - planId
+ *                 properties:
+ *                   accountType:
+ *                     type: string
+ *                     enum: [merchant]
+ *                     description: Indicates the account type.
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     description: Must be a valid email address.
+ *                   firstName:
+ *                     type: string
+ *                     example: "Alberth"
+ *                   lastName:
+ *                     type: string
+ *                     example: "Arthur"
+ *                   planId:
+ *                     type: integer
+ *                     example: 2
+ *               - type: object
+ *                 required:
+ *                   - accountType
+ *                   - email
+ *                   - password
+ *                   - firstName
+ *                   - lastName
+ *                   - role
+ *                 properties:
+ *                   accountType:
+ *                     type: string
+ *                     enum: [system]
+ *                     description: Indicates the account type.
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     description: Must be a valid email address.
+ *                   firstName:
+ *                     type: string
+ *                     example: "Alberth"
+ *                   lastName:
+ *                     type: string
+ *                     example: "Arthur"
+ *                   role:
+ *                     type: string
+ *                     example: "UserManager"
+ *                     description: Must be a valid role name in the system.
  *     responses:
  *       201:
  *         description: Admin account created successfully.
@@ -101,7 +127,7 @@ exports.adminRouter = (0, express_1.Router)();
  *                   type: string
  *                   example: "Merchant account already exists"
  */
-exports.adminRouter.post("/create/merchant-account", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.createMerchantController);
+exports.adminRouter.post("/create/admin-account", verifyJwt_1.verifyJwt, checkForSuperAdmin_1.isSuperAdminAccount, adminControllers_1.createAdminAccountController);
 /**
  * @swagger
  * /api/v1/admin/account-info:

@@ -26,7 +26,7 @@ exports.startPaymentController = (0, express_async_handler_1.default)((req, res)
     res.status(200).json({ checkoutUrl: checkOutPageUrl });
 }));
 exports.sucessfullPaymentController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.redirect("http://crbtmusicpro.com");
+    res.redirect("http://crbtmusicpro.com/app/auth");
 }));
 exports.confirmPaymentController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { event, tx_ref, status } = req.body;

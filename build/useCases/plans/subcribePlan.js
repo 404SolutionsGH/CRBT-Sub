@@ -21,7 +21,6 @@ const adminRepoImplementation_1 = require("../../infrastructure/repository/admin
 const subAdminPlansRepoImplementation_1 = require("../../infrastructure/repository/subAdminPlansRepoImplementation");
 const startPayment_1 = require("../payment/startPayment");
 const subscibeToPlan = (adminId_1, planId_1, phone_1, ...args_1) => __awaiter(void 0, [adminId_1, planId_1, phone_1, ...args_1], void 0, function* (adminId, planId, phone, isSuperAdmin = false) {
-    // confirm payment first(Not yet implemented)
     const { setUpPaymentData, findAdminById } = new adminRepoImplementation_1.AdminRepoImp();
     const { findPlanById } = new adminPlanRepoImplementation_1.AdminPlanRepoImp();
     const { createSubscription } = new subAdminPlansRepoImplementation_1.SubAdminPlansRepoImp();
