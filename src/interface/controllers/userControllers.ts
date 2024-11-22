@@ -24,6 +24,6 @@ export const accountUpdateController = asyncHandler(async (req: Request, res: Re
 export const accountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
 
-  const { firstName, lastName, accountBalance, phone, langPref, subSongDetails } = await getAccountInfo(Number(id));
-  res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, subSongDetails });
+  const { firstName, lastName, accountBalance, phone, langPref, subSongDetails,rewardPoints,createdAt } = await getAccountInfo(Number(id));
+  res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, rewardPoints, createdAt, subSongDetails });
 });
