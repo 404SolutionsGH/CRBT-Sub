@@ -161,6 +161,9 @@ exports.adminRouter.post("/create/admin-account", verifyJwt_1.verifyJwt, checkFo
  *                 nextSubPayment:
  *                   type: string
  *                   example: "2024-12-01"
+ *                 rewardPoints:
+ *                   type: number
+ *                   example: 50
  *                 subPlanDetails:
  *                   type: object
  *                   properties:

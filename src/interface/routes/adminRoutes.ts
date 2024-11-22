@@ -179,6 +179,9 @@ adminRouter.post("/create/admin-account", verifyJwt, isSuperAdminAccount, create
  *                 nextSubPayment:
  *                   type: string
  *                   example: "2024-12-01"
+ *                 rewardPoints:
+ *                   type: number
+ *                   example: 50
  *                 subPlanDetails:
  *                   type: object
  *                   properties:

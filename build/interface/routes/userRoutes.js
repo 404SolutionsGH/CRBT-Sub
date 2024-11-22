@@ -115,31 +115,39 @@ exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userContro
  *                   example: "Doe"
  *                 accountBalance:
  *                   type: string
- *                   example: "1000.00"
+ *                   example: "0.00"
  *                 phone:
  *                   type: string
- *                   example: "+1234567890"
+ *                   example: "+233503747733"
  *                 langPref:
  *                   type: string
- *                   example: "eng"
+ *                   example: "English"
+ *                 rewardPoints:
+ *                   type: number
+ *                   example: 2
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-11-22T02:16:32.012Z"
  *                 subSongDetails:
  *                   type: object
  *                   properties:
  *                     artisteName:
  *                       type: string
- *                       example: "Artist Name"
+ *                       example: "The Weeknd"
  *                     songTitle:
  *                       type: string
- *                       example: "Song Title"
+ *                       example: "Blinding Lights"
  *                     subscriptionType:
  *                       type: string
- *                       example: "Premium"
+ *                       example: "weekly"
  *                     price:
  *                       type: string
- *                       example: "10.00"
+ *                       example: "2"
  *                     profile:
  *                       type: string
- *                       example: "Song Profile URL or Details"
+ *                       format: uri
+ *                       example: "https://crbtbackend.trotro.live/api/v1/songs/profile/PVTlS8u2jTZv6CwqxLBm.jpeg"
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:
