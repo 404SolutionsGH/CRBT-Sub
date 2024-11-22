@@ -27,7 +27,7 @@ export class RoleRepoImpl implements RoleRepository {
     return false;
   }
   checkedAllowedPages(allowedPages: string[]): void {
-    const validPages = ["Packages", "UserManagement", "Rewards", "Dashboard", "Payments", "Uploads", "SubscriptionPlans", " CRBTAds"];
+    const validPages = ["Packages", "UserManagement", "Rewards", "Dashboard", "Payments", "Uploads", "SubscriptionPlans", "CRBTAds"];
     allowedPages.forEach((page) => {
       if (!validPages.includes(page)) {
         throw new AppError(`The value ${page} is not a valid value for allowedPages`, 400);
