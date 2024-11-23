@@ -11,7 +11,9 @@ import {
   getAdminAccountInfoController,
   getMerchantsController,
   getPointsInfoController,
+  getSystemAdminsController,
   getUsersController,
+  updateAccountBySuperAdminController,
   updateAdminAccountInfoController,
   updatePackageCategoriesController,
   updatePackagesController,
@@ -303,6 +305,101 @@ adminRouter.put("/account-info",verifyJwt,updateAdminAccountInfoController)
 
 /**
  * @swagger
+ * /api/v1/admin/account-info/{adminType}/{adminId}:
+ *   put:
+ *     tags:
+ *       - Admins
+ *     summary: Edit System Admins and Merchant Accounts
+ *     description: This endpoint allows SuperAdmins to edit the account information of other system administrators and merchants.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: adminType
+ *         schema:
+ *           type: string
+ *           enum: [merchant, system]
+ *         required: true
+ *         description: Specify the type of admin account to edit ('merchant' or 'system').
+ *       - in: path
+ *         name: adminId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the admin account to edit.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             oneOf:
+ *               - description: Request body for editing merchant accounts
+ *                 properties:
+ *                   firstName:
+ *                     type: string
+ *                     example: "John"
+ *                   lastName:
+ *                     type: string
+ *                     example: "Doe"
+ *                   email:
+ *                     type: string
+ *                     example: "merchant@example.com"
+ *                   planId:
+ *                     type: number
+ *                     example: 123
+ *               - description: Request body for editing system admin accounts
+ *                 properties:
+ *                   firstName:
+ *                     type: string
+ *                     example: "Alice"
+ *                   lastName:
+ *                     type: string
+ *                     example: "Smith"
+ *                   email:
+ *                     type: string
+ *                     example: "admin@example.com"
+ *                   role:
+ *                     type: string
+ *                     example: "SuperAdmin"
+ *     responses:
+ *       200:
+ *         description: Account updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Account updated successfully."
+ *       400:
+ *         description: Bad request. Missing or invalid fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "<Error message indicating why the request was unsuccessful>"
+ *       404:
+ *         description: Account not found. The account does not exist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Account not found."
+ */
+adminRouter.put("/account-info/:adminType/:adminId",verifyJwt,isSuperAdminAccount,updateAccountBySuperAdminController)
+
+
+
+/**
+ * @swagger
  * /api/v1/admin/password-change:
  *   put:
  *     tags:
@@ -477,6 +574,69 @@ adminRouter.get("/users/:type", verifyJwt, isSuperAdminAccount, getUsersControll
  *                   example: "Unauthorized access. Only superAdmins can get all merchants."
  */
 adminRouter.get("/merchants/:cat", verifyJwt, isSuperAdminAccount, getMerchantsController);
+
+/**
+ * @swagger
+ * /api/v1/admin/system:
+ *   get:
+ *     tags:
+ *       - Admins
+ *     summary: Get all system administrators
+ *     description: This is the endpoint for retrieving all system administrators (SuperAdmin and other admin roles) in the system.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of system administrators retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 admins:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: List of administrator data
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                         example: 1
+ *                       firstName:
+ *                         type: string
+ *                         example: "John"
+ *                       lastName:
+ *                         type: string
+ *                         example: "Doe"
+ *                       email:
+ *                         type: string
+ *                         example: "admin@example.com"
+ *                       role:
+ *                         type: string
+ *                         example: "SuperAdmin"
+ *       400:
+ *         description: Bad request.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid request or missing parameters."
+ *       401:
+ *         description: Unauthorized access.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized access. Only superAdmins can retrieve system administrators."
+ */
+adminRouter.get("/system", verifyJwt, isSuperAdminAccount, getSystemAdminsController);
+
 
 /**
  * @swagger

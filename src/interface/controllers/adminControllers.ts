@@ -21,6 +21,7 @@ import { deleteMerchantAccount, deleteUserAccount } from "../../useCases/admin/d
 import { getRewardInfoOfAccounts } from "../../useCases/admin/getRewardInfo";
 import { createAdminAccount } from "../../useCases/auth/createAdmin";
 import { createSystemAdmins } from "../../useCases/admin/createSystemAdmin";
+import { getSystemAdmins } from "../../useCases/admin/getSystemAdmins";
 
 export const getAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
@@ -142,7 +143,7 @@ export const createAdminAccountController = asyncHandler(async (req: Request, re
   if (!accountType || RegExp(/^\d+$/).test(accountType) || !email) {
     throw new AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for email" : "Value passed for account type must be a string"}`, 400);
   }
-  
+
   if (accountType === "merchant") {
     if (!planId) throw new AppError("No data passed for planId", 400);
     isStringContentNumber(planId, "planId");
@@ -154,4 +155,21 @@ export const createAdminAccountController = asyncHandler(async (req: Request, re
   res.status(201).json({ message: "Admin account created successfully" });
 });
 
+export const updateAccountBySuperAdminController = asyncHandler(async (req: Request, res: Response) => {
+  const { firstName, lastName, email, planId, role } = req.body;
+  const { adminId, adminType } = req.params;
+  if (adminType === "system") {
+    if (!role) throw new AppError("No value passed for role", 400);
+    await updateAdminAccountInfo(Admin.build({ id: +adminId, firstName, lastName, email, role }));
+  } else if (adminType === "merchant") {
+    if (!planId) throw new AppError("No value passed for planId", 400);
+    await updateAdminAccountInfo(Admin.build({ id: +adminId, firstName, lastName, email, planId }));
+  } else {
+    throw new AppError("Valid Values for adminType are system and merchant", 400);
+  }
+  res.status(200).json({ message: "Account Updated Sucessfully" });
+});
 
+export const getSystemAdminsController = asyncHandler(async (req: Request, res: Response) => {
+  res.status(200).json(await getSystemAdmins());
+});

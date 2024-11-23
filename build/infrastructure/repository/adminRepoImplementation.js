@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminRepoImp = void 0;
+const sequelize_1 = require("sequelize");
 const Admin_1 = require("../../domain/entities/Admin");
 class AdminRepoImp {
     createAdmin(adminData) {
@@ -24,7 +25,7 @@ class AdminRepoImp {
                         firstName,
                         lastName,
                         adminType,
-                        role
+                        role,
                     },
                 })
                 : yield Admin_1.Admin.findOrCreate({
@@ -65,10 +66,21 @@ class AdminRepoImp {
             return yield Admin_1.Admin.findAll({ where: { adminType: "merchant" } });
         });
     }
+    getAllSystemAdmins() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Admin_1.Admin.findAll({ where: { adminType: "system", role: { [sequelize_1.Op.ne]: null } } });
+        });
+    }
     updateAdminAccount(updatedInfo) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { firstName, lastName, email, id, password } = updatedInfo;
-            const updatedData = password ? yield Admin_1.Admin.update({ password }, { where: { id }, returning: true }) : yield Admin_1.Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
+            const { firstName, lastName, email, id, password, planId, role } = updatedInfo;
+            const updatedData = password && !email && !firstName && !lastName && !planId
+                ? yield Admin_1.Admin.update({ password }, { where: { id }, returning: true })
+                : planId
+                    ? yield Admin_1.Admin.update({ firstName, lastName, email, planId }, { where: { id }, returning: true })
+                    : role
+                        ? yield Admin_1.Admin.update({ firstName, lastName, email, role }, { where: { id }, returning: true })
+                        : yield Admin_1.Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
             if (updatedData[0] === 1)
                 return updatedData[1][0];
             return null;

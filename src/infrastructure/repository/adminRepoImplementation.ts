@@ -1,11 +1,11 @@
-import { where } from "sequelize";
+import { Op, where } from "sequelize";
 import { Admin } from "../../domain/entities/Admin";
 import { AppError } from "../../domain/entities/AppError";
 import { AdminRepository } from "../../domain/interfaces/adminRepository";
 
 export class AdminRepoImp implements AdminRepository {
   async createAdmin(adminData: Admin): Promise<Admin | null> {
-    const { email, password, firstName, lastName, adminType ,role} = adminData;
+    const { email, password, firstName, lastName, adminType, role } = adminData;
     const [itemCreated, isCreated] = role
       ? await Admin.findOrCreate({
           where: { email },
@@ -15,7 +15,7 @@ export class AdminRepoImp implements AdminRepository {
             firstName,
             lastName,
             adminType,
-            role
+            role,
           },
         })
       : await Admin.findOrCreate({
@@ -50,9 +50,20 @@ export class AdminRepoImp implements AdminRepository {
     return await Admin.findAll({ where: { adminType: "merchant" } });
   }
 
+  async getAllSystemAdmins(): Promise<Admin[]> {
+    return await Admin.findAll({ where: { adminType: "system", role: { [Op.ne]: null } } });
+  }
+
   async updateAdminAccount(updatedInfo: Admin): Promise<Admin | null> {
-    const { firstName, lastName, email, id, password } = updatedInfo;
-    const updatedData = password ? await Admin.update({ password }, { where: { id }, returning: true }) : await Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
+    const { firstName, lastName, email, id, password, planId, role } = updatedInfo;
+    const updatedData =
+      password && !email && !firstName && !lastName && !planId
+        ? await Admin.update({ password }, { where: { id }, returning: true })
+        : planId
+        ? await Admin.update({ firstName, lastName, email, planId }, { where: { id }, returning: true })
+        : role
+        ? await Admin.update({ firstName, lastName, email, role }, { where: { id }, returning: true })
+        : await Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
     if (updatedData[0] === 1) return updatedData[1][0];
     return null;
   }
@@ -63,7 +74,7 @@ export class AdminRepoImp implements AdminRepository {
 
   async deleteAccount(accountId: number): Promise<boolean> {
     const numOfDeleted = await Admin.destroy({ where: { id: accountId } });
-    if(numOfDeleted!==0)return true
+    if (numOfDeleted !== 0) return true;
     return false;
   }
 }

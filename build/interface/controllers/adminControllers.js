@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAdminAccountController = exports.getPointsInfoController = exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
+exports.getSystemAdminsController = exports.updateAccountBySuperAdminController = exports.createAdminAccountController = exports.getPointsInfoController = exports.deleteMerchnatsController = exports.deleteUsersController = exports.delePackageCategoriesController = exports.updatePackageCategoriesController = exports.createPackageCategoriesController = exports.deletePackagesController = exports.updatePackagesController = exports.createPackagesController = exports.getMerchantsController = exports.getUsersController = exports.changePasswordController = exports.updateAdminAccountInfoController = exports.getAdminAccountInfoController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const getUsers_1 = require("../../useCases/admin/getUsers");
@@ -34,6 +34,7 @@ const deleteAccounts_1 = require("../../useCases/admin/deleteAccounts");
 const getRewardInfo_1 = require("../../useCases/admin/getRewardInfo");
 const createAdmin_1 = require("../../useCases/auth/createAdmin");
 const createSystemAdmin_1 = require("../../useCases/admin/createSystemAdmin");
+const getSystemAdmins_1 = require("../../useCases/admin/getSystemAdmins");
 exports.getAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     res.status(200).json(yield (0, getAccountInfo_1.getAdminAccountInfo)(id));
@@ -158,4 +159,25 @@ exports.createAdminAccountController = (0, express_async_handler_1.default)((req
     else
         throw new AppError_1.AppError("Value passed for accountType in request body must be merchant or system", 400);
     res.status(201).json({ message: "Admin account created successfully" });
+}));
+exports.updateAccountBySuperAdminController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { firstName, lastName, email, planId, role } = req.body;
+    const { adminId, adminType } = req.params;
+    if (adminType === "system") {
+        if (!role)
+            throw new AppError_1.AppError("No value passed for role", 400);
+        yield (0, updateAccountInfo_1.updateAdminAccountInfo)(Admin_1.Admin.build({ id: +adminId, firstName, lastName, email, role }));
+    }
+    else if (adminType === "merchant") {
+        if (!planId)
+            throw new AppError_1.AppError("No value passed for planId", 400);
+        yield (0, updateAccountInfo_1.updateAdminAccountInfo)(Admin_1.Admin.build({ id: +adminId, firstName, lastName, email, planId }));
+    }
+    else {
+        throw new AppError_1.AppError("Valid Values for adminType are system and merchant", 400);
+    }
+    res.status(200).json({ message: "Account Updated Sucessfully" });
+}));
+exports.getSystemAdminsController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(200).json(yield (0, getSystemAdmins_1.getSystemAdmins)());
 }));
