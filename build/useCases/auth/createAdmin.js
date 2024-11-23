@@ -16,7 +16,7 @@ const bcrypt_1 = require("../../libs/bcrypt");
 const nodeMailer_1 = require("../../libs/nodeMailer");
 const subcribePlan_1 = require("../plans/subcribePlan");
 const createAdminAccount = (adminData_1, planId_1, ...args_1) => __awaiter(void 0, [adminData_1, planId_1, ...args_1], void 0, function* (adminData, planId, isSuperAdmin = false) {
-    const { email, password } = adminData;
+    const { email, password, firstName } = adminData;
     const adminRepo = new adminRepoImplementation_1.AdminRepoImp();
     if (password) {
         console.log("Encrypting password..");
@@ -27,6 +27,7 @@ const createAdminAccount = (adminData_1, planId_1, ...args_1) => __awaiter(void 
     if (!account)
         throw new AppError_1.AppError(`Admin account with email ${email} already exist`, 409);
     console.log("Subscribing merchants to a plan..");
+    yield (0, nodeMailer_1.sendAccountCreationEmail)(email, firstName);
     if (isSuperAdmin) {
         yield (0, subcribePlan_1.subscibeToPlan)(account.id, planId, "", true);
         yield (0, nodeMailer_1.sendAccountPassword)(password, email);
