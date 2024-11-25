@@ -2,10 +2,11 @@ import { Op } from "sequelize";
 import { AppError } from "../../domain/entities/AppError";
 import { Song } from "../../domain/entities/Song";
 import { SongRepository } from "../../domain/interfaces/songRepository";
+import { Admin } from "../../domain/entities/Admin";
 
 export class SongRepoImpl implements SongRepository {
   async saveSong(songData: Song): Promise<Song | null> {
-    const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType,registrationUssdCode } = songData;
+    const { ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, tune, profile, subscriptionType, registrationUssdCode } = songData;
     const [itemCreated, isCreated] = await Song.findOrCreate({
       where: { ownerId, songTitle, lang, subscriptionType },
       defaults: {
@@ -29,10 +30,10 @@ export class SongRepoImpl implements SongRepository {
   }
 
   async updateSongInfo(songData: Song): Promise<Song | null> {
-    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode,tune,profile } = songData;
+    const { id, ownerId, songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode, tune, profile } = songData;
 
     const updatedSongInfo = await Song.update(
-      { songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode,profile,tune },
+      { songTitle, albumName, artisteName, lang, ussdCode, price, category, subscriptionType, registrationUssdCode, profile, tune },
       { where: { id, ownerId }, returning: true }
     );
     if (updatedSongInfo[0] === 1) return updatedSongInfo[1][0];
@@ -44,7 +45,12 @@ export class SongRepoImpl implements SongRepository {
     return await Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
   }
 
-  async findSongsByOwnersId(ownerId: number): Promise<Array<Song>> {
+  async findSongsByOwnersId(ownerId: number, isSuperAdmin: boolean = false): Promise<Array<Song>> {
+    if (isSuperAdmin) {
+      const results = await Admin.findAll({ where: { adminType: "system"}, attributes:["id"] });
+      const allSystemAdminIds= results.map(item=>item.id)
+      return await Song.findAll({ where: { ownerId:{[Op.in]:allSystemAdminIds} } });
+    }
     return await Song.findAll({ where: { ownerId } });
   }
 

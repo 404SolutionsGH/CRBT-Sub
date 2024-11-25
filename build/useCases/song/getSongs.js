@@ -14,15 +14,15 @@ const songRepoImplementaion_1 = require("../../infrastructure/repository/songRep
 const tempSongRepoImplementation_1 = require("../../infrastructure/repository/tempSongRepoImplementation");
 const helpers_1 = require("./helpers");
 const getTempUploads = (ownerId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, helpers_1.isUserAdmin)(ownerId);
-    const { findTempSongsById } = new tempSongRepoImplementation_1.TempSongRepoImpl();
-    return yield findTempSongsById(ownerId);
+    const accountInfo = yield (0, helpers_1.isUserAdmin)(ownerId);
+    const { findTempSongsByOwnersId } = new tempSongRepoImplementation_1.TempSongRepoImpl();
+    return yield findTempSongsByOwnersId(ownerId, accountInfo.adminType === "system");
 });
 exports.getTempUploads = getTempUploads;
 const getSavedUploads = (ownerId) => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, helpers_1.isUserAdmin)(ownerId);
+    const accountInfo = yield (0, helpers_1.isUserAdmin)(ownerId);
     const { findSongsByOwnersId } = new songRepoImplementaion_1.SongRepoImpl();
-    return yield findSongsByOwnersId(ownerId);
+    return yield findSongsByOwnersId(ownerId, accountInfo.adminType === "system");
 });
 exports.getSavedUploads = getSavedUploads;
 const getAllSongs = (id) => __awaiter(void 0, void 0, void 0, function* () {

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TempSongRepoImpl = void 0;
 const sequelize_1 = require("sequelize");
 const TempSong_1 = require("../../domain/entities/TempSong");
+const Admin_1 = require("../../domain/entities/Admin");
 class TempSongRepoImpl {
     createTempSongs(songsData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -22,8 +23,13 @@ class TempSongRepoImpl {
             }));
         });
     }
-    findTempSongsById(ownerId) {
-        return __awaiter(this, void 0, void 0, function* () {
+    findTempSongsByOwnersId(ownerId_1) {
+        return __awaiter(this, arguments, void 0, function* (ownerId, isSuperAdmin = true) {
+            if (isSuperAdmin) {
+                const results = yield Admin_1.Admin.findAll({ where: { adminType: "system" }, attributes: ["id"] });
+                const allSystemAdminIds = results.map((item) => item.id);
+                return yield TempSong_1.TempSong.findAll({ where: { ownerId: { [sequelize_1.Op.in]: allSystemAdminIds } } });
+            }
             return yield TempSong_1.TempSong.findAll({ where: { ownerId } });
         });
     }

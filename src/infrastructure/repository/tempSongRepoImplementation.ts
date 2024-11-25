@@ -1,6 +1,7 @@
 import { Op } from "sequelize";
 import { TempSong } from "../../domain/entities/TempSong";
 import { TempSongRepository } from "../../domain/interfaces/tempSongRepository";
+import { Admin } from "../../domain/entities/Admin";
 
 export class TempSongRepoImpl implements TempSongRepository {
   async createTempSongs(songsData: Array<TempSong>): Promise<void> {
@@ -10,7 +11,12 @@ export class TempSongRepoImpl implements TempSongRepository {
       await TempSong.create({ tune, ownerId, originalName });
     });
   }
-  async findTempSongsById(ownerId: number): Promise<Array<TempSong>> {
+  async findTempSongsByOwnersId(ownerId: number, isSuperAdmin: boolean = true): Promise<Array<TempSong>> {
+    if (isSuperAdmin) {
+      const results = await Admin.findAll({ where: { adminType: "system" }, attributes: ["id"] });
+      const allSystemAdminIds = results.map((item) => item.id);
+      return await TempSong.findAll({ where: { ownerId: { [Op.in]: allSystemAdminIds } } });
+    }
     return await TempSong.findAll({ where: { ownerId } });
   }
   async findTempSongById(songId: number): Promise<TempSong | null> {

@@ -13,6 +13,7 @@ exports.SongRepoImpl = void 0;
 const sequelize_1 = require("sequelize");
 const AppError_1 = require("../../domain/entities/AppError");
 const Song_1 = require("../../domain/entities/Song");
+const Admin_1 = require("../../domain/entities/Admin");
 class SongRepoImpl {
     saveSong(songData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,8 +56,13 @@ class SongRepoImpl {
             return yield Song_1.Song.findByPk(id, { attributes: { exclude: ["ownerId", "updatedAt"] } });
         });
     }
-    findSongsByOwnersId(ownerId) {
-        return __awaiter(this, void 0, void 0, function* () {
+    findSongsByOwnersId(ownerId_1) {
+        return __awaiter(this, arguments, void 0, function* (ownerId, isSuperAdmin = false) {
+            if (isSuperAdmin) {
+                const results = yield Admin_1.Admin.findAll({ where: { adminType: "system" }, attributes: ["id"] });
+                const allSystemAdminIds = results.map(item => item.id);
+                return yield Song_1.Song.findAll({ where: { ownerId: { [sequelize_1.Op.in]: allSystemAdminIds } } });
+            }
             return yield Song_1.Song.findAll({ where: { ownerId } });
         });
     }

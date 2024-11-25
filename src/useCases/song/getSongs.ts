@@ -4,15 +4,15 @@ import { TempSongRepoImpl } from "../../infrastructure/repository/tempSongRepoIm
 import { isUserAdmin } from "./helpers";
 
 export const getTempUploads = async (ownerId: number) => {
-  await isUserAdmin(ownerId);
-  const { findTempSongsById } = new TempSongRepoImpl();
-  return await findTempSongsById(ownerId);
+  const accountInfo = await isUserAdmin(ownerId);
+  const { findTempSongsByOwnersId } = new TempSongRepoImpl();
+  return await findTempSongsByOwnersId(ownerId, accountInfo.adminType === "system");
 };
 
 export const getSavedUploads = async (ownerId: number) => {
-  await isUserAdmin(ownerId);
+  const accountInfo = await isUserAdmin(ownerId);
   const { findSongsByOwnersId } = new SongRepoImpl();
-  return await findSongsByOwnersId(ownerId);
+  return await findSongsByOwnersId(ownerId, accountInfo.adminType === "system");
 };
 
 export const getAllSongs = async (id: number) => {
