@@ -23,6 +23,7 @@ import { systemRouter } from "./interface/routes/systemRoutes";
 import { checkSystemStatus } from "./interface/middlewares/checkSystemStatus";
 import { adsRouter } from "./interface/routes/adsRoutes";
 import { roleRouter } from "./interface/routes/roleRoutes";
+import { reportsRouter } from "./interface/routes/reportRoutes";
 
 const server = express();
 
@@ -37,18 +38,17 @@ server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], creden
 server.use("/api/v1/system", systemRouter);
 server.use("/api/v1/auth", authRouter);
 
-
-
 // routes
 server.use("/api/v1/user", userRouter);
-server.use("/api/v1/admin",adminRouter)
+server.use("/api/v1/admin", adminRouter);
 server.use("/api/v1/songs", songsRouter);
 server.use("/api/v1/service", serviceRouter);
-server.use("/api/v1/admin-plan",adminPlanRouter)
-server.use("/api/v1/package",checkSystemStatus,packageRouter)
-server.use("/api/v1/payments",checkSystemStatus,paymentsRouter)
-server.use("/api/v1/ads",adsRouter)
-server.use("/api/v1/roles",roleRouter)
+server.use("/api/v1/admin-plan", adminPlanRouter);
+server.use("/api/v1/package", checkSystemStatus, packageRouter);
+server.use("/api/v1/payments", checkSystemStatus, paymentsRouter);
+server.use("/api/v1/ads", adsRouter);
+server.use("/api/v1/roles", roleRouter);
+server.use("/api/v1/reports", reportsRouter);
 
 // error handling middlware
 server.use(errorHandler);
@@ -56,8 +56,8 @@ server.use(errorHandler);
 const port = process.env.PORT ? process.env.PORT : 8000;
 const startServer = async () => {
   try {
-    setUpAllEventListners()
-    await connectToDatabase()
+    setUpAllEventListners();
+    await connectToDatabase();
     server.listen(port, () => {
       console.log(`Server  is listening on ${port} `);
     });

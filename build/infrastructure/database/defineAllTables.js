@@ -21,6 +21,7 @@ const adminTable_1 = require("./tables/adminTable");
 const adsTable_1 = require("./tables/adsTable");
 const packageCatTable_1 = require("./tables/packageCatTable");
 const packageTables_1 = require("./tables/packageTables");
+const ReportTable_1 = require("./tables/ReportTable");
 const rewardTable_1 = require("./tables/rewardTable");
 const roleTable_1 = require("./tables/roleTable");
 const serviceTable_1 = require("./tables/serviceTable");
@@ -48,6 +49,7 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, adsTable_1.defineAdsTable)();
     (0, rewardTable_1.defineRewardTable)();
     (0, roleTable_1.defineRoleTable)();
+    (0, ReportTable_1.defineReportTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");

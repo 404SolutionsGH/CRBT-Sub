@@ -9,6 +9,7 @@ import { defineAdminTable } from "./tables/adminTable";
 import { defineAdsTable } from "./tables/adsTable";
 import { definePackageCategoryTable } from "./tables/packageCatTable";
 import { definePackageTable } from "./tables/packageTables";
+import { defineReportTable } from "./tables/ReportTable";
 import { defineRewardTable } from "./tables/rewardTable";
 import { defineRoleTable } from "./tables/roleTable";
 import { defineServiceTable } from "./tables/serviceTable";
@@ -37,6 +38,7 @@ export const defineAllTables = async () => {
   defineAdsTable();
   defineRewardTable();
   defineRoleTable();
+  defineReportTable();
   console.log("Setting Up Associations btw Tables...");
   settingUpTableAssociations();
   console.log("Set up done");
