@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginController = exports.signUpController = void 0;
+exports.resetAccountController = exports.loginController = exports.signUpController = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const AppError_1 = require("../../domain/entities/AppError");
 const User_1 = require("../../domain/entities/User");
@@ -21,6 +21,9 @@ const Admin_1 = require("../../domain/entities/Admin");
 const userLogin_1 = require("../../useCases/auth/userLogin");
 const adminLogin_1 = require("../../useCases/auth/adminLogin");
 const isStringNumber_1 = require("../../@common/helperMethods/isStringNumber");
+const resetAccount_1 = require("../../useCases/auth/resetAccount");
+const startPayment_1 = require("../../useCases/payment/startPayment");
+const Transactions_1 = require("../../domain/entities/Transactions");
 // import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 // // helper methods
 const nullAndStringTypeChecker = (data1, data2, d1Name, d2Name) => {
@@ -31,19 +34,13 @@ const nullAndStringTypeChecker = (data1, data2, d1Name, d2Name) => {
 };
 exports.signUpController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Account creation began ...");
-    const { email, accountType, password, firstName, lastName, planId } = req.body;
-    if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
-        throw new AppError_1.AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
-    }
-    if (accountType === "admin") {
-        if (!email)
-            throw new AppError_1.AppError("No data passed for email", 400);
-        (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
-        yield (0, createAdmin_1.createAdminAccount)(Admin_1.Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId);
-        res.status(201).json({ message: "Admin account created successfully" });
-    }
-    else
-        throw new AppError_1.AppError("Value passed for accountType in request body must be admin or user", 400);
+    const { email, password, firstName, lastName, planId, phoneNumber } = req.body;
+    if (!email)
+        throw new AppError_1.AppError("No data passed for email", 400);
+    (0, isStringNumber_1.isStringContentNumber)(planId, "planId");
+    yield (0, createAdmin_1.createAdminAccount)(Admin_1.Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId);
+    const checkOutPageUrl = yield (0, startPayment_1.startPayment)(Transactions_1.Transaction.build({ email, planId }), phoneNumber);
+    res.status(200).json({ checkoutUrl: checkOutPageUrl });
 }));
 exports.loginController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User logging in ...");
@@ -64,4 +61,9 @@ exports.loginController = (0, express_async_handler_1.default)((req, res) => __a
     }
     console.log("Login sucessfull");
     res.status(200).json({ message: "Login successfull", account: data.account, token: data.token });
+}));
+exports.resetAccountController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.params;
+    yield (0, resetAccount_1.resetAccount)(email);
+    res.status(201).json({ message: `An email has been sent to ${email} with a new password` });
 }));

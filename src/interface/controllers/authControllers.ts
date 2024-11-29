@@ -8,6 +8,9 @@ import { Admin } from "../../domain/entities/Admin";
 import { userLogin } from "../../useCases/auth/userLogin";
 import { adminLogin } from "../../useCases/auth/adminLogin";
 import { isStringContentNumber } from "../../@common/helperMethods/isStringNumber";
+import { resetAccount } from "../../useCases/auth/resetAccount";
+import { startPayment } from "../../useCases/payment/startPayment";
+import { Transaction } from "../../domain/entities/Transactions";
 
 // import { verifyTokenIdFromFirebase } from "../../libs/firebase";
 
@@ -19,17 +22,12 @@ const nullAndStringTypeChecker = (data1: any, data2: any, d1Name: string, d2Name
 
 export const signUpController = asyncHandler(async (req: Request, res: Response) => {
   console.log("Account creation began ...");
-  const {email, accountType, password, firstName, lastName, planId } = req.body;
-
-  if (!accountType || RegExp(/^\d+$/).test(accountType) || !planId) {
-    throw new AppError(`${!accountType ? "No data passed for accountType in request body" : !planId ? "No data passed for planId" : "Value passed for account type must be a string"}`, 400);
-  }
-  if (accountType === "admin") {
-    if (!email) throw new AppError("No data passed for email", 400);
-    isStringContentNumber(planId, "planId");
-    await createAdminAccount(Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId);
-    res.status(201).json({ message: "Admin account created successfully" });
-  } else throw new AppError("Value passed for accountType in request body must be admin or user", 400);
+  const {email,  password, firstName, lastName, planId,phoneNumber } = req.body;
+     if (!email) throw new AppError("No data passed for email", 400);
+     isStringContentNumber(planId, "planId");
+     await createAdminAccount(Admin.build({ email, password, adminType: "merchant", firstName, lastName }), planId);
+     const checkOutPageUrl = await startPayment(Transaction.build({ email, planId }), phoneNumber);
+     res.status(200).json({ checkoutUrl: checkOutPageUrl });
 });
 
 export const loginController = asyncHandler(async (req: Request, res: Response) => {
@@ -50,3 +48,9 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
   console.log("Login sucessfull");
   res.status(200).json({ message: "Login successfull", account: data.account,token:data.token });
 });
+
+export const resetAccountController=asyncHandler(async (req: Request, res: Response) => {
+  const {email}= req.params
+  await resetAccount(email)
+  res.status(201).json({message:`An email has been sent to ${email} with a new password`})
+})

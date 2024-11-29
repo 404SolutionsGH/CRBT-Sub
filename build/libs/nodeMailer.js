@@ -44,7 +44,6 @@ const sendAccountPassword = (password, email) => __awaiter(void 0, void 0, void 
 exports.sendAccountPassword = sendAccountPassword;
 const sendAccountCreationEmail = (email, firstName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Sending Account Password to user....");
         const messageObject = {
             from: process.env.SmtpUserName,
             subject: ` Welcome to ${process.env.AppName}. Account creation successfull.`,

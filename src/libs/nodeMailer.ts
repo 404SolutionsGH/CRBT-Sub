@@ -31,7 +31,6 @@ export const sendAccountPassword = async (password: string, email: string) => {
 
 export const sendAccountCreationEmail= async (email:string,firstName:string)=>{
 try {
-  console.log("Sending Account Password to user....");
   const messageObject = {
     from: process.env.SmtpUserName,
     subject: ` Welcome to ${process.env.AppName}. Account creation successfull.`,

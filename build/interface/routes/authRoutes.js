@@ -220,8 +220,8 @@ exports.authRouter.post("/signup", checkSystemStatus_1.checkSystemStatus, authCo
  *                   example: "Invalid credentials"
  */
 exports.authRouter.post("/login", authControllers_1.loginController);
+exports.authRouter.post("/reset-account/:email", authControllers_1.resetAccountController);
 // // authRouter.post("/send-confirmationCode", checkingForAccount, sendConfirmationCodeController);
 // authRouter.post("/admin/login", checkingForAccount, loginControllerForAdmins);
 // authRouter.post("/login", checkingForAccount, loginController);
 // authRouter.post("/confirm-account", checkingForAccount, accountConfirmationController);
-// authRouter.post("/reset-account", checkingForAccount,resetAccountController);
