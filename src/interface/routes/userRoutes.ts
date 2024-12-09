@@ -90,8 +90,6 @@ export const userRouter = Router();
  */
 userRouter.put("/update-account-info", verifyJwt, accountUpdateController);
 
-
-
 /**
  * @swagger
  * /api/v1/user/account-info:
@@ -150,7 +148,7 @@ userRouter.put("/update-account-info", verifyJwt, accountUpdateController);
  *                     profile:
  *                       type: string
  *                       format: uri
- *                       example: "https://crbtbackend.trotro.live/api/v1/songs/profile/PVTlS8u2jTZv6CwqxLBm.jpeg"
+ *                       example: "https://api.crbtmusicpro.com/api/v1/songs/profile/PVTlS8u2jTZv6CwqxLBm.jpeg"
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:
@@ -173,5 +171,3 @@ userRouter.put("/update-account-info", verifyJwt, accountUpdateController);
  *                   example: "Unauthorized access. Invalid token."
  */
 userRouter.get("/account-info", verifyJwt, accountInfoController);
-
-

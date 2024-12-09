@@ -2,7 +2,20 @@ import { Router } from "express";
 import { verifyJwt } from "../middlewares/verifyJwt";
 import { getArrayOfFiles, getFilesFromReq } from "../../libs/multer";
 import { setImgAndMp3Files } from "../middlewares/setImg&Mp3Files";
-import { deleteSongController, getAllSongsController, getUploadedSongsController, listenController, profileController, searchController, songController, subcribeController, tempUploadController, unsubcribeController, updateSavedSongController, uploadController } from "../controllers/songsControllers";
+import {
+  deleteSongController,
+  getAllSongsController,
+  getUploadedSongsController,
+  listenController,
+  profileController,
+  searchController,
+  songController,
+  subcribeController,
+  tempUploadController,
+  unsubcribeController,
+  updateSavedSongController,
+  uploadController,
+} from "../controllers/songsControllers";
 import { setupMp3FilesInReq } from "../middlewares/setMp3Files";
 import { getFileFromSys } from "../middlewares/getFile";
 import { isSuperAdminAccount } from "../middlewares/checkForSuperAdmin";
@@ -132,9 +145,6 @@ export const songsRouter = Router();
  */
 songsRouter.post("/upload", getFilesFromReq(), verifyJwt, setImgAndMp3Files, uploadController);
 
-
-
-
 /**
  * @swagger
  * /api/v1/songs/temp/upload:
@@ -198,9 +208,7 @@ songsRouter.post("/upload", getFilesFromReq(), verifyJwt, setImgAndMp3Files, upl
  *                   type: string
  *                   example: "Merchant account not found."
  */
-songsRouter.post("/temp/upload",getArrayOfFiles(),verifyJwt,setupMp3FilesInReq,tempUploadController)
-
-
+songsRouter.post("/temp/upload", getArrayOfFiles(), verifyJwt, setupMp3FilesInReq, tempUploadController);
 
 /**
  * @swagger
@@ -260,13 +268,13 @@ songsRouter.post("/temp/upload",getArrayOfFiles(),verifyJwt,setupMp3FilesInReq,t
  *                         example: "entertainment"
  *                       tune:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
  *                       lang:
  *                         type: string
  *                         example: "English"
  *                       profile:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
  *                       subscriptionType:
  *                         type: string
  *                         example: "weekly"
@@ -316,11 +324,7 @@ songsRouter.post("/temp/upload",getArrayOfFiles(),verifyJwt,setupMp3FilesInReq,t
  *                   example: "Merchant account not found."
  */
 //endpoint for getting only songs an Admin has uploaded.
-songsRouter.get("/:state",verifyJwt,getUploadedSongsController) 
-
-
-
-
+songsRouter.get("/:state", verifyJwt, getUploadedSongsController);
 
 /**
  * @swagger
@@ -366,13 +370,13 @@ songsRouter.get("/:state",verifyJwt,getUploadedSongsController)
  *                         example: "entertainment"
  *                       tune:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
  *                       lang:
  *                         type: string
  *                         example: "English"
  *                       profile:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
  *                       subscriptionType:
  *                         type: string
  *                         example: "weekly"
@@ -392,8 +396,7 @@ songsRouter.get("/:state",verifyJwt,getUploadedSongsController)
  *                         example: "2024-10-02T17:07:04.045Z"
  */
 // endpoint for getting all songs to get all songs
-songsRouter.get("/",checkSystemStatus,getAllSongsController)
-
+songsRouter.get("/", checkSystemStatus, getAllSongsController);
 
 // endpoint for subscribing and unsubscribing to song
 /**
@@ -456,7 +459,6 @@ songsRouter.get("/",checkSystemStatus,getAllSongsController)
  *                   example: "User is already subscribed to this song"
  */
 songsRouter.post("/subscribe/:songId", verifyJwt, subcribeController);
-
 
 /**
  * @swagger
@@ -589,8 +591,7 @@ songsRouter.post("/unsubscribe", verifyJwt, unsubcribeController);
  *                   type: string
  *                   example: "No song with the provided ID exists or the file content does not exist."
  */
-songsRouter.put("/:id", getFilesFromReq("newProfile","newTune"), verifyJwt, updateSavedSongController);
-
+songsRouter.put("/:id", getFilesFromReq("newProfile", "newTune"), verifyJwt, updateSavedSongController);
 
 // endpoint for getting a song
 /**
@@ -653,7 +654,6 @@ songsRouter.put("/:id", getFilesFromReq("newProfile","newTune"), verifyJwt, upda
  *                   example: "No song with the provided ID exists."
  */
 songsRouter.get("/one/:id", verifyJwt, songController);
-
 
 /**
  * @swagger
@@ -721,20 +721,12 @@ songsRouter.get("/one/:id", verifyJwt, songController);
  *                   type: string
  *                   example: "Song not found or flagged for deletion."
  */
-songsRouter.delete("/:state/:songId", verifyJwt,deleteSongController);
+songsRouter.delete("/:state/:songId", verifyJwt, deleteSongController);
 
 songsRouter.get("/search", verifyJwt, searchController);
 
-songsRouter.get("/profile/:fileName",checkSystemStatus,getFileFromSys,profileController);
-songsRouter.get("/listen/:fileName",checkSystemStatus, getFileFromSys, listenController);
-
-
-
-
-
-
-
-
+songsRouter.get("/profile/:fileName", checkSystemStatus, getFileFromSys, profileController);
+songsRouter.get("/listen/:fileName", checkSystemStatus, getFileFromSys, listenController);
 
 // songsRouter.get("/subscription-details", verifyJwt, songSubDetailController);
 // songsRouter.get("/recommendation", verifyJwt, recommendationController);

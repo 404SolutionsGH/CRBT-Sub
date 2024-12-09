@@ -253,13 +253,13 @@ exports.songsRouter.post("/temp/upload", (0, multer_1.getArrayOfFiles)(), verify
  *                         example: "entertainment"
  *                       tune:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
  *                       lang:
  *                         type: string
  *                         example: "English"
  *                       profile:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
  *                       subscriptionType:
  *                         type: string
  *                         example: "weekly"
@@ -354,13 +354,13 @@ exports.songsRouter.get("/:state", verifyJwt_1.verifyJwt, songsControllers_1.get
  *                         example: "entertainment"
  *                       tune:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/listen/lIJlLoQ7YquNbygMoZ8W.mp3"
  *                       lang:
  *                         type: string
  *                         example: "English"
  *                       profile:
  *                         type: string
- *                         example: "https://crbtbackend.trotro.live/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
+ *                         example: "https://api.crbtmusicpro.com/api/v1/songs/profile/T8dpQGdY7AXwzz4f4UbL.jpeg"
  *                       subscriptionType:
  *                         type: string
  *                         example: "weekly"

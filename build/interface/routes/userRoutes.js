@@ -147,7 +147,7 @@ exports.userRouter.put("/update-account-info", verifyJwt_1.verifyJwt, userContro
  *                     profile:
  *                       type: string
  *                       format: uri
- *                       example: "https://crbtbackend.trotro.live/api/v1/songs/profile/PVTlS8u2jTZv6CwqxLBm.jpeg"
+ *                       example: "https://api.crbtmusicpro.com/api/v1/songs/profile/PVTlS8u2jTZv6CwqxLBm.jpeg"
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:
