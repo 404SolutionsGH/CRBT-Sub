@@ -51,6 +51,10 @@ export const defineUserTable = () => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      location: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {
       sequelize: sequelize,

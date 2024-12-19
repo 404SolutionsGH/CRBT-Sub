@@ -51,6 +51,10 @@ const defineUserTable = () => {
             type: sequelize_1.DataTypes.TEXT,
             allowNull: true,
         },
+        location: {
+            type: sequelize_1.DataTypes.TEXT,
+            allowNull: true,
+        },
     }, {
         sequelize: connectDb_1.sequelize,
         tableName: "Users",

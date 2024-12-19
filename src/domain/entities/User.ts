@@ -10,6 +10,7 @@ export class User extends Model {
   declare langPref: string;
   declare accountBalance: string;
   declare profile?:string;
+  declare location?:string;
   declare subSongId: number;
   declare createdAt: string;
 }

@@ -31,6 +31,7 @@ const subSongsTable_1 = require("./tables/subSongsTable");
 const systemTable_1 = require("./tables/systemTable");
 const tempSongTable_1 = require("./tables/tempSongTable");
 const transactionTable_1 = require("./tables/transactionTable");
+const userContactsTable_1 = require("./tables/userContactsTable");
 const userTable_1 = require("./tables/userTable");
 // method for defining all table structures using the models
 const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -50,6 +51,7 @@ const defineAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, rewardTable_1.defineRewardTable)();
     (0, roleTable_1.defineRoleTable)();
     (0, ReportTable_1.defineReportTable)();
+    (0, userContactsTable_1.defineUserContactsTable)();
     console.log("Setting Up Associations btw Tables...");
     settingUpTableAssociations();
     console.log("Set up done");
