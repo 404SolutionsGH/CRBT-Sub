@@ -32,7 +32,7 @@ const updateAdminAccountInfo = (updatedInfo) => __awaiter(void 0, void 0, void 0
     const updatedAccount = yield updateAdminAccount(updatedInfo);
     if (!updatedAccount)
         throw new AppError_1.AppError("Account update failed,no such account exist", 404);
-    const { firstName, lastName, email } = updatedAccount;
-    return { firstName, lastName, email };
+    const { firstName, lastName, email, profile } = updatedAccount;
+    return { firstName, lastName, email, profile };
 });
 exports.updateAdminAccountInfo = updateAdminAccountInfo;

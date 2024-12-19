@@ -67,12 +67,16 @@ export const defineAdminTable = () => {
         },
       },
 
-      role:{
-        type:DataTypes.STRING,
-        allowNull:true,
-      }
+      role: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      profile: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
-    { sequelize: sequelize, tableName: "Admins", timestamps: true, createdAt:true,updatedAt:false }
+    { sequelize: sequelize, tableName: "Admins", timestamps: true, createdAt: true, updatedAt: false }
   );
 
   //  setting up associations

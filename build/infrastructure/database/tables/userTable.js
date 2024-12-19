@@ -47,6 +47,10 @@ const defineUserTable = () => {
             type: sequelize_1.DataTypes.INTEGER(),
             defaultValue: 0,
         },
+        profile: {
+            type: sequelize_1.DataTypes.TEXT,
+            allowNull: true,
+        },
     }, {
         sequelize: connectDb_1.sequelize,
         tableName: "Users",

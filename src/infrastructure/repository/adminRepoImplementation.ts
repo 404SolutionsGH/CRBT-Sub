@@ -55,7 +55,7 @@ export class AdminRepoImp implements AdminRepository {
   }
 
   async updateAdminAccount(updatedInfo: Admin): Promise<Admin | null> {
-    const { firstName, lastName, email, id, password, planId, role } = updatedInfo;
+    const { firstName, lastName, email, id, password, planId, role,profile } = updatedInfo;
     const updatedData =
       password && !email && !firstName && !lastName && !planId
         ? await Admin.update({ password }, { where: { id }, returning: true })
@@ -63,7 +63,7 @@ export class AdminRepoImp implements AdminRepository {
         ? await Admin.update({ firstName, lastName, email, planId }, { where: { id }, returning: true })
         : role
         ? await Admin.update({ firstName, lastName, email, role }, { where: { id }, returning: true })
-        : await Admin.update({ firstName, lastName, email }, { where: { id }, returning: true });
+        : await Admin.update({ firstName, lastName, email,profile }, { where: { id }, returning: true });
     if (updatedData[0] === 1) return updatedData[1][0];
     return null;
   }

@@ -9,6 +9,7 @@ export class User extends Model {
   declare phone: string;
   declare langPref: string;
   declare accountBalance: string;
+  declare profile?:string;
   declare subSongId: number;
   declare createdAt: string;
 }

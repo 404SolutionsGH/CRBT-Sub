@@ -1,6 +1,5 @@
 import { Model } from "sequelize";
 
-
 export class Admin extends Model {
   declare id: number;
   declare firstName: string;
@@ -9,7 +8,8 @@ export class Admin extends Model {
   declare password: string;
   declare adminType: "merchant" | "system";
   declare planId: number;
-  declare role?:string
+  declare role?: string;
+  declare profile?: string;
   declare nextSubPayment: string;
-  declare createdAt:string;
+  declare createdAt: string;
 }

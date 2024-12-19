@@ -67,7 +67,11 @@ const defineAdminTable = () => {
         role: {
             type: sequelize_1.DataTypes.STRING,
             allowNull: true,
-        }
+        },
+        profile: {
+            type: sequelize_1.DataTypes.TEXT,
+            allowNull: true,
+        },
     }, { sequelize: connectDb_1.sequelize, tableName: "Admins", timestamps: true, createdAt: true, updatedAt: false });
     //  setting up associations
     // Admin.belongsTo(AdminPlan, { foreignKey: "planId" });

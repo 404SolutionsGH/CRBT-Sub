@@ -32,8 +32,8 @@ export class UserRepoImp implements UserRepository {
   }
 
   async updateAccountInfo(account: User): Promise<User | null> {
-    const { firstName, lastName, id, accountBalance, phone, langPref } = account;
-    const updatedData = await User.update({ firstName, accountBalance, phone, langPref, lastName }, { where: { id }, returning: true });
+    const { firstName, lastName, id, accountBalance, phone, langPref,profile } = account;
+    const updatedData = await User.update({ firstName, accountBalance, phone, langPref, lastName ,profile}, { where: { id }, returning: true });
     if (updatedData[0] == 1) return updatedData[1][0];
     return null;
   }

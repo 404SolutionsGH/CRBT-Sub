@@ -22,7 +22,7 @@ const getAdminAccountInfo = (adminId) => __awaiter(void 0, void 0, void 0, funct
     if (!account)
         throw new AppError_1.AppError("Account info could not be retrived, such account does not exist", 404);
     const rewardInfo = yield get(adminId);
-    const { adminType, lastName, firstName, email, nextSubPayment, planId, createdAt } = account;
-    return { adminType, lastName, firstName, email, nextSubPayment, createdAt, subPlanDetails: yield findPlanById(planId), rewardPoints: rewardInfo ? rewardInfo.points : 0 };
+    const { adminType, lastName, firstName, email, nextSubPayment, planId, createdAt, profile } = account;
+    return { adminType, lastName, firstName, email, profile, nextSubPayment, createdAt, subPlanDetails: yield findPlanById(planId), rewardPoints: rewardInfo ? rewardInfo.points : 0 };
 });
 exports.getAdminAccountInfo = getAdminAccountInfo;

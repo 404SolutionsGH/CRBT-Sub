@@ -20,10 +20,10 @@ const AppError_1 = require("../../domain/entities/AppError");
 const getAccountInfo_1 = require("../../useCases/user/getAccountInfo");
 exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User updating account info....");
-    const { firstName, lastName, id, langPref, phone, accountBalance } = req.body;
+    const { firstName, lastName, id, langPref, phone, accountBalance, profile } = req.body;
     if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
         throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
-    const updatedData = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance }));
+    const updatedData = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance, profile }));
     if (!updatedData) {
         throw new AppError_1.AppError("Update failed, account does not exist", 404);
     }

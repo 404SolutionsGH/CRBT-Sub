@@ -40,8 +40,8 @@ exports.getAdminAccountInfoController = (0, express_async_handler_1.default)((re
     res.status(200).json(yield (0, getAccountInfo_1.getAdminAccountInfo)(id));
 }));
 exports.updateAdminAccountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, firstName, lastName, email } = req.body;
-    res.status(200).json({ message: "Account Info Updated", updatedData: yield (0, updateAccountInfo_1.updateAdminAccountInfo)(Admin_1.Admin.build({ id, firstName, lastName, email })) });
+    const { id, firstName, lastName, email, profile } = req.body;
+    res.status(200).json({ message: "Account Info Updated", updatedData: yield (0, updateAccountInfo_1.updateAdminAccountInfo)(Admin_1.Admin.build({ id, firstName, lastName, email, profile })) });
 }));
 exports.changePasswordController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { newPassword, oldPassword, id } = req.body;

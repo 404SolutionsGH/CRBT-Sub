@@ -47,6 +47,10 @@ export const defineUserTable = () => {
         type: DataTypes.INTEGER(),
         defaultValue: 0,
       },
+      profile: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {
       sequelize: sequelize,

@@ -47,8 +47,8 @@ class UserRepoImp {
     }
     updateAccountInfo(account) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { firstName, lastName, id, accountBalance, phone, langPref } = account;
-            const updatedData = yield User_1.User.update({ firstName, accountBalance, phone, langPref, lastName }, { where: { id }, returning: true });
+            const { firstName, lastName, id, accountBalance, phone, langPref, profile } = account;
+            const updatedData = yield User_1.User.update({ firstName, accountBalance, phone, langPref, lastName, profile }, { where: { id }, returning: true });
             if (updatedData[0] == 1)
                 return updatedData[1][0];
             return null;

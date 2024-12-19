@@ -28,9 +28,9 @@ export const getAdminAccountInfoController = asyncHandler(async (req: Request, r
   res.status(200).json(await getAdminAccountInfo(id));
 });
 export const updateAdminAccountInfoController = asyncHandler(async (req: Request, res: Response) => {
-  const { id, firstName, lastName, email } = req.body;
+  const { id, firstName, lastName, email,profile } = req.body;
 
-  res.status(200).json({ message: "Account Info Updated", updatedData: await updateAdminAccountInfo(Admin.build({ id, firstName, lastName, email })) });
+  res.status(200).json({ message: "Account Info Updated", updatedData: await updateAdminAccountInfo(Admin.build({ id, firstName, lastName, email ,profile})) });
 });
 
 export const changePasswordController = asyncHandler(async (req: Request, res: Response) => {

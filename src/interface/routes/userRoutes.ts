@@ -38,6 +38,11 @@ export const userRouter = Router();
  *               langPref:
  *                 type: string
  *                 example: "eng"
+ *               profile:
+ *                 type: string
+ *                 nullable: true
+ *                 description: "Base64 string of the profile image. Can be null."
+ *                 example: null
  *     responses:
  *       200:
  *         description: Account information updated successfully.
@@ -67,6 +72,11 @@ export const userRouter = Router();
  *                     langPref:
  *                       type: string
  *                       example: "eng"
+ *                     profile:
+ *                       type: string
+ *                       nullable: true
+ *                       description: "Base64 string of the profile image. Can be null."
+ *                       example: "data:image/png;base64,iVBORw0..."
  *       400:
  *         description: Bad request. Missing or invalid fields.
  *         content:
