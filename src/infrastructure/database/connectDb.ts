@@ -17,9 +17,9 @@ export const connectToDatabase = async () => {
   console.log("Table Structures defined");
   //models syncronization
   console.log("Database syncronising..");
-  await sequelize.sync({ force:true });
+  await sequelize.sync();
   console.log("Syncronization sucessfull");
-  console.log("Setting Up seeders");
-  await setUpAllSeeders();
-  console.log("Seeders setup sucessfully");
+  // console.log("Setting Up seeders");
+  // await setUpAllSeeders();
+  // console.log("Seeders setup sucessfully");
 };
