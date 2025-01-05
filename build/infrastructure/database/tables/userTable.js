@@ -21,6 +21,10 @@ const defineUserTable = () => {
                 notEmpty: { msg: "phone cannot be empty" },
             },
         },
+        email: {
+            type: sequelize_1.DataTypes.STRING(),
+            allowNull: true,
+        },
         langPref: {
             type: sequelize_1.DataTypes.STRING(),
             allowNull: false,

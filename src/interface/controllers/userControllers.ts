@@ -11,12 +11,12 @@ import { getUserContacts } from "../../useCases/user/getUsersContacts";
 
 export const accountUpdateController = asyncHandler(async (req: Request, res: Response) => {
   console.log("User updating account info....");
-  const { firstName, lastName, id, langPref, phone, accountBalance, profile, location } = req.body;
+  const { firstName, lastName, id, langPref, phone, accountBalance, profile, location,email } = req.body;
 
   if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
     throw new AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
 
-  const updatedData = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance, profile, location }));
+  const updatedData = await updateAccountInfo(User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance, profile, location ,email}));
 
   if (!updatedData) {
     throw new AppError("Update failed, account does not exist", 404);
@@ -27,8 +27,8 @@ export const accountUpdateController = asyncHandler(async (req: Request, res: Re
 export const accountInfoController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
 
-  const { firstName, lastName, accountBalance, phone, langPref, subSongDetails, rewardPoints, createdAt } = await getAccountInfo(Number(id));
-  res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, rewardPoints, createdAt, subSongDetails });
+  const { firstName, lastName, accountBalance, phone, langPref, subSongDetails, rewardPoints, createdAt,email } = await getAccountInfo(Number(id));
+  res.status(200).json({ firstName, lastName, email,accountBalance, phone, langPref, rewardPoints, createdAt, subSongDetails });
 });
 
 export const saveUserContactsController = asyncHandler(async (req: Request, res: Response) => {

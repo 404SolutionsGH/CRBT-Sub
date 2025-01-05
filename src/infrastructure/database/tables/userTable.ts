@@ -20,6 +20,10 @@ export const defineUserTable = () => {
           notEmpty: { msg: "phone cannot be empty" },
         },
       },
+      email: {
+        type: DataTypes.STRING(),
+        allowNull: true,
+      },
       langPref: {
         type: DataTypes.STRING(),
         allowNull: false,

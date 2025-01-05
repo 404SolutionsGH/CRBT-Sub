@@ -8,8 +8,8 @@ export const adminLogin = async (email: string, pasword: string) => {
   const account = await adminRepo.findAdminByEmail(email);
   if (account) {
     if (!(await verifyPassword(pasword, account.password!))) throw new AppError("Invalid email and password", 401);
-    const { firstName, lastName, email, adminType, planId, nextSubPayment,createdAt,profile}=account
-    return { account: { firstName, lastName, email, profile,adminType, planId, nextSubPayment, createdAt }, token: jwtForLogIn(String(account.id)) };
+    const { firstName, lastName, email, adminType, planId, nextSubPayment,createdAt,profile,role}=account
+    return { account: { firstName, lastName, email, profile,role,adminType, planId, nextSubPayment, createdAt }, token: jwtForLogIn(String(account.id)) };
   }
   throw new AppError(`No admin account with ${email} exist`, 404);
 };

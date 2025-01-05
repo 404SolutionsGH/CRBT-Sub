@@ -22,10 +22,10 @@ const saveUsersContacts_1 = require("../../useCases/user/saveUsersContacts");
 const getUsersContacts_1 = require("../../useCases/user/getUsersContacts");
 exports.accountUpdateController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("User updating account info....");
-    const { firstName, lastName, id, langPref, phone, accountBalance, profile, location } = req.body;
+    const { firstName, lastName, id, langPref, phone, accountBalance, profile, location, email } = req.body;
     if ((typeof firstName !== "string" && firstName) || (typeof lastName !== "string" && lastName))
         throw new AppError_1.AppError(typeof firstName !== "string" ? "Value for firstName should be a string" : "Value for lastName should be a string", 400);
-    const updatedData = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance, profile, location }));
+    const updatedData = yield (0, updateAccountInfo_1.updateAccountInfo)(User_1.User.build({ firstName, lastName, id: Number(id), langPref, phone, accountBalance, profile, location, email }));
     if (!updatedData) {
         throw new AppError_1.AppError("Update failed, account does not exist", 404);
     }
@@ -33,8 +33,8 @@ exports.accountUpdateController = (0, express_async_handler_1.default)((req, res
 }));
 exports.accountInfoController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
-    const { firstName, lastName, accountBalance, phone, langPref, subSongDetails, rewardPoints, createdAt } = yield (0, getAccountInfo_1.getAccountInfo)(Number(id));
-    res.status(200).json({ firstName, lastName, accountBalance, phone, langPref, rewardPoints, createdAt, subSongDetails });
+    const { firstName, lastName, accountBalance, phone, langPref, subSongDetails, rewardPoints, createdAt, email } = yield (0, getAccountInfo_1.getAccountInfo)(Number(id));
+    res.status(200).json({ firstName, lastName, email, accountBalance, phone, langPref, rewardPoints, createdAt, subSongDetails });
 }));
 exports.saveUserContactsController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { contacts, id } = req.body;

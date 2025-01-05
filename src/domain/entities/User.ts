@@ -7,6 +7,7 @@ export class User extends Model {
   declare firstName: string;
   declare lastName: string;
   declare phone: string;
+  declare email:string;
   declare langPref: string;
   declare accountBalance: string;
   declare profile?:string;
