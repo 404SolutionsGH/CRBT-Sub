@@ -51,7 +51,7 @@ export class AdminRepoImp implements AdminRepository {
   }
 
   async getAllSystemAdmins(): Promise<Admin[]> {
-    return await Admin.findAll({ where: { adminType: "system", role: { [Op.ne]: null } } });
+    return await Admin.findAll({ where: { adminType: "system", role: { [Op.ne]: null } },attributes:{exclude:["password"]} });
   }
 
   async updateAdminAccount(updatedInfo: Admin): Promise<Admin | null> {

@@ -68,7 +68,7 @@ class AdminRepoImp {
     }
     getAllSystemAdmins() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Admin_1.Admin.findAll({ where: { adminType: "system", role: { [sequelize_1.Op.ne]: null } } });
+            return yield Admin_1.Admin.findAll({ where: { adminType: "system", role: { [sequelize_1.Op.ne]: null } }, attributes: { exclude: ["password"] } });
         });
     }
     updateAdminAccount(updatedInfo) {
