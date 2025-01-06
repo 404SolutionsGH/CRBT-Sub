@@ -41,16 +41,6 @@ export const saveUserContactsController = asyncHandler(async (req: Request, res:
 });
 
 export const getUserContactsController = asyncHandler(async (req: Request, res: Response) => {
-  const { page, size } = req.query;
-  let results: any;
-  try {
-    if (page && size) {
-      results = await getUserContacts(+page, +size);
-    } else {
-      results = await getUserContacts();
-    }
-  } catch (error) {
-    throw new AppError("page and size values should be integers", 400);
-  }
+  const results = await getUserContacts();
   res.status(200).json(results);
 });

@@ -12,18 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserContacts = void 0;
 const UserContacts_1 = require("../../domain/entities/UserContacts");
 const getUserContacts = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (page = 1, size = 10) {
-    const limit = size; // Number of records per page
-    const offset = (page - 1) * size; // Starting point for the current page
-    const { count, rows } = yield UserContacts_1.UserContacts.findAndCountAll({
-        limit,
-        offset,
+    const contacts = yield UserContacts_1.UserContacts.findAll({
         attributes: { exclude: ["id", "ownerId", "updatedAt"] },
     });
+    const results = [];
+    contacts.forEach((contact) => {
+        contact.contacts.forEach((phone) => {
+            results.push(phone);
+        });
+    });
     return {
-        totalItems: count,
-        result: rows,
-        totalPages: Math.ceil(count / size),
-        currentPage: page,
+        totalItems: results.length,
+        results
     };
 });
 exports.getUserContacts = getUserContacts;

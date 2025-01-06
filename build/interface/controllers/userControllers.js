@@ -45,18 +45,6 @@ exports.saveUserContactsController = (0, express_async_handler_1.default)((req, 
     res.status(201).json({ message: "Contacts Saved" });
 }));
 exports.getUserContactsController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, size } = req.query;
-    let results;
-    try {
-        if (page && size) {
-            results = yield (0, getUsersContacts_1.getUserContacts)(+page, +size);
-        }
-        else {
-            results = yield (0, getUsersContacts_1.getUserContacts)();
-        }
-    }
-    catch (error) {
-        throw new AppError_1.AppError("page and size values should be integers", 400);
-    }
+    const results = yield (0, getUsersContacts_1.getUserContacts)();
     res.status(200).json(results);
 }));
