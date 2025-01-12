@@ -21,7 +21,7 @@ const changePassword = (newPasswword, oldPassword, adminId) => __awaiter(void 0,
         throw new AppError_1.AppError("Password change failed , nosuch account exist", 404);
     if (yield (0, bcrypt_1.verifyPassword)(oldPassword, accountInfo.password)) {
         const password = yield (0, bcrypt_1.encryptPassword)(newPasswword);
-        yield updateAdminAccount(Admin_1.Admin.build({ password }));
+        yield updateAdminAccount(Admin_1.Admin.build({ password, id: adminId }));
     }
     else {
         throw new AppError_1.AppError("The old password you entered is incorrect. Please try again.", 401);

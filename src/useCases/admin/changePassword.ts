@@ -9,7 +9,7 @@ export const changePassword = async (newPasswword: string, oldPassword: string, 
   if (!accountInfo) throw new AppError("Password change failed , nosuch account exist", 404);
   if (await verifyPassword(oldPassword, accountInfo.password)) {
     const password = await encryptPassword(newPasswword);
-    await updateAdminAccount(Admin.build({ password }));
+    await updateAdminAccount(Admin.build({ password ,id:adminId}));
   } else {
     throw new AppError("The old password you entered is incorrect. Please try again.", 401);
   }
