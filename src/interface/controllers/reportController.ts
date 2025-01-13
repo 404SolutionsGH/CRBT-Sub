@@ -20,14 +20,14 @@ export const getReportsController = asyncHandler(async (req: Request, res: Respo
 });
 
 export const getReportController = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  isStringContentNumber(id, "id");
-  res.status(200).json(await getReport(+id));
+  const { reportId } = req.params;
+  isStringContentNumber(reportId, "reportId");
+  res.status(200).json(await getReport(+reportId));
 });
 
 export const deleteReportController = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  isStringContentNumber(id, "id");
-  await removeReport(+id);
+  const { reportId } = req.params;
+  isStringContentNumber(reportId, "reportId");
+  await removeReport(+reportId);
   res.status(204).end();
 });

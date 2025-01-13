@@ -30,13 +30,13 @@ exports.getReportsController = (0, express_async_handler_1.default)((req, res) =
     res.status(200).json(yield (0, getAllReports_1.getAllReports)());
 }));
 exports.getReportController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    (0, isStringNumber_1.isStringContentNumber)(id, "id");
-    res.status(200).json(yield (0, getAReport_1.getReport)(+id));
+    const { reportId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(reportId, "reportId");
+    res.status(200).json(yield (0, getAReport_1.getReport)(+reportId));
 }));
 exports.deleteReportController = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    (0, isStringNumber_1.isStringContentNumber)(id, "id");
-    yield (0, deleteReport_1.removeReport)(+id);
+    const { reportId } = req.params;
+    (0, isStringNumber_1.isStringContentNumber)(reportId, "reportId");
+    yield (0, deleteReport_1.removeReport)(+reportId);
     res.status(204).end();
 }));

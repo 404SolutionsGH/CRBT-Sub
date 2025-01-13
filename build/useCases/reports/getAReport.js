@@ -10,9 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getReport = void 0;
+const AppError_1 = require("../../domain/entities/AppError");
 const reportRepoImplementation_1 = require("../../infrastructure/repository/reportRepoImplementation");
 const getReport = (reportId) => __awaiter(void 0, void 0, void 0, function* () {
     const { getOne } = new reportRepoImplementation_1.ReportRepoImpl();
-    return yield getOne(reportId);
+    const report = yield getOne(reportId);
+    if (!report)
+        throw new AppError_1.AppError("No report with this id exist", 404);
+    return report;
 });
 exports.getReport = getReport;

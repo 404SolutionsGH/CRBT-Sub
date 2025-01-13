@@ -50,6 +50,10 @@ const option = {
                 name: "Roles",
                 description: "All operations relating to roles.",
             },
+            {
+                name: "Reports",
+                description: "All operations relating to reports",
+            },
         ],
         components: {
             securitySchemes: {
