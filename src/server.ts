@@ -31,7 +31,7 @@ const server = express();
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // middlewares
-server.use(express.json());
+server.use(express.json({ limit: "20mb" }));
 server.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
 // route

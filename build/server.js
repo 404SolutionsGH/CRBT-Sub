@@ -38,7 +38,7 @@ const server = (0, express_1.default)();
 // setting up swagger-ui
 server.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerConfig_1.swaggerSpecs));
 // middlewares
-server.use(express_1.default.json());
+server.use(express_1.default.json({ limit: "20mb" }));
 server.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 // route
 server.use("/api/v1/system", systemRoutes_1.systemRouter);
